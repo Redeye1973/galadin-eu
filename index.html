@@ -5,20 +5,43 @@
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <title>Galadin</title>
 <style>
-  body { font-family: system-ui, sans-serif; margin: 0; min-height: 100vh; display: grid; place-items: center; background: #0f1115; color: #e8e8e8; text-align: center; }
-  h1 { font-size: 3rem; letter-spacing: .1em; margin: 0 0 .5rem; }
-  p { margin: .35rem 0; opacity: .85; }
+  body { font-family: system-ui, sans-serif; margin: 0; background: #0f1115; color: #e8e8e8; }
+  main { max-width: 40rem; margin: 0 auto; padding: 2rem 1rem 3rem; }
+  h1 { font-size: 2.4rem; letter-spacing: .1em; margin: 0 0 .25rem; text-align: center; }
+  .tag { text-align: center; opacity: .85; margin: 0 0 1.5rem; }
+  .lijst { display: grid; gap: .9rem; margin: 1.5rem 0; }
+  .tegel { display: flex; gap: .9rem; align-items: center; background: #1b1e25; border: 1px solid #2d323d; border-radius: .6rem; padding: .8rem; text-decoration: none; color: inherit; }
+  .tegel:hover { border-color: #fca311; }
+  .tegel img { width: 64px; height: 64px; border-radius: .4rem; object-fit: cover; background: #0f1115; flex: none; }
+  .tegel h2 { margin: 0 0 .15rem; font-size: 1.1rem; }
+  .tegel p { margin: 0; opacity: .85; font-size: .92rem; }
+  .etiket { display: inline-block; font-size: .72rem; font-weight: 700; letter-spacing: .06em; padding: .1rem .45rem; border-radius: .3rem; background: #fca311; color: #111; margin-left: .4rem; vertical-align: middle; }
+  .let { opacity: .8; font-size: .92rem; border-left: 3px solid #fca311; padding-left: .8rem; margin: 1.5rem 0; }
+  footer { text-align: center; opacity: .75; font-size: .9rem; margin-top: 2rem; }
   a { color: #fca311; }
-  main { max-width: 32rem; padding: 0 1rem; }
 </style>
 </head>
 <body>
 <main>
   <h1>GALADIN</h1>
-  <p>We make worlds.</p>
-  <p>Games for an older audience are coming here. Nothing is playable yet.</p>
-  <p>Looking for the family games? <a href="https://galadin.nl">galadin.nl</a></p>
-  <p><a href="privacy.html">Privacy</a></p>
+  <p class="tag">We make worlds.</p>
+  <p>Games for an older audience. You will be asked to solve a sum before you play: a threshold, not an age check.</p>
+
+  <div class="lijst">
+    <a class="tegel" href="spel/jeager/">
+      <img src="spel/jeager/logo.png" alt="">
+      <div>
+        <h2>Jeager <span class="etiket">BETA</span></h2>
+        <p>Your air base guards the sky: scramble, take off, send fighters out, and shoot down drones and jets on patrol. War theme, cartoon explosions, no people shown.</p>
+      </div>
+    </a>
+  </div>
+
+  <p class="let">These games are not finished. Beta: nearly done, but there can still be mistakes. Alpha: still being built, a lot is missing. In both cases your progress can be lost with a new version.</p>
+
+  <footer>
+    <a href="https://galadin.nl">Games for everyone: galadin.nl</a> · <a href="privacy.html">Privacy</a>
+  </footer>
 </main>
 </body>
 </html>
