@@ -1,8 +1,7 @@
 <!doctype html>
 <html lang="nl">
 <head>
-<script>(function(){var ok=false;try{ok=sessionStorage.getItem("galadin_poort")==="1";}catch(e){}if(!ok){location.replace("../../poort.html?naar=spel/speelhal/");return;}
-function toon(){try{if(sessionStorage.getItem("speelhal_begrepen")==="1")return;}catch(e){}
+<script>(function(){function toon(){try{if(sessionStorage.getItem("speelhal_begrepen")==="1")return;}catch(e){}
 var d=document.createElement("div");d.setAttribute("role","dialog");d.style.cssText="position:fixed;inset:0;z-index:2147483647;background:rgba(10,10,14,.96);color:#eee;display:grid;place-items:center;font-family:system-ui,sans-serif;text-align:center;padding:1rem";
 d.innerHTML='<div style="max-width:30rem"><h2 style="margin:0 0 .6rem">18+</h2>'
 +'<p>Dit spel gebruikt <b>speelgeld</b>. Er is niets te winnen en niets te kopen. Penningen hebben geen waarde en kunnen niet worden omgewisseld. Het spel bootst gokspellen na en is alleen voor volwassenen.</p>'
