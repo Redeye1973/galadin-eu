@@ -1299,16 +1299,24 @@ function duwNatuur(st, dt, stil) {
       if (d >= min) continue;
       const f = (min - d) / 2, nx = dx / d, ny = dy / d;
 
-      const aVast = a.y - a.r <= st.balk + 1 || a.soort === 'reus', bVast = b.y - b.r <= st.balk + 1 || b.soort === 'reus';
-      if (!aVast) { a.x -= nx * f; a.y -= ny * f; }
-      if (!bVast) { b.x += nx * f; b.y += ny * f; }
-      if (aVast && !bVast) { b.x += nx * f; b.y += ny * f; }
-      if (bVast && !aVast) { a.x -= nx * f; a.y -= ny * f; }
+
+
+
+      const ma = a.r * a.r, mb = b.r * b.r, fa = 2 * f * mb / (ma + mb), fb = 2 * f * ma / (ma + mb);
+
+
+      const za = a.soort === 'reus' ? 0.25 : 1, zb = b.soort === 'reus' ? 0.25 : 1;
+      const aVast = a.y - a.r <= st.balk + 1, bVast = b.y - b.r <= st.balk + 1;
+      if (aVast && bVast) continue;
+      if (aVast) { b.x += nx * 2 * f * zb; b.y += ny * 2 * f; }
+      else if (bVast) { a.x -= nx * 2 * f * za; a.y -= ny * 2 * f; }
+      else { a.x -= nx * fa * za; a.y -= ny * fa; b.x += nx * fb * zb; b.y += ny * fb; }
     }
     for (const m of st.munten) {
       if (m.y - m.r < st.balk) m.y = st.balk + m.r;
 
-      m.x = muur ? clamp(m.x, D.bakLinks + m.r, D.bakRechts - m.r) : clamp(m.x, D.bakLinks - m.r * 0.95, D.bakRechts + m.r * 0.95);
+
+      m.x = muur || 2 * m.r > D.bakLinks ? clamp(m.x, D.bakLinks + m.r, D.bakRechts - m.r) : clamp(m.x, D.bakLinks - m.r * 0.95, D.bakRechts + m.r * 0.95);
     }
   }
 
