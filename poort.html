@@ -1,0 +1,54 @@
+<!doctype html>
+<html lang="nl">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="robots" content="noindex">
+<title>Galadin – 18+ / volwassenen</title>
+<style>
+  body { font-family: system-ui, sans-serif; margin: 0; min-height: 100vh; display: grid; place-items: center; background: #0f1115; color: #e8e8e8; text-align: center; }
+  main { max-width: 26rem; padding: 0 1rem; }
+  h1 { font-size: 1.6rem; margin: 0 0 .75rem; }
+  p { margin: .5rem 0; opacity: .9; }
+  input { font-size: 1.2rem; width: 5rem; text-align: center; padding: .4rem; border-radius: .4rem; border: 1px solid #555; background: #1b1e25; color: #fff; }
+  button { font-size: 1rem; padding: .5rem 1rem; border: 0; border-radius: .4rem; background: #fca311; color: #111; cursor: pointer; margin-left: .4rem; }
+  #fout { color: #ff7b72; min-height: 1.4rem; }
+  small { opacity: .7; }
+  a { color: #fca311; }
+</style>
+</head>
+<body>
+<main>
+  <h1>Voor volwassenen · For adults</h1>
+  <p>Deze spellen zijn niet voor kinderen. Los de som op om verder te gaan.</p>
+  <p>These games are not for children. Solve the sum to continue.</p>
+  <p id="som" style="font-size:1.6rem;margin:1rem 0 .5rem"></p>
+  <p><input id="antwoord" type="number" inputmode="numeric" autocomplete="off" aria-label="Antwoord"><button id="ga">OK</button></p>
+  <p id="fout" role="alert"></p>
+  <p><small>Dit is een drempel, geen leeftijdscontrole. · This is a threshold, not an age check.</small></p>
+  <p><small><a href="https://galadin.nl">Spellen voor iedereen · Games for everyone</a> · <a href="privacy.html">Privacy</a></small></p>
+</main>
+<script>
+(function () {
+  var params = new URLSearchParams(location.search);
+  var naar = params.get("naar") || "./";
+  if (!/^[a-z0-9\-_\/]+\/?$/i.test(naar)) naar = "./";   // alleen een pad binnen deze site
+  var a = 12 + Math.floor(Math.random() * 38), b = 6 + Math.floor(Math.random() * 14);
+  var som = a * b - 7;
+  document.getElementById("som").textContent = a + " × " + b + " − 7 = ?";
+  function ga() {
+    var v = parseInt(document.getElementById("antwoord").value, 10);
+    if (v === som) {
+      try { sessionStorage.setItem("galadin_poort", "1"); } catch (e) {}
+      location.href = naar;
+    } else {
+      document.getElementById("fout").textContent = "Niet goed · Not correct";
+      document.getElementById("antwoord").value = "";
+    }
+  }
+  document.getElementById("ga").addEventListener("click", ga);
+  document.getElementById("antwoord").addEventListener("keydown", function (e) { if (e.key === "Enter") ga(); });
+})();
+</script>
+</body>
+</html>
