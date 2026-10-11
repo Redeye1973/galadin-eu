@@ -67,7 +67,7 @@ canvas, img { image-rendering: pixelated; image-rendering: crisp-edges; }
     <h1>KOGELKAST</h1>
     <p class="onder">KIES EEN TAFEL</p>
     <div id="tafels" class="tafels"></div>
-    <p class="uitleg">Pc: pijltjes links/rechts of Z en / voor de flippers, spatie vasthouden voor de veer, X stoot.<br>Telefoon: tik links of rechts op de tafel, LANCEER vasthouden.</p>
+    <p class="uitleg">Pc: linker Shift en rechter Shift voor de flippers, pijl omlaag vasthouden om de bal weg te schieten, X stoot.<br>Telefoon: tik links of rechts op de tafel, LANCEER vasthouden.</p>
     <p class="versie" id="versie"></p>
   </section>
 
@@ -1001,13 +1001,15 @@ function renderHud() {
 
 
 
+
 function toetsen() {
   const zet = (k, v) => { UI.toetsen[k] = v; };
   document.addEventListener('keydown', (e) => {
     if (e.repeat) return;
     const k = e.key;
     if (UI.scherm === 'titel') { if (k === 'Enter' || k === ' ') { e.preventDefault(); audioStart(); nieuwSpel(); } return; }
-    if (k === 'ArrowLeft' || k === 'z' || k === 'Z' || k === 'a' || k === 'A') { e.preventDefault(); zet('links', true); }
+    if (k === 'Shift') { e.preventDefault(); zet(e.location === 2 ? 'rechts' : 'links', true); }
+    else if (k === 'ArrowLeft' || k === 'z' || k === 'Z' || k === 'a' || k === 'A') { e.preventDefault(); zet('links', true); }
     else if (k === 'ArrowRight' || k === '/' || k === 'l' || k === 'L') { e.preventDefault(); zet('rechts', true); }
     else if (k === ' ' || k === 'ArrowDown') { e.preventDefault(); if (UI.st && UI.st.fase === 'klaar') { audioStart(); nieuwSpel(); } else zet('trek', true); }
     else if (k === 'ArrowUp' || k === 'x' || k === 'X') { e.preventDefault(); UI.stoot = Math.random() < 0.5 ? -1 : 1; }
@@ -1019,7 +1021,8 @@ function toetsen() {
   });
   document.addEventListener('keyup', (e) => {
     const k = e.key;
-    if (k === 'ArrowLeft' || k === 'z' || k === 'Z' || k === 'a' || k === 'A') zet('links', false);
+    if (k === 'Shift') zet(e.location === 2 ? 'rechts' : 'links', false);
+    else if (k === 'ArrowLeft' || k === 'z' || k === 'Z' || k === 'a' || k === 'A') zet('links', false);
     else if (k === 'ArrowRight' || k === '/' || k === 'l' || k === 'L') zet('rechts', false);
     else if (k === ' ' || k === 'ArrowDown') zet('trek', false);
   });
