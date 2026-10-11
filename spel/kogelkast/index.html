@@ -52,6 +52,21 @@ canvas, img { image-rendering: pixelated; image-rendering: crisp-edges; }
 .tafelkaart small { display: block; font: 700 11px var(--kop); letter-spacing: .2em; color: var(--inkt2); margin-top: 2px; }
 .tafelkaart em { display: block; font: 600 11.5px var(--tekst); color: var(--inkt2); margin-top: 4px; }
 
+.tafelscherm { width: 100%; flex-direction: row; justify-content: center; align-items: stretch; }
+.tafelscherm .kolom { width: min(100%, 520px); height: 100%; display: flex; flex-direction: column; align-items: center; }
+.zijpaneel { display: none; }
+@media (min-width: 860px) {
+  .zijpaneel { display: block; width: 300px; margin-left: 18px; padding: 18px 18px 18px 20px; align-self: flex-start; margin-top: 56px; border-left: 2px solid var(--messing2); color: var(--inkt2); font-size: 13.5px; line-height: 1.45; }
+  .zijpaneel h2 { font: 900 15px var(--kop); letter-spacing: .18em; color: var(--messing); margin: 0 0 8px; text-transform: uppercase; }
+  .zijpaneel h2 + h2, .zijpaneel ul + h2 { margin-top: 18px; }
+  .zijpaneel .rij { display: grid; grid-template-columns: 58px 1fr; gap: 10px; align-items: center; margin: 0 0 6px; }
+  .zijpaneel .rij + h2 { margin-top: 18px; }
+  .zijpaneel kbd { display: inline-block; text-align: center; padding: 3px 6px; border-radius: 6px; background: #2e2535; border: 1px solid var(--messing2); box-shadow: 0 2px 0 #0b0810; font: 700 13px var(--kop); color: var(--inkt); }
+  .zijpaneel ul { margin: 0; padding-left: 18px; }
+  .zijpaneel li { margin-bottom: 6px; }
+  .zijpaneel b { color: var(--inkt); }
+}
+
 
 #studio { --gw: min(96vw, 66vh); position: fixed; inset: 0; z-index: 1000; display: grid; place-items: center; background: rgb(8,11,53) linear-gradient(to bottom, rgb(4,5,31) 0%, rgb(6,7,44) calc(50% + var(--gw) * -0.5195), rgb(7,8,46) calc(50% + var(--gw) * -0.4330), rgb(7,9,49) calc(50% + var(--gw) * -0.3463), rgb(8,10,50) calc(50% + var(--gw) * -0.2598), rgb(8,11,52) calc(50% + var(--gw) * -0.1732), rgb(8,11,53) calc(50% + var(--gw) * -0.0866), rgb(8,11,53) calc(50% + var(--gw) * 0.0000), rgb(8,11,52) calc(50% + var(--gw) * 0.0866), rgb(8,10,50) calc(50% + var(--gw) * 0.1732), rgb(7,9,49) calc(50% + var(--gw) * 0.2598), rgb(7,8,47) calc(50% + var(--gw) * 0.3463), rgb(6,7,44) calc(50% + var(--gw) * 0.4330), rgb(5,6,42) calc(50% + var(--gw) * 0.5195), rgb(4,5,31) 100%); transition: opacity .45s ease; }
 #studio.weg { opacity: 0; pointer-events: none; }
@@ -67,11 +82,12 @@ canvas, img { image-rendering: pixelated; image-rendering: crisp-edges; }
     <h1>KOGELKAST</h1>
     <p class="onder">KIES EEN TAFEL</p>
     <div id="tafels" class="tafels"></div>
-    <p class="uitleg">Pc: linker Shift en rechter Shift voor de flippers, pijl omlaag vasthouden om de bal weg te schieten, X stoot.<br>Telefoon: tik links of rechts op de tafel, LANCEER vasthouden.</p>
+    <p class="uitleg">Pc: Z en / voor de flippers, pijl omlaag vasthouden om de bal weg te schieten, X stoot.<br>Telefoon: tik links of rechts op de tafel, LANCEER vasthouden.</p>
     <p class="versie" id="versie"></p>
   </section>
 
-  <section id="scherm-tafel" class="scherm" hidden>
+  <section id="scherm-tafel" class="scherm tafelscherm" hidden>
+    <div class="kolom">
     <header id="hud" class="hud">
       <button id="terug" class="rond" aria-label="Terug naar de tafelkeuze">‹</button>
       <div class="vak"><small id="tafelNaam">SCORE</small><b id="score">0</b></div>
@@ -89,6 +105,8 @@ canvas, img { image-rendering: pixelated; image-rendering: crisp-edges; }
       <button id="knopLanceer" class="lanceerknop" aria-label="Veer: vasthouden en loslaten">LANCEER</button>
       <button id="knopRechts" class="flipknop" aria-label="Rechterflipper">▶</button>
     </div>
+    </div>
+    <aside id="zijpaneel" class="zijpaneel" aria-label="Besturing en regels"></aside>
   </section>
 </div>
 <script>
@@ -841,11 +859,23 @@ function nieuwSpel(tafelId) {
   UI.camY = TAFEL.H - UI.zichtH; UI.deeltjes = []; UI.flits = {}; UI.bericht = '';
   naarScherm('tafel');
   $('tafelNaam').textContent = tafelVan(UI.st).naam.toUpperCase();
+  renderZijpaneel();
   muziekStart();
   zegt('Bal 1 · trek aan de veer', 2500);
   renderHud();
 }
 function zegt(tekst, ms) { UI.bericht = tekst; UI.berichtTot = performance.now() + (ms || 1800); }
+
+function renderZijpaneel() {
+  const tafel = tafelVan(UI.st), P = TAFEL.punten, rij = (k, w) => '<div class="rij"><kbd>' + k + '</kbd><span>' + w + '</span></div>';
+  $('zijpaneel').innerHTML =
+    '<h2>Besturing</h2>' + rij('Z', 'linkerflipper') + rij('/', 'rechterflipper') + rij('&darr;', 'bal wegschieten: vasthouden, loslaten') + rij('X', 'stoot (vier keer in twee tellen is tilt)') + rij('Enter', 'nieuw spel') + rij('Esc', 'terug naar de tafelkeuze') +
+    '<h2>' + tafel.naam + '</h2><ul>' +
+    '<li>De lanen bovenin spellen <b>' + tafel.letters.join('-') + '</b>: vol is ' + getal(P.letters) + ' en de bonus een trap hoger (tot x5).</li>' +
+    '<li>Bumper ' + P.bumper + '. Drie valdoelen neer: bank ' + getal(P.bank) + ' en ' + TAFEL.opwindDuur + ' tellen bumpers x10.</li>' +
+    '<li>Beide staande doelen: ' + getal(P.staandPaar) + (tafel.delen.gaten.length ? ' en de accu vol: het vanggat is dan ' + getal(P.gatVol) + ' in plaats van ' + getal(P.gat) + '.' : '.') + '</li>' +
+    '<li>Extra bal bij ' + getal(TAFEL.extraBalBij) + '. Bonus per bal: letters en doelen keer de multiplier.</li></ul>';
+}
 
 
 function maatDoek() {
@@ -1002,14 +1032,14 @@ function renderHud() {
 
 
 
+
 function toetsen() {
   const zet = (k, v) => { UI.toetsen[k] = v; };
   document.addEventListener('keydown', (e) => {
     if (e.repeat) return;
     const k = e.key;
     if (UI.scherm === 'titel') { if (k === 'Enter' || k === ' ') { e.preventDefault(); audioStart(); nieuwSpel(); } return; }
-    if (k === 'Shift') { e.preventDefault(); zet(e.location === 2 ? 'rechts' : 'links', true); }
-    else if (k === 'ArrowLeft' || k === 'z' || k === 'Z' || k === 'a' || k === 'A') { e.preventDefault(); zet('links', true); }
+    if (k === 'ArrowLeft' || k === 'z' || k === 'Z' || k === 'a' || k === 'A') { e.preventDefault(); zet('links', true); }
     else if (k === 'ArrowRight' || k === '/' || k === 'l' || k === 'L') { e.preventDefault(); zet('rechts', true); }
     else if (k === ' ' || k === 'ArrowDown') { e.preventDefault(); if (UI.st && UI.st.fase === 'klaar') { audioStart(); nieuwSpel(); } else zet('trek', true); }
     else if (k === 'ArrowUp' || k === 'x' || k === 'X') { e.preventDefault(); UI.stoot = Math.random() < 0.5 ? -1 : 1; }
@@ -1021,8 +1051,7 @@ function toetsen() {
   });
   document.addEventListener('keyup', (e) => {
     const k = e.key;
-    if (k === 'Shift') zet(e.location === 2 ? 'rechts' : 'links', false);
-    else if (k === 'ArrowLeft' || k === 'z' || k === 'Z' || k === 'a' || k === 'A') zet('links', false);
+    if (k === 'ArrowLeft' || k === 'z' || k === 'Z' || k === 'a' || k === 'A') zet('links', false);
     else if (k === 'ArrowRight' || k === '/' || k === 'l' || k === 'L') zet('rechts', false);
     else if (k === ' ' || k === 'ArrowDown') zet('trek', false);
   });
