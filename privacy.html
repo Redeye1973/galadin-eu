@@ -1,5 +1,5 @@
 <!doctype html>
-<html lang="nl">
+<html lang="en">
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
@@ -9,43 +9,134 @@
   h1 { font-size: 1.6rem; }
   h2 { font-size: 1.1rem; margin-top: 1.5rem; }
   a { color: #1a5fb4; }
+  .taal { text-align: right; font-size: .9rem; }
+  .taal select { font: inherit; padding: .2rem .4rem; }
+  [data-l][hidden] { display: none; }
+  @media (prefers-color-scheme: dark) { body { background: #14161a; color: #e6e6e6; } a { color: #7fb4ff; } .taal select { background: #1e2127; color: #e6e6e6; } }
 </style>
 </head>
 <body>
+<p class="taal"><label for="taalkeuze">Language</label> <select id="taalkeuze"></select></p>
+
+<div data-l="en">
+<h1>Privacy</h1>
+<p><strong>In short: this website and the games collect nothing.</strong></p>
+<h2>The website</h2>
+<p>galadin.eu is a website of Galadin, a small independent studio from the Netherlands. It has no cookies, no statistics and no ads, and you do not need an account. The website is hosted by GitHub Pages. Like any web server, GitHub may process technical data such as your IP address when a page is requested; we have no access to that. See <a href="https://docs.github.com/site-policy/privacy-policies/github-general-privacy-statement">GitHub's privacy statement</a>.</p>
+<h2>The games</h2>
+<p>The games run entirely in your browser and send nothing to us or to anyone else. Your progress and settings are stored in your own browser's storage, on your own device. Clear this website's data in your browser and the progress is gone. Your language choice is stored the same way (key galadin_taal); it goes nowhere and is not used to track you. Some games let you load a mod from a file or from pasted text on your own device; it stays on your device and nothing is uploaded.</p>
+<h2>Age</h2>
+<p>The games on this website are for an older audience. 12+, 16+ and 18+ are our own age labels, not a PEGI or USK rating; check the label on each game. Some games contain violence, or simulate gambling with play money (nothing real can be won or bought). Parents and carers decide what is suitable.</p>
+<h2>Viewing or deleting data</h2>
+<p>We hold no data about you. What is on your device, you remove through your browser settings.</p>
+<h2>Contact</h2>
+<p>Questions? Mail <a href="mailto:gaidaxgames@gmail.com">gaidaxgames@gmail.com</a>.</p>
+<p><small>Last updated: 17 October 2026</small></p>
+</div>
+
+<div data-l="nl" hidden>
 <h1>Privacy</h1>
 <p><strong>Kort: deze website en de spellen verzamelen niets.</strong></p>
-
 <h2>De website</h2>
-<p>galadin.nl is een website van Galadin, een kleine spelstudio uit Nederland. De website heeft geen cookies, geen
-statistieken en geen advertenties. Je hoeft je nergens aan te melden.</p>
-<p>De website wordt gehost door GitHub Pages. Zoals elke webserver kan GitHub bij het opvragen van een pagina
-technische gegevens verwerken, zoals je IP-adres. Daar hebben wij geen toegang toe. Zie het
-<a href="https://docs.github.com/site-policy/privacy-policies/github-general-privacy-statement">privacybeleid van GitHub</a>.</p>
-
+<p>galadin.eu is een website van Galadin, een kleine, onafhankelijke spelstudio uit Nederland. De website heeft geen cookies, geen statistieken en geen advertenties, en je hoeft je nergens aan te melden. De website wordt gehost door GitHub Pages. Zoals elke webserver kan GitHub bij het opvragen van een pagina technische gegevens verwerken, zoals je IP-adres; daar hebben wij geen toegang toe. Zie het <a href="https://docs.github.com/site-policy/privacy-policies/github-general-privacy-statement">privacybeleid van GitHub</a>.</p>
 <h2>De spellen</h2>
-<p>De spellen draaien helemaal in je browser. Ze sturen niets naar ons of naar anderen. Je voortgang (je dieren, munten
-en instellingen) wordt bewaard in de opslag van je eigen browser, op je eigen toestel. Wis je de gegevens van deze
-website in je browser, dan is die voortgang weg.</p>
-<p>Wil je je spel meenemen naar een ander toestel, dan maak je in het oudermenu een code ("Spel meenemen") en plak je die
-op het andere toestel ("Spel ophalen"). Die code bevat alleen de spelgegevens en instellingen, geen naam of e-mailadres.
-Je verstuurt hem zelf; hij gaat niet langs ons.</p>
-<p>Op een iPhone of iPad bewaart Safari de voortgang alleen blijvend als je het spel op het beginscherm hebt gezet.</p>
-
-<h2>Kinderen</h2>
-<p>De spellen zijn geschikt voor kinderen. Omdat er niets verzameld wordt, wordt er ook niets van kinderen verzameld.</p>
-
-<h2>Testers voor Google Play</h2>
-<p>Wil je een spel testen voor Google Play, dan stuur je ons een e-mail. Je e-mailadres gebruiken we alleen om je toe
-te voegen aan de testlijst van Google Play voor dat spel. We geven het aan niemand anders en we halen het van de lijst
-zodra je dat vraagt of zodra de test voorbij is. Google verwerkt je adres daarbij volgens het
-<a href="https://policies.google.com/privacy">privacybeleid van Google</a>.</p>
-
+<p>De spellen draaien helemaal in je browser en sturen niets naar ons of naar anderen. Je voortgang en instellingen worden bewaard in de opslag van je eigen browser, op je eigen toestel. Wis je de gegevens van deze website in je browser, dan is de voortgang weg. Je taalkeuze wordt op dezelfde manier bewaard (sleutel galadin_taal); ze gaat nergens heen en wordt niet gebruikt om je te volgen. In sommige spellen kun je een mod laden uit een bestand of uit geplakte tekst op je eigen toestel; die blijft op je toestel en er wordt niets geüpload.</p>
+<h2>Leeftijd</h2>
+<p>De spellen op deze website zijn voor een ouder publiek. 12+, 16+ en 18+ zijn onze eigen leeftijdsaanduidingen, geen PEGI- of USK-keurmerk; kijk bij elk spel naar het label. Sommige spellen bevatten geweld, of bootsen gokken na met speelgeld (er is niets echts te winnen of te kopen). Ouders en verzorgers bepalen wat geschikt is.</p>
 <h2>Gegevens inzien of verwijderen</h2>
-<p>Behalve het e-mailadres van testers hebben wij geen gegevens van je. Wat op je eigen toestel staat, verwijder je via de instellingen van je browser. Wil je van de testlijst af, mail dan.</p>
-
+<p>Wij hebben geen gegevens van je. Wat op je eigen toestel staat, verwijder je via de instellingen van je browser.</p>
 <h2>Contact</h2>
 <p>Vragen? Mail naar <a href="mailto:gaidaxgames@gmail.com">gaidaxgames@gmail.com</a>.</p>
+<p><small>Laatst bijgewerkt: 17 oktober 2026</small></p>
+</div>
 
-<p><small>Laatst bijgewerkt: [datum]</small></p>
+<div data-l="de" hidden>
+<h1>Datenschutz</h1>
+<p><strong>Kurz: Diese Website und die Spiele sammeln nichts.</strong></p>
+<h2>Die Website</h2>
+<p>galadin.eu ist eine Website von Galadin, einem kleinen unabhängigen Studio aus den Niederlanden. Die Website hat keine Cookies, keine Statistiken und keine Werbung, und du brauchst kein Konto. Die Website wird von GitHub Pages gehostet. Wie jeder Webserver kann GitHub beim Abruf einer Seite technische Daten wie deine IP-Adresse verarbeiten; darauf haben wir keinen Zugriff. Siehe die <a href="https://docs.github.com/site-policy/privacy-policies/github-general-privacy-statement">Datenschutzerklärung von GitHub</a>.</p>
+<h2>Die Spiele</h2>
+<p>Die Spiele laufen vollständig in deinem Browser und senden nichts an uns oder an andere. Dein Fortschritt und deine Einstellungen werden im Speicher deines eigenen Browsers auf deinem eigenen Gerät gespeichert. Löschst du die Daten dieser Website in deinem Browser, ist der Fortschritt weg. Deine Sprachwahl wird auf dieselbe Weise gespeichert (Schlüssel galadin_taal); sie wird nirgendwohin gesendet und nicht zum Verfolgen verwendet. In manchen Spielen kannst du eine Mod aus einer Datei oder aus eingefügtem Text auf deinem eigenen Gerät laden; sie bleibt auf deinem Gerät, und es wird nichts hochgeladen.</p>
+<h2>Alter</h2>
+<p>Die Spiele auf dieser Website sind für ein älteres Publikum. 12+, 16+ und 18+ sind unsere eigenen Altersangaben, keine PEGI- oder USK-Kennzeichnung; achte bei jedem Spiel auf das Label. Manche Spiele enthalten Gewalt oder ahmen Glücksspiel mit Spielgeld nach (es gibt nichts Echtes zu gewinnen oder zu kaufen). Eltern und Betreuer entscheiden, was geeignet ist.</p>
+<h2>Daten einsehen oder löschen</h2>
+<p>Wir haben keine Daten über dich. Was auf deinem Gerät gespeichert ist, entfernst du über die Einstellungen deines Browsers.</p>
+<h2>Kontakt</h2>
+<p>Fragen? Schreib an <a href="mailto:gaidaxgames@gmail.com">gaidaxgames@gmail.com</a>.</p>
+<p><small>Zuletzt aktualisiert: 17. Oktober 2026</small></p>
+</div>
+
+<div data-l="fr" hidden>
+<h1>Confidentialité</h1>
+<p><strong>En bref : ce site web et les jeux ne collectent rien.</strong></p>
+<h2>Le site web</h2>
+<p>galadin.eu est un site web de Galadin, un petit studio indépendant des Pays-Bas. Le site n'a ni cookies, ni statistiques, ni publicités, et tu n'as pas besoin de compte. Le site est hébergé par GitHub Pages. Comme tout serveur web, GitHub peut traiter des données techniques, comme ton adresse IP, lorsqu'une page est demandée ; nous n'y avons pas accès. Voir la <a href="https://docs.github.com/site-policy/privacy-policies/github-general-privacy-statement">déclaration de confidentialité de GitHub</a>.</p>
+<h2>Les jeux</h2>
+<p>Les jeux fonctionnent entièrement dans ton navigateur et n'envoient rien ni à nous ni à d'autres. Ta progression et tes réglages sont conservés dans le stockage de ton propre navigateur, sur ton propre appareil. Si tu effaces les données de ce site dans ton navigateur, la progression disparaît. Ton choix de langue est conservé de la même façon (clé galadin_taal) ; il n'est envoyé nulle part et n'est pas utilisé pour te suivre. Dans certains jeux, tu peux charger un mod depuis un fichier ou un texte collé sur ton propre appareil ; il reste sur ton appareil et rien n'est envoyé.</p>
+<h2>Âge</h2>
+<p>Les jeux de ce site s'adressent à un public plus âgé. 12+, 16+ et 18+ sont nos propres indications d'âge, pas une classification PEGI ou USK ; regarde l'étiquette de chaque jeu. Certains jeux contiennent de la violence ou imitent des jeux d'argent avec de l'argent fictif (rien de réel ne peut être gagné ni acheté). Les parents et les accompagnants décident de ce qui convient.</p>
+<h2>Consulter ou supprimer des données</h2>
+<p>Nous n'avons aucune donnée sur toi. Ce qui se trouve sur ton appareil, tu le supprimes dans les réglages de ton navigateur.</p>
+<h2>Contact</h2>
+<p>Des questions ? Écris à <a href="mailto:gaidaxgames@gmail.com">gaidaxgames@gmail.com</a>.</p>
+<p><small>Dernière mise à jour : 17 octobre 2026</small></p>
+</div>
+
+<div data-l="es" hidden>
+<h1>Privacidad</h1>
+<p><strong>En resumen: este sitio web y los juegos no recopilan nada.</strong></p>
+<h2>El sitio web</h2>
+<p>galadin.eu es un sitio web de Galadin, un pequeño estudio independiente de los Países Bajos. El sitio no tiene cookies, ni estadísticas, ni anuncios, y no necesitas una cuenta. El sitio está alojado en GitHub Pages. Como cualquier servidor web, GitHub puede procesar datos técnicos, como tu dirección IP, cuando se solicita una página; nosotros no tenemos acceso a eso. Consulta la <a href="https://docs.github.com/site-policy/privacy-policies/github-general-privacy-statement">declaración de privacidad de GitHub</a>.</p>
+<h2>Los juegos</h2>
+<p>Los juegos funcionan por completo en tu navegador y no envían nada ni a nosotros ni a otros. Tu progreso y tus ajustes se guardan en el almacenamiento de tu propio navegador, en tu propio dispositivo. Si borras los datos de este sitio en tu navegador, el progreso se pierde. Tu elección de idioma se guarda de la misma manera (clave galadin_taal); no se envía a ninguna parte ni se usa para seguirte. En algunos juegos puedes cargar un mod desde un archivo o desde texto pegado en tu propio dispositivo; se queda en tu dispositivo y no se sube nada.</p>
+<h2>Edad</h2>
+<p>Los juegos de este sitio son para un público mayor. 12+, 16+ y 18+ son nuestras propias indicaciones de edad, no una clasificación PEGI ni USK; mira la etiqueta de cada juego. Algunos juegos contienen violencia o imitan juegos de azar con dinero de juego (no se puede ganar ni comprar nada real). Los padres y cuidadores deciden lo que es adecuado.</p>
+<h2>Consultar o eliminar datos</h2>
+<p>No tenemos ningún dato sobre ti. Lo que hay en tu dispositivo lo eliminas desde los ajustes de tu navegador.</p>
+<h2>Contacto</h2>
+<p>¿Preguntas? Escribe a <a href="mailto:gaidaxgames@gmail.com">gaidaxgames@gmail.com</a>.</p>
+<p><small>Última actualización: 17 de octubre de 2026</small></p>
+</div>
+
+<div data-l="it" hidden>
+<h1>Privacy</h1>
+<p><strong>In breve: questo sito web e i giochi non raccolgono nulla.</strong></p>
+<h2>Il sito web</h2>
+<p>galadin.eu è un sito web di Galadin, un piccolo studio indipendente dei Paesi Bassi. Il sito non ha cookie, statistiche né pubblicità, e non serve un account. Il sito è ospitato da GitHub Pages. Come ogni server web, GitHub può trattare dati tecnici, come il tuo indirizzo IP, quando viene richiesta una pagina; noi non vi abbiamo accesso. Vedi l'<a href="https://docs.github.com/site-policy/privacy-policies/github-general-privacy-statement">informativa sulla privacy di GitHub</a>.</p>
+<h2>I giochi</h2>
+<p>I giochi funzionano interamente nel tuo browser e non inviano nulla né a noi né ad altri. I tuoi progressi e le tue impostazioni sono salvati nella memoria del tuo browser, sul tuo dispositivo. Se cancelli i dati di questo sito nel browser, i progressi vanno persi. La tua scelta della lingua viene salvata allo stesso modo (chiave galadin_taal); non viene inviata da nessuna parte e non serve a tracciarti. In alcuni giochi puoi caricare un mod da un file o da un testo incollato sul tuo dispositivo; resta sul tuo dispositivo e non viene caricato nulla.</p>
+<h2>Età</h2>
+<p>I giochi di questo sito sono per un pubblico più grande. 12+, 16+ e 18+ sono le nostre indicazioni di età, non una classificazione PEGI o USK; guarda l'etichetta di ogni gioco. Alcuni giochi contengono violenza o imitano il gioco d'azzardo con denaro finto (non si può vincere né comprare nulla di reale). Genitori e tutori decidono cosa è adatto.</p>
+<h2>Consultare o eliminare i dati</h2>
+<p>Non abbiamo alcun dato su di te. Ciò che si trova sul tuo dispositivo lo elimini dalle impostazioni del browser.</p>
+<h2>Contatto</h2>
+<p>Domande? Scrivi a <a href="mailto:gaidaxgames@gmail.com">gaidaxgames@gmail.com</a>.</p>
+<p><small>Ultimo aggiornamento: 17 ottobre 2026</small></p>
+</div>
+
+<p><a href="./">Galadin</a></p>
+<script>
+(function () {
+  'use strict';
+  var LANGS = ['nl', 'en', 'de', 'fr', 'es', 'it'], KEY = 'galadin_taal';
+  var NAMES = { nl: 'Nederlands', en: 'English', de: 'Deutsch', fr: 'Français', es: 'Español', it: 'Italiano' };
+  var LABEL = { nl: 'Taal', en: 'Language', de: 'Sprache', fr: 'Langue', es: 'Idioma', it: 'Lingua' };
+  function valid(c) { return LANGS.indexOf(c) > -1; }
+  function fromUrl() { try { var m = /[?&]taal=([a-z]{2})(&|$)/.exec(location.search); return m && valid(m[1]) ? m[1] : null; } catch (e) { return null; } }
+  function fromStore() { try { var v = localStorage.getItem(KEY); return valid(v) ? v : null; } catch (e) { return null; } }
+  function fromBrowser() { var l = navigator.languages || [navigator.language || '']; for (var i = 0; i < l.length; i++) { var c = String(l[i]).slice(0, 2).toLowerCase(); if (valid(c)) return c; } return null; }
+  var cur = fromUrl() || fromStore() || fromBrowser() || 'en';
+  var sel = document.getElementById('taalkeuze');
+  sel.innerHTML = LANGS.map(function (c) { return '<option value="' + c + '">' + NAMES[c] + '</option>'; }).join('');
+  function apply() {
+    document.documentElement.lang = cur; sel.value = cur;
+    document.querySelector('label[for=taalkeuze]').textContent = LABEL[cur];
+    var bl = document.querySelectorAll('[data-l]');
+    for (var i = 0; i < bl.length; i++) bl[i].hidden = bl[i].getAttribute('data-l') !== cur;
+  }
+  sel.addEventListener('change', function () { cur = sel.value; try { localStorage.setItem(KEY, cur); } catch (e) { } apply(); });
+  apply();
+})();
+</script>
 </body>
 </html>
