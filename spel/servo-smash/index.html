@@ -134,6 +134,12 @@ body.pad .raakknoppen, body.tweemens .raakknoppen { display: none !important; }
 .pauzevel b { font: 900 30px var(--kop); color: var(--geel); letter-spacing: .1em; }
 
 
+.draaimelding { display: none; position: fixed; inset: 0; z-index: 30; place-items: center; background: rgba(8,10,14,.94); text-align: center; padding: 24px; }
+.draaimelding b { display: block; font: 900 64px/1 var(--kop); color: var(--geel); margin-bottom: 12px; }
+.draaimelding span { font: 700 17px var(--tekst); color: var(--inkt); }
+@media (orientation: portrait) and (pointer: coarse) { body.vecht .draaimelding { display: grid; } }
+
+
 #studio { --gw: min(96vw, 66vh); position: fixed; inset: 0; z-index: 1000; display: grid; place-items: center; background: rgb(8,11,53) linear-gradient(to bottom, rgb(4,5,31) 0%, rgb(6,7,44) calc(50% + var(--gw) * -0.5195), rgb(7,8,46) calc(50% + var(--gw) * -0.4330), rgb(7,9,49) calc(50% + var(--gw) * -0.3463), rgb(8,10,50) calc(50% + var(--gw) * -0.2598), rgb(8,11,52) calc(50% + var(--gw) * -0.1732), rgb(8,11,53) calc(50% + var(--gw) * -0.0866), rgb(8,11,53) calc(50% + var(--gw) * 0.0000), rgb(8,11,52) calc(50% + var(--gw) * 0.0866), rgb(8,10,50) calc(50% + var(--gw) * 0.1732), rgb(7,9,49) calc(50% + var(--gw) * 0.2598), rgb(7,8,47) calc(50% + var(--gw) * 0.3463), rgb(6,7,44) calc(50% + var(--gw) * 0.4330), rgb(5,6,42) calc(50% + var(--gw) * 0.5195), rgb(4,5,31) 100%); transition: opacity .45s ease; }
 #studio.weg { opacity: 0; pointer-events: none; }
 #studio img { display: block; width: var(--gw); height: auto; animation: studioIn .5s ease both; }
@@ -189,6 +195,7 @@ body.pad .raakknoppen, body.tweemens .raakknoppen { display: none !important; }
         <div class="links"><button data-houd="blok" class="blokknop" aria-label="Blokken">BLOK</button><button data-houd="neer" class="hurkknop" aria-label="Hurken">▼</button><button data-houd="links" aria-label="Naar links">◀</button><button data-houd="rechts" aria-label="Naar rechts">▶</button></div>
         <div class="rechts"><button data-druk="speciaal" class="spec" aria-label="Speciale zet">SPEC</button><button data-druk="stoot" aria-label="Stoot">STOOT</button><button data-druk="trap" aria-label="Trap">TRAP</button><button data-druk="duw" aria-label="Duw">DUW</button></div>
       </div>
+      <div class="draaimelding"><div><b>⟳</b><span>Draai je telefoon dwars: het gevecht past liggend.</span></div></div>
       <div id="pauzeVel" class="pauzevel" hidden>
         <div><b>PAUZE</b><button class="hoofdknop" id="knopHervat">VERDER</button><button class="hoofdknop tweede" id="knopOpgeven">OPGEVEN</button></div>
       </div>
@@ -1375,6 +1382,8 @@ function aiInvoer(g, v, o) {
   const ligt = obs.actie === 'val';
   const keuzes = [['stoot', false, 30], ['stoot', true, 18], ['trap', false, ligt ? 40 : 20], ['trap', true, v.balans > 60 ? 10 : 0], ['duw', false, blokt ? 30 : 6], ['duw', true, dichtbij ? (blokt ? 30 : 8) : 0], ['speciaal', false, v.vermogen > v.s.vermogen * 0.6 ? 10 : 0],
     ['stoot', false, 8, true], ['trap', false, blokt ? 14 : 6, true], ['duw', false, dichtbij ? (blokt ? 20 : 6) : 0, false, true]];
+
+  if (A.demoMods) { keuzes.push(['stoot', false, 40, true], ['trap', true, 40]); }
   let som = keuzes.reduce((s, k) => s + k[2], 0), r = rnd(g) * som;
   for (const [k, vooruit, w, neer, achter] of keuzes) { r -= w; if (r <= 0) return druk(k, vooruit, neer, achter); }
   return druk('stoot', false);
@@ -1483,7 +1492,7 @@ const SPONSORS = [
   { id: 'gouden_pan', naam: 'Frituur De Gouden Pan', klasse: 'licht', per: 600, bonus: 900, doel: 'winst', zegt: 'Knapperig van buiten, hard van binnen.' },
   { id: 'snelpost', naam: 'Snelpost Koeriers', klasse: 'licht', per: 800, bonus: 1500, doel: 'snel', zegt: 'Wij zijn ook altijd eerder dan gedacht.' },
   { id: 'zonnedak', naam: 'Zonnedak Installaties', klasse: 'midden', per: 1600, bonus: 2500, doel: 'zonderVal', zegt: 'Wat wij ophangen, blijft hangen.' },
-  { id: 'windkracht', naam: 'Energiecoöperatie Windhoek', klasse: 'midden', per: 2000, bonus: 3500, doel: 'zuiver', zegt: 'Elke klap is groene stroom.' },
+  { id: 'windhoek', naam: 'Energiecoöperatie Windhoek', klasse: 'midden', per: 2000, bonus: 3500, doel: 'zuiver', zegt: 'Elke klap is groene stroom.' },
   { id: 'spijker', naam: 'Bouwmarkt De Spijker', klasse: 'zwaar', per: 3500, bonus: 6000, doel: 'tweeNul', zegt: 'Op de kop. In één keer.' },
   { id: 'koelcel', naam: 'Koelcel Diepvriesdiensten', klasse: 'zwaar', per: 4500, bonus: 8000, doel: 'zonderVal', zegt: 'Wij houden het koel. Jij houdt hem overeind.' },
 ];
@@ -2188,8 +2197,8 @@ function effectGebeurd(e, g, nu) {
     if (e.tegen) D.push({ x: e.x, y: e.y - 44, t0: nu, duur: 700, tekst: 'TEGENSTOOT', kleur: '#ff7a3b', klein: true });
     if (e.combo >= 2) D.push({ x: e.x + (e.kant === 0 ? -40 : 40), y: e.y - 60, t0: nu, duur: 900, tekst: e.combo + ' TREFFERS', kleur: '#ffffff' });
     if (e.vloer) D.push({ x: e.x, y: e.y - 24, t0: nu, duur: 600, tekst: 'VLOERKLAP', kleur: '#ffd34d', klein: true });
-    if (e.zet === 'spijkerOpstoot' && !e.geblokt) D.push({ x: e.x, y: e.y - 40, t0: nu, duur: 800, tekst: 'SPIJKERS!', kleur: '#d9dee6' });
-    if (e.zet === 'raketTrap' && !e.geblokt) { D.push({ x: e.x, y: e.y - 40, t0: nu, duur: 800, tekst: 'RAKETTRAP', kleur: '#ff9f43' }); Effect.schud = Math.max(Effect.schud, 10); }
+    if (e.zet === 'spijkerOpstoot' && !e.geblokt) D.push({ x: e.x, y: e.y - 80, t0: nu, duur: 800, tekst: 'SPIJKERS!', kleur: '#d9dee6' });
+    if (e.zet === 'raketTrap' && !e.geblokt) { D.push({ x: e.x, y: e.y - 80, t0: nu, duur: 800, tekst: 'RAKETTRAP', kleur: '#ff9f43' }); Effect.schud = Math.max(Effect.schud, 10); }
     if (e.worp) { D.push({ x: e.x, y: e.y - 40, t0: nu, duur: 900, tekst: 'SCHOUDERWORP', kleur: '#ff9f43' }); Effect.schud = 11; }
     else if (e.geblokt) D.push({ x: e.x, y: e.y - 20, t0: nu, duur: 500, tekst: 'BLOK', kleur: '#9fd3ff', klein: true });
     Effect.schud = Math.max(Effect.schud, e.geblokt ? 2 : Math.min(9, e.dmg / 4));
@@ -2213,8 +2222,8 @@ function tekenEffecten(c, nu, dt) {
     if (u < 0) return true;
     c.globalAlpha = 1 - u;
     if (p.tekst) {
-      c.font = '900 ' + (p.groot ? 64 : p.klein ? 13 : 20) + 'px "Roboto Condensed", Impact, sans-serif'; c.textAlign = 'center'; c.textBaseline = 'middle';
-      c.lineWidth = p.groot ? 6 : 3; c.strokeStyle = '#120a08'; c.strokeText(p.tekst, p.x, p.y - u * 20); c.fillStyle = p.kleur; c.fillText(p.tekst, p.x, p.y - u * 20);
+      c.font = '900 ' + (p.groot ? 60 : p.klein ? 11 : 16) + 'px ' + (typeof LETTER !== 'undefined' ? LETTER : 'sans-serif'); c.textAlign = 'center'; c.textBaseline = 'middle';
+      c.lineWidth = p.groot ? 6 : 3; c.lineJoin = 'round'; c.strokeStyle = '#120a08'; c.strokeText(p.tekst, p.x, p.y - u * 20); c.fillStyle = p.kleur; c.fillText(p.tekst, p.x, p.y - u * 20);
     } else {
       p.x += (p.vx || 0) * dt; p.y += (p.vy || 0) * dt; if (!p.rook) p.vy += 600 * dt;
       c.fillStyle = p.kleur; c.beginPath(); c.arc(p.x, p.y, p.grootte * (p.rook ? 1 + u * 2 : 1), 0, 6.29); c.fill();
@@ -2456,7 +2465,14 @@ function maatDoek() {
   if (h > window.innerHeight) { h = window.innerHeight; b = h * ARENA.W / ARENA.H; }
   cv.style.width = Math.floor(b) + 'px'; cv.style.height = Math.floor(h) + 'px';
   $('arenaVak').style.width = Math.floor(b) + 'px'; $('arenaVak').style.height = Math.floor(h) + 'px';
+
+
+  const dpr = Math.min(window.devicePixelRatio || 1, 3);
+  cv.width = Math.max(ARENA.W, Math.round(b * dpr)); cv.height = Math.round(cv.width * ARENA.H / ARENA.W);
+  UI.schaal = cv.width / ARENA.W;
 }
+
+const LETTER = '"Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif';
 function leegInvoer() { return { n: { stoot: 0, trap: 0, duw: 0, speciaal: 0 }, ruw: {}, houd: {} }; }
 
 function startGevecht(deelnemers, modus, tegen) {
@@ -2468,6 +2484,7 @@ function startGevecht(deelnemers, modus, tegen) {
 
   document.body.classList.toggle('tweemens', UI.g.v.every((v) => v.mens));
   naarScherm('gevecht');
+  if (window.matchMedia('(orientation: portrait) and (pointer: coarse)').matches) zetPauze(true);
   geluid('bel');
 }
 function invoerVoor(k) {
@@ -2490,6 +2507,7 @@ function gevechtTik(nu) {
       if (g.fase === 'klaar') { setTimeout(gevechtKlaar, 900); break; }
     }
   }
+  UI.ctx.setTransform(UI.schaal || 1, 0, 0, UI.schaal || 1, 0, 0);
   tekenGevecht(UI.ctx, g, nu, UI.pauze ? 0 : dt, UI.arenaMod ? UI.arenaMod.arena : null);
   tekenHud(UI.ctx, g, nu);
 }
@@ -2498,7 +2516,7 @@ function tekenHud(c, g, nu) {
   g.v.forEach((v, i) => {
     const links = i === 0, x0 = links ? 12 : W - 12 - 250, bw = 250;
     c.fillStyle = 'rgba(8,10,14,.72)'; c.fillRect(x0 - 4, 6, bw + 8, 60);
-    c.font = '900 13px "Roboto Condensed", Impact, sans-serif'; c.textBaseline = 'top'; c.textAlign = links ? 'left' : 'right';
+    c.font = '800 12px ' + LETTER; c.textBaseline = 'top'; c.textAlign = links ? 'left' : 'right';
     c.fillStyle = '#ffffff'; c.fillText(v.naam.toUpperCase() + '  ' + '●'.repeat(v.rondes) + '○'.repeat(GEVECHT.rondesNodig - v.rondes), links ? x0 : x0 + bw, 9);
     const sb = (y, h, w, kleur) => { c.fillStyle = 'rgba(255,255,255,.12)'; c.fillRect(x0, y, bw, h); c.fillStyle = kleur; const ww = bw * clamp(w, 0, 1); c.fillRect(links ? x0 : x0 + bw - ww, y, ww, h); };
     const st = v.structuur / v.s.structuur;
@@ -2506,7 +2524,7 @@ function tekenHud(c, g, nu) {
     if (v.wond > 0) { c.fillStyle = 'rgba(127,247,227,.45)'; const ww = bw * clamp(v.wond / v.s.structuur, 0, 1 - st), xx = links ? x0 + bw * st : x0 + bw - bw * st - ww; c.fillRect(xx, 26, ww, 11); }
     sb(40, 6, v.vermogen / v.s.vermogen, v.vermogen < v.s.vermogen * 0.2 ? '#ff9f43' : '#5fb6ff');
     sb(49, 4, v.balans / 100, '#e8e8e8');
-    c.font = '700 10px "Roboto Condensed", sans-serif'; c.fillStyle = '#c8ccd4';
+    c.font = '600 9.5px ' + LETTER; c.fillStyle = '#c8ccd4';
     const info = 'accu ' + Math.round(v.lading) + '%' + (v.s.brein >= 5 ? ' · AI vecht' : ' · ' + Math.round(v.vertraging * 1000 / 60) + ' ms') + (v.pg.paniek > 0 ? ' · PANIEK' : v.pg.moe > 50 ? ' · moe' : '');
     c.fillText(info, links ? x0 : x0 + bw, 55);
   });
@@ -2518,12 +2536,12 @@ function tekenHud(c, g, nu) {
       mens ? 'Je piloot ' + mens.piloot.naam + ' zit ' + Math.round(mens.vertraging * 1000 / 60) + ' ms achter jouw knop. Moe of in paniek wordt dat meer.' : ''];
     c.globalAlpha = clamp((60 * 8 - g.rondeFrames) / 60, 0, 1);
     c.fillStyle = 'rgba(8,10,14,.78)'; c.fillRect(ARENA.W / 2 - 280, 74, 560, 58);
-    c.font = '700 12px "Roboto Condensed", sans-serif'; c.textAlign = 'center'; c.textBaseline = 'middle'; c.fillStyle = '#ffffff';
+    c.font = '600 11.5px ' + LETTER; c.textAlign = 'center'; c.textBaseline = 'middle'; c.fillStyle = '#ffffff';
     regels.forEach((r, i) => c.fillText(r, ARENA.W / 2, 86 + i * 17));
     c.globalAlpha = 1;
   }
   c.textAlign = 'center'; c.textBaseline = 'middle';
-  const groot = (t, kleur) => { c.font = '900 46px "Roboto Condensed", Impact, sans-serif'; c.lineWidth = 6; c.strokeStyle = '#120a08'; c.strokeText(t, W / 2, 150); c.fillStyle = kleur; c.fillText(t, W / 2, 150); };
+  const groot = (t, kleur) => { c.font = '900 44px ' + LETTER; c.lineWidth = 6; c.lineJoin = 'round'; c.strokeStyle = '#120a08'; c.strokeText(t, W / 2, 150); c.fillStyle = kleur; c.fillText(t, W / 2, 150); };
   if (g.fase === 'intro') groot('RONDE ' + g.ronde, '#ffd34d');
   else if (g.fase === 'ko' || (g.fase === 'pauze' && nu - (Effect.ko || 0) < 2600)) groot('K.O.', '#ff4f2e');
   else if (g.fase === 'vecht' && g.rondeFrames < 50) groot('VECHT!', '#ff4f2e');
@@ -2589,7 +2607,7 @@ function vrijStart() {
     if (s.extra === 'spijker' || s.extra === 'beide') r.mods.armen = 'spijkervuist';
     if (s.extra === 'raket' || s.extra === 'beide') r.mods.benen = 'stuwraket';
     const w = VRIJ_PILOOT[s.piloot], p = pilootNieuw({ id: 'vrij', naam: 'Piloot', reflex: w, conditie: w, focus: w, kalmte: w });
-    return s.mens ? { robot: r, piloot: p, mens: true } : { robot: r, piloot: p, ai: { kunde: w, agressie: 0.6, blok: 0.4 + w / 250 } };
+    return s.mens ? { robot: r, piloot: p, mens: true } : { robot: r, piloot: p, ai: { kunde: w, agressie: 0.6, blok: 0.4 + w / 250, demoMods: !!UI.demoMods } };
   });
   startGevecht(d, 'vrij');
 }
@@ -2719,7 +2737,9 @@ function toetsen() {
   document.querySelectorAll('#raakKnoppen [data-druk]').forEach((b) => {
     b.addEventListener('pointerdown', (e) => { e.preventDefault(); audioStart(); UI.invoer[menskant(0)].n[b.dataset.druk]++; b.classList.add('in'); setTimeout(() => b.classList.remove('in'), 120); });
   });
-  window.addEventListener('resize', () => { if (UI.scherm === 'gevecht') maatDoek(); });
+
+  const rechtop = () => window.matchMedia('(orientation: portrait) and (pointer: coarse)').matches;
+  window.addEventListener('resize', () => { if (UI.scherm === 'gevecht') { maatDoek(); if (rechtop()) zetPauze(true); } });
 }
 
 function zetHoud(I) {
@@ -2798,7 +2818,15 @@ function laadTeam() {
   try { if (window.DierApp) tekst = DierApp.laad(); } catch (e) { tekst = ''; }
   if (!tekst) { try { tekst = localStorage.getItem(OPSLAG.team) || ''; } catch (e) { tekst = ''; } }
   if (!tekst) return null;
-  try { const T = JSON.parse(tekst); return T && T.v === 1 && T.piloot && T.robots && T.robots.length ? T : null; } catch (e) { return null; }
+  try {
+    const T = JSON.parse(tekst);
+    if (!(T && T.v === 1 && T.piloot && T.robots && T.robots.length)) return null;
+
+    for (const r of T.robots.concat(T.buit ? [T.buit] : [])) if (r.naam === 'Bastion Z3') r.naam = 'Burcht Z3';
+    if (T.sponsor && !SPONSOR_VAN[T.sponsor.id]) T.sponsor.id = 'windhoek';
+    if (T.aanbod && !SPONSOR_VAN[T.aanbod]) T.aanbod = 'windhoek';
+    return T;
+  } catch (e) { return null; }
 }
 function bewaarNu(wis) {
   if (UI.nietBewaren) return;
@@ -2839,6 +2867,9 @@ async function start() {
   naarScherm('hoofd');
   if (demo) UI.nietBewaren = true;
   if (demo === 'vrij') { UI.vrij = vrijNieuw(); vrijStart(); }
+
+
+  else if (demo === 'modsgevecht') { UI.vrij = [{ frame: 'bastion', piloot: 'top', mens: false, brein: 0, extra: 'beide' }, { frame: 'kraan', piloot: 'top', mens: false, brein: 0, extra: 'beide' }]; UI.demoMods = true; vrijStart(); }
   else if (demo === 'prototype') { UI.vrij = [{ frame: 'feniks', piloot: 'top', mens: false, brein: 0 }, { frame: 'monoliet', piloot: 'top', mens: false, brein: 0 }]; vrijStart(); }
   else if (demo === 'team') { UI.team = teamNieuw('sem', 'libel', 7); UI.team.geld = 400000; naarScherm('team'); }
   else if (demo === 'mods') naarScherm('mods');
