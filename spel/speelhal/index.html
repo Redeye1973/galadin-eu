@@ -1092,7 +1092,19 @@ function schietKlaar(S, st) {
 }
 
 
-const Schiet = { st: null, cv: null, ctx: null, deeltjes: [], plaatjes: {} };
+const Schiet = { st: null, cv: null, ctx: null, deeltjes: [], plaatjes: {}, mik: null, boven: false };
+
+
+
+const GUN = { greepX: 10, greepY: 24, loopX: 61, loopY: 9, hoogte: 8 };
+function gunDraai() {
+  const W = SCHIET.W, H = SCHIET.H, m = Schiet.mik || { x: W / 2, y: 60 }, px = W / 2, py = H - GUN.hoogte, ty = Math.min(m.y, H - 30);
+
+  const a0 = Math.atan2(ty - py, m.x - px), ly = (GUN.loopY - GUN.greepY) * (Math.cos(a0) < 0 ? -1 : 1);
+  return { px, py, hoek: Math.atan2(ty - (py + Math.cos(a0) * ly), m.x - (px - Math.sin(a0) * ly)) };
+}
+
+function gunLoop() { const d = gunDraai(), om = Math.cos(d.hoek) < 0 ? -1 : 1, lx = GUN.loopX - GUN.greepX, ly = (GUN.loopY - GUN.greepY) * om; return { x: d.px + Math.cos(d.hoek) * lx - Math.sin(d.hoek) * ly, y: d.py + Math.sin(d.hoek) * lx + Math.cos(d.hoek) * ly }; }
 function schietPlaatje(naam) {
   if (Schiet.plaatjes[naam] !== undefined) return Schiet.plaatjes[naam];
   const url = sprUrl('schiet/' + naam);
@@ -1151,9 +1163,14 @@ function tekenSchiet(nu, dt) {
     return true;
   });
 
-  const gun = schietPlaatje('pistool');
-  if (gun && gun.complete && gun.naturalWidth) { c.imageSmoothingEnabled = false; c.drawImage(gun, W / 2 - 32, H - 30, 64, 32); }
-  else { c.fillStyle = '#2a7fd4'; c.beginPath(); c.roundRect(W / 2 - 26, H - 26, 52, 20, 6); c.fill(); c.fillStyle = '#ff8a00'; c.fillRect(W / 2 - 8, H - 34, 16, 10); c.fillRect(W / 2 + 10, H - 22, 22, 8); }
+
+  if (Schiet.mik && Schiet.boven && !st.klaar) { const m = Schiet.mik; c.strokeStyle = 'rgba(255,255,255,.85)'; c.lineWidth = 1.5; c.beginPath(); c.arc(m.x, m.y, 7, 0, 6.29); c.moveTo(m.x - 11, m.y); c.lineTo(m.x - 4, m.y); c.moveTo(m.x + 4, m.y); c.lineTo(m.x + 11, m.y); c.moveTo(m.x, m.y - 11); c.lineTo(m.x, m.y - 4); c.moveTo(m.x, m.y + 4); c.lineTo(m.x, m.y + 11); c.stroke(); }
+
+  const gun = schietPlaatje('pistool'), d = gunDraai();
+  c.save(); c.translate(d.px, d.py); c.rotate(d.hoek); if (Math.cos(d.hoek) < 0) c.scale(1, -1);
+  if (gun && gun.complete && gun.naturalWidth) { c.imageSmoothingEnabled = false; c.drawImage(gun, -GUN.greepX, -GUN.greepY, 62, 32); }
+  else { c.fillStyle = '#2a7fd4'; c.beginPath(); c.roundRect(-14, -18, 46, 14, 5); c.fill(); c.fillStyle = '#ff8a00'; c.fillRect(30, -16, 12, 9); c.fillStyle = '#1e5aa0'; c.fillRect(-10, -6, 12, 14); }
+  c.restore();
   for (let i = 0; i < C.pijlen; i++) { c.fillStyle = i < st.pijlen ? '#ff8a00' : 'rgba(0,0,0,.35)'; c.fillRect(10 + i * 9, H - 14, 6, 10); }
   if (st.herlaad > 0 && st.pijlen === 0) { c.fillStyle = '#fff'; c.font = '700 10px sans-serif'; c.textAlign = 'left'; c.fillText('herladen…', 10, H - 18); }
 
@@ -1290,6 +1307,8 @@ function kastStijl() {
   if (u('kast/hendel_voet')) r.push('.hendel .voet-hendel{background:url("' + u('kast/hendel_voet') + '") center/26px 40px no-repeat;border:0;image-rendering:pixelated}');
   if (u('kast/lamp_uit') && u('kast/lamp_aan')) r.push('.lampjes i{background:url("' + u('kast/lamp_uit') + '") center/12px 12px no-repeat;border:0;image-rendering:pixelated}.lampjes i.aan{background-image:url("' + u('kast/lamp_aan') + '")}');
   for (const k of ['bandiet', 'grijpkast', 'schiettent', 'duwer']) if (u('hal/' + k)) r.push('.kastikoon.' + k + '{background:#15161a url("' + u('hal/' + k) + '") center bottom/60px 60px no-repeat;box-shadow:none;image-rendering:pixelated}');
+
+  if (u('hal/balie')) r.push('.kastikoon.balie{background:#15161a url("' + u('hal/balie') + '") center top/60px auto no-repeat;box-shadow:none;image-rendering:pixelated}');
   if (u('duw/ticket')) r.push('.kaartje{background:url("' + u('duw/ticket') + '") center/18px 18px no-repeat;border:0;width:18px;height:18px;image-rendering:pixelated}');
   if (!r.length) return 0;
   const s = document.createElement('style'); s.textContent = r.join('\n'); document.head.appendChild(s);
@@ -2191,12 +2210,17 @@ function toetsen() {
   $('grijpDoek').addEventListener('pointermove', (e) => { if (e.buttons && Grijp.st && Grijp.st.fase === 'stuur') Grijp.sleepDoel = doekX($('grijpDoek'), e, GRIJP.W); });
   $('grijpDoek').addEventListener('pointerup', () => { Grijp.sleepDoel = null; });
 
-  $('schietDoek').addEventListener('pointerdown', (e) => {
-    e.preventDefault(); audioStart();
+
+  const scv = $('schietDoek'), mikOp = (e) => { Schiet.mik = { x: doekX(scv, e, SCHIET.W), y: doekY(scv, e, SCHIET.H) }; };
+  scv.addEventListener('pointermove', (e) => { mikOp(e); Schiet.boven = e.pointerType === 'mouse'; });
+  scv.addEventListener('pointerleave', () => { Schiet.boven = false; });
+  scv.addEventListener('pointerdown', (e) => {
+    e.preventDefault(); audioStart(); mikOp(e);
     const st = Schiet.st;
     if (!st || st.klaar) return;
-    const r = schietSchot(st, doekX($('schietDoek'), e, SCHIET.W), doekY($('schietDoek'), e, SCHIET.H));
+    const r = schietSchot(st, Schiet.mik.x, Schiet.mik.y);
     if (r.leeg) geluid('leeg');
+    if (r.ok && st.pijl) { const l = gunLoop(); st.pijl.x0 = l.x; st.pijl.y0 = l.y; }
   });
 
 
