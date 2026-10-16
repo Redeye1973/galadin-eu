@@ -770,15 +770,18 @@ const effectief = (p, k) => clamp(p[k] - (p.blessure > 0 && (k === 'reflex' || k
 
 
 
-function pilootInGevecht(p, link, brein) {
 
-  return { moe: clamp((p.moe || 0) * 0.5, 0, 60), stress: 0, paniek: 0, paniekKeren: 0, link: !!link, brein: brein || 0 };
+
+function pilootInGevecht(p, link, brein, mens) {
+
+  return { moe: clamp((p.moe || 0) * 0.5, 0, 60), stress: 0, paniek: 0, paniekKeren: 0, link: !!link, brein: brein || 0, mens: !!mens };
 }
 
 function vertraging(p, g) {
   if (g.brein >= 5) return 4;
   const basis = Math.round(PILOOT.basisVertraging - effectief(p, 'reflex') * PILOOT.perReflex);
-  return clamp(basis + Math.floor(g.moe / PILOOT.moeStap) + (g.paniek > 0 && g.brein < 4 ? PILOOT.paniekExtra : 0) - (g.link ? 2 : 0) - (g.brein >= 3 ? 1 : 0), 2, 20);
+  const d = basis + Math.floor(g.moe / PILOOT.moeStap) + (g.paniek > 0 && g.brein < 4 ? PILOOT.paniekExtra : 0) - (g.link ? 2 : 0) - (g.brein >= 3 ? 1 : 0);
+  return clamp(g.mens ? Math.round(d * 0.6) : d, g.mens ? 1 : 2, 20);
 }
 
 function schoonKans(p, g) {
@@ -920,6 +923,11 @@ const GEVECHT = {
 };
 
 const GREEP = { los: 14, knie: 24, klaar: 42, tillen: 16, smak: 36, worpKlaar: 50 };
+
+
+
+
+const HULP = { schade: 0.85, kunde: 0.75, blok: 0.5, agressie: 0.8 };
 const LEEG_INVOER = { x: 0, blok: false, neer: false, n: { stoot: 0, trap: 0, duw: 0, speciaal: 0 } };
 
 function vechterNieuw(kant, deelnemer) {
@@ -931,7 +939,7 @@ function vechterNieuw(kant, deelnemer) {
     x: kant === 0 ? 220 : 420, dir: kant === 0 ? 1 : -1, vx: 0,
     structuur: s.structuur, vermogen: s.vermogen, lading: deelnemer.robot.lading == null ? 100 : deelnemer.robot.lading, balans: 100,
     actie: 'staan', t: 0, zet: null, onkwetsbaar: 0, sindsGeraakt: 999,
-    pg: pilootInGevecht(deelnemer.piloot, s.link, s.brein), invoer: [], gebruikt: { stoot: 0, trap: 0, duw: 0, speciaal: 0 }, wil: null, vertraging: 0,
+    pg: pilootInGevecht(deelnemer.piloot, s.link, s.brein, !!deelnemer.mens && s.brein < 5), invoer: [], gebruikt: { stoot: 0, trap: 0, duw: 0, speciaal: 0 }, wil: null, vertraging: 0,
     schade: { armen: 0, benen: 0, romp: 0 }, wond: 0,
     stats: { hersteld: 0, raak: 0, schoon: 0, geblokt: 0, vallen: 0, toegebracht: 0, ontvangen: 0, zetten: 0, gemist: 0, paniek: 0 },
     rondes: 0, publiek: [], aiPlan: null, aiTel: { stoot: 0, trap: 0, duw: 0, speciaal: 0 },
@@ -940,7 +948,13 @@ function vechterNieuw(kant, deelnemer) {
 }
 
 function gevechtNieuw(deelnemers, zaad) {
-  return { rng: (zaad | 0) || 1, frame: 0, fase: 'intro', faseT: GEVECHT.intro, ronde: 1, rondeFrames: 0, v: deelnemers.map((d, i) => vechterNieuw(i, d)), gebeurd: [], uitslag: null, rondeTijden: [], rondeWinnaars: [] };
+  const g = { rng: (zaad | 0) || 1, frame: 0, fase: 'intro', faseT: GEVECHT.intro, ronde: 1, rondeFrames: 0, v: deelnemers.map((d, i) => vechterNieuw(i, d)), gebeurd: [], uitslag: null, rondeTijden: [], rondeWinnaars: [] };
+
+  for (const v of g.v) {
+    v.tegenMens = !v.mens && g.v[1 - v.kant].mens;
+    if (v.tegenMens && v.ai) v.ai = Object.assign({}, v.ai, { kunde: v.ai.kunde * HULP.kunde, blok: v.ai.blok * HULP.blok, agressie: v.ai.agressie * HULP.agressie });
+  }
+  return g;
 }
 
 
@@ -950,7 +964,7 @@ function zetBereik(v, Z) {
   return Z.bereik * v.s.lengte / 160 * (Z.bron === 'arm' ? vorm.arm : Z.bron === 'been' ? vorm.been : 1);
 }
 function zetKracht(v, Z) {
-  const nood = v.nood ? COMBO.noodKracht : 1;
+  const nood = (v.nood ? COMBO.noodKracht : 1) * (v.tegenMens ? HULP.schade : 1);
   if (Z.bron === 'arm') return nood * Math.pow(v.s.arm / 120, 0.6) * (1 - (v.s.armSchade + v.schade.armen) / 200);
   if (Z.bron === 'been') return nood * Math.pow(v.s.been / 340, 0.6) * (1 - (v.s.beenSchade + v.schade.benen) / 250);
   return nood * Math.pow(v.s.massa / 70, 0.7);
@@ -1438,17 +1452,18 @@ const LADDERS = {
 function tegenstander(klasse, rang, open) {
   const L = LADDERS[klasse], t = L[rang % L.length], r = open ? 6 + rang : rang;
   const robot = robotNieuw(t.frame, t.robot);
-  const niveau = clamp(1 + Math.floor(r * 0.8), 1, DEEL_MAX);
+
+
+  const niveau = clamp(1 + Math.floor(r * 0.5), 1, DEEL_MAX);
   for (const d of DELEN) robot.delen[d.id] = niveau;
-  if (r >= 2) robot.mods = r % 2 ? { armen: 'overbekrachtigd' } : { regeling: 'agressief' };
-  if (r >= 4) robot.mods.pantser = 'nanocoating';
+  if (r >= 3) robot.mods = r % 2 ? { armen: 'overbekrachtigd' } : { regeling: 'agressief' };
   if (r === 4) robot.mods.armen = 'spijkervuist';
-  if (r >= 5) robot.mods.benen = 'stuwraket';
-  robot.brein = clamp(r - 2, 0, 4);
-  if (r >= 3) robot.wisselaccu = true;
-  const w = clamp(28 + r * 11, 20, 95);
+  if (r >= 5) { robot.mods.benen = 'stuwraket'; robot.mods.pantser = 'nanocoating'; }
+  robot.brein = clamp(r - 4, 0, 4);
+  if (r >= 4) robot.wisselaccu = true;
+  const w = clamp(28 + r * 8, 20, 95);
   const piloot = pilootNieuw({ id: 'tegen', naam: t.piloot, reflex: w, conditie: w - 4, focus: w - 2, kalmte: w + 2 });
-  return { team: open ? t.team + ' (open circuit)' : t.team, piloot, robot, ai: { kunde: clamp(30 + r * 11, 20, 95), agressie: 0.45 + ((rang * 37) % 5) * 0.08, blok: 0.45 + r * 0.06 }, rang, kampioen: !!t.kampioen && !open };
+  return { team: open ? t.team + ' (open circuit)' : t.team, piloot, robot, ai: { kunde: clamp(30 + r * 8, 20, 95), agressie: 0.45 + ((rang * 37) % 5) * 0.08, blok: 0.4 + r * 0.04 }, rang, kampioen: !!t.kampioen && !open };
 }
 function gevechtGeld(klasse, rang, open) {
   const f = KLASSE_GELD[klasse] * (open ? 1.5 : 1);
