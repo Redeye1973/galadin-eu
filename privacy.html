@@ -9,14 +9,26 @@
   h1 { font-size: 1.6rem; }
   h2 { font-size: 1.1rem; margin-top: 1.5rem; }
   a { color: #1a5fb4; }
+  /* taalkiezer */
   .taal { text-align: right; font-size: .9rem; }
-  .taal select { font: inherit; padding: .2rem .4rem; }
+  :root { --tk-bg: #ffffff; --tk-fg: #222; --tk-rand: #bbb; --tk-accent: #1a5fb4; }
+  @media (prefers-color-scheme: dark) { :root { --tk-bg: #1e2127; --tk-fg: #e6e6e6; --tk-rand: #3a3f48; --tk-accent: #7fb4ff; } }
+  .tk { position: relative; display: inline-block; font: inherit; }
+  .tk-knop { display: inline-flex; align-items: center; gap: .5rem; background: var(--tk-bg, #1b1e25); color: var(--tk-fg, #e8e8e8); border: 1px solid var(--tk-rand, #2d323d); border-radius: .5rem; padding: .3rem .6rem; font: inherit; cursor: pointer; }
+  .tk-knop:hover { border-color: var(--tk-accent, #fca311); }
+  .tk-vlag { width: 24px; height: 16px; border-radius: 2px; box-shadow: 0 0 0 1px rgba(128,128,128,.45); object-fit: cover; flex: none; }
+  .tk-lijst { position: absolute; z-index: 1000; top: calc(100% + 4px); left: 50%; transform: translateX(-50%); min-width: 13rem; max-height: min(60vh, 22rem); overflow: auto; margin: 0; padding: .25rem; list-style: none; text-align: left; background: var(--tk-bg, #1b1e25); color: var(--tk-fg, #e8e8e8); border: 1px solid var(--tk-rand, #2d323d); border-radius: .6rem; box-shadow: 0 8px 24px rgba(0,0,0,.4); }
+  .tk-lijst[hidden] { display: none; }
+  .tk-optie { display: flex; align-items: center; gap: .6rem; padding: .35rem .5rem; border-radius: .4rem; cursor: pointer; }
+  .tk-optie:hover, .tk-optie.tk-focus { background: rgba(252,163,17,.2); }
+  .tk-optie[aria-selected="true"] { font-weight: 700; }
+  /* einde taalkiezer */
   [data-l][hidden] { display: none; }
   @media (prefers-color-scheme: dark) { body { background: #14161a; color: #e6e6e6; } a { color: #7fb4ff; } .taal select { background: #1e2127; color: #e6e6e6; } }
 </style>
 </head>
 <body>
-<p class="taal"><label for="taalkeuze">Language</label> <select id="taalkeuze"></select></p>
+<p class="taal" id="taalhost"></p>
 
 <div data-l="en">
 <h1>Privacy</h1>
@@ -130,22 +142,6 @@
 <p><small>Última atualização: 17 de outubro de 2026</small></p>
 </div>
 
-<div data-l="fi" hidden>
-<h1>Tietosuoja</h1>
-<p><strong>Lyhyesti: tämä verkkosivusto ja pelit eivät kerää mitään.</strong></p>
-<h2>Verkkosivusto</h2>
-<p>galadin.eu on Galadinin verkkosivusto. Galadin on pieni itsenäinen studio Alankomaista. Sivustolla ei ole evästeitä, tilastoja eikä mainoksia, etkä tarvitse tiliä. Sivustoa isännöi GitHub Pages. Kuten mikä tahansa verkkopalvelin, GitHub voi käsitellä teknisiä tietoja, kuten IP-osoitettasi, kun sivua pyydetään; meillä ei ole niihin pääsyä. Katso <a href="https://docs.github.com/site-policy/privacy-policies/github-general-privacy-statement">GitHubin tietosuojakäytäntö</a>.</p>
-<h2>Pelit</h2>
-<p>Pelit toimivat kokonaan selaimessasi eivätkä lähetä mitään meille tai kenellekään muulle. Edistymisesi ja asetuksesi tallennetaan oman selaimesi tallennustilaan omalla laitteellasi. Jos tyhjennät tämän sivuston tiedot selaimessasi, edistyminen katoaa. Kielivalintasi tallennetaan samalla tavalla (avain galadin_taal); sitä ei lähetetä minnekään eikä käytetä seurantaan. Joissakin peleissä voit ladata modin tiedostosta tai liitetystä tekstistä omalla laitteellasi; se pysyy laitteellasi eikä mitään lähetetä.</p>
-<h2>Ikä</h2>
-<p>Tämän sivuston pelit on tarkoitettu vanhemmalle yleisölle. 12+, 16+ ja 18+ ovat omia ikämerkintöjämme, eivät PEGI- tai USK-luokituksia; katso kunkin pelin merkintä. Joissakin peleissä on väkivaltaa tai ne jäljittelevät uhkapelejä pelirahalla (mitään oikeaa ei voi voittaa eikä ostaa). Vanhemmat ja huoltajat päättävät, mikä sopii.</p>
-<h2>Tietojen tarkastelu tai poisto</h2>
-<p>Meillä ei ole sinusta mitään tietoja. Sen, mitä laitteellasi on, poistat selaimen asetuksista.</p>
-<h2>Yhteystiedot</h2>
-<p>Kysyttävää? Kirjoita osoitteeseen <a href="mailto:gaidaxgames@gmail.com">gaidaxgames@gmail.com</a>.</p>
-<p><small>Päivitetty viimeksi: 17. lokakuuta 2026</small></p>
-</div>
-
 <div data-l="da" hidden>
 <h1>Privatliv</h1>
 <p><strong>Kort sagt: dette websted og spillene indsamler ingenting.</strong></p>
@@ -178,27 +174,314 @@
 <p><small>Senast uppdaterad: 17 oktober 2026</small></p>
 </div>
 
+<div data-l="fi" hidden>
+<h1>Tietosuoja</h1>
+<p><strong>Lyhyesti: tämä verkkosivusto ja pelit eivät kerää mitään.</strong></p>
+<h2>Verkkosivusto</h2>
+<p>galadin.eu on Galadinin verkkosivusto. Galadin on pieni itsenäinen studio Alankomaista. Sivustolla ei ole evästeitä, tilastoja eikä mainoksia, etkä tarvitse tiliä. Sivustoa isännöi GitHub Pages. Kuten mikä tahansa verkkopalvelin, GitHub voi käsitellä teknisiä tietoja, kuten IP-osoitettasi, kun sivua pyydetään; meillä ei ole niihin pääsyä. Katso <a href="https://docs.github.com/site-policy/privacy-policies/github-general-privacy-statement">GitHubin tietosuojakäytäntö</a>.</p>
+<h2>Pelit</h2>
+<p>Pelit toimivat kokonaan selaimessasi eivätkä lähetä mitään meille tai kenellekään muulle. Edistymisesi ja asetuksesi tallennetaan oman selaimesi tallennustilaan omalla laitteellasi. Jos tyhjennät tämän sivuston tiedot selaimessasi, edistyminen katoaa. Kielivalintasi tallennetaan samalla tavalla (avain galadin_taal); sitä ei lähetetä minnekään eikä käytetä seurantaan. Joissakin peleissä voit ladata modin tiedostosta tai liitetystä tekstistä omalla laitteellasi; se pysyy laitteellasi eikä mitään lähetetä.</p>
+<h2>Ikä</h2>
+<p>Tämän sivuston pelit on tarkoitettu vanhemmalle yleisölle. 12+, 16+ ja 18+ ovat omia ikämerkintöjämme, eivät PEGI- tai USK-luokituksia; katso kunkin pelin merkintä. Joissakin peleissä on väkivaltaa tai ne jäljittelevät uhkapelejä pelirahalla (mitään oikeaa ei voi voittaa eikä ostaa). Vanhemmat ja huoltajat päättävät, mikä sopii.</p>
+<h2>Tietojen tarkastelu tai poisto</h2>
+<p>Meillä ei ole sinusta mitään tietoja. Sen, mitä laitteellasi on, poistat selaimen asetuksista.</p>
+<h2>Yhteystiedot</h2>
+<p>Kysyttävää? Kirjoita osoitteeseen <a href="mailto:gaidaxgames@gmail.com">gaidaxgames@gmail.com</a>.</p>
+<p><small>Päivitetty viimeksi: 17. lokakuuta 2026</small></p>
+</div>
+
+<div data-l="et" hidden>
+<h1>Privaatsus</h1>
+<p><strong>Lühidalt: see veebisait ja mängud ei kogu midagi.</strong></p>
+<h2>Veebisait</h2>
+<p>galadin.eu on Galadini veebisait, väikese sõltumatu stuudio oma Hollandist. Sellel ei ole küpsiseid, statistikat ega reklaame ning sul ei ole kontot vaja. Veebisaiti majutab GitHub Pages. Nagu iga veebiserver, võib GitHub lehe küsimisel töödelda tehnilisi andmeid, näiteks sinu IP-aadressi; meil ei ole neile juurdepääsu. Vaata <a href="https://docs.github.com/site-policy/privacy-policies/github-general-privacy-statement">GitHubi privaatsuspoliitikat</a>.</p>
+<h2>Mängud</h2>
+<p>Mängud töötavad täielikult sinu brauseris ega saada midagi meile ega kellelegi teisele. Sinu edasiminek ja seaded salvestatakse sinu enda brauseri mällu sinu enda seadmes. Kui kustutad selle veebisaidi andmed brauseris, on edasiminek kadunud. Sinu keelevalik salvestatakse samamoodi (võti galadin_taal); seda ei saadeta kuhugi ega kasutata sinu jälgimiseks. Mõnes mängus saad laadida modi failist või kleebitud tekstist oma seadmes; see jääb sinu seadmesse ja midagi ei laadita üles.</p>
+<h2>Vanus</h2>
+<p>Selle veebisaidi mängud on mõeldud vanemale vaatajaskonnale. 12+, 16+ ja 18+ on meie enda vanusemärgised, mitte PEGI või USK hinnang; vaata iga mängu märgist. Mõnes mängus on vägivalda või jäljendatakse hasartmänge mänguraha eest (midagi päriselt ei saa võita ega osta). Vanemad ja hooldajad otsustavad, mis sobib.</p>
+<h2>Andmete vaatamine või kustutamine</h2>
+<p>Meil ei ole sinu kohta andmeid. Mis on sinu seadmes, selle eemaldad brauseri seadete kaudu.</p>
+<h2>Kontakt</h2>
+<p>Küsimusi? Kirjuta aadressile <a href="mailto:gaidaxgames@gmail.com">gaidaxgames@gmail.com</a>.</p>
+<p><small>Viimati uuendatud: 17. oktoober 2026</small></p>
+</div>
+
+<div data-l="lv" hidden>
+<h1>Privātums</h1>
+<p><strong>Īsumā: šī vietne un spēles neko nevāc.</strong></p>
+<h2>Vietne</h2>
+<p>galadin.eu ir Galadin vietne — neliela neatkarīga studija no Nīderlandes. Vietnei nav sīkdatņu, statistikas un reklāmu, un tev nav vajadzīgs konts. Vietni mitina GitHub Pages. Tāpat kā jebkurš tīmekļa serveris, GitHub, pieprasot lapu, var apstrādāt tehniskus datus, piemēram, tavu IP adresi; mums tiem nav piekļuves. Skatīt <a href="https://docs.github.com/site-policy/privacy-policies/github-general-privacy-statement">GitHub privātuma paziņojumu</a>.</p>
+<h2>Spēles</h2>
+<p>Spēles darbojas pilnībā tavā pārlūkprogrammā un neko nesūta ne mums, ne citiem. Tavs progress un iestatījumi tiek glabāti tavas pārlūkprogrammas krātuvē tavā ierīcē. Ja pārlūkprogrammā notīri šīs vietnes datus, progress pazūd. Tava valodas izvēle tiek glabāta tādā pašā veidā (atslēga galadin_taal); tā netiek nekur sūtīta un netiek izmantota izsekošanai. Dažās spēlēs vari ielādēt modu no faila vai ielīmēta teksta savā ierīcē; tas paliek tavā ierīcē, un nekas netiek augšupielādēts.</p>
+<h2>Vecums</h2>
+<p>Šīs vietnes spēles ir paredzētas vecākai auditorijai. 12+, 16+ un 18+ ir mūsu pašu vecuma norādes, nevis PEGI vai USK vērtējums; skaties katras spēles norādi. Dažās spēlēs ir vardarbība vai tās atdarina azartspēles ar spēles naudu (neko īstu nevar uzvarēt vai nopirkt). Vecāki un aprūpētāji izlemj, kas ir piemērots.</p>
+<h2>Datu skatīšana vai dzēšana</h2>
+<p>Mums nav nekādu datu par tevi. To, kas atrodas tavā ierīcē, tu noņem pārlūkprogrammas iestatījumos.</p>
+<h2>Kontakti</h2>
+<p>Jautājumi? Raksti uz <a href="mailto:gaidaxgames@gmail.com">gaidaxgames@gmail.com</a>.</p>
+<p><small>Pēdējoreiz atjaunināts: 2026. gada 17. oktobrī</small></p>
+</div>
+
+<div data-l="lt" hidden>
+<h1>Privatumas</h1>
+<p><strong>Trumpai: ši svetainė ir žaidimai nieko nerenka.</strong></p>
+<h2>Svetainė</h2>
+<p>galadin.eu yra Galadin, mažos nepriklausomos studijos iš Nyderlandų, svetainė. Joje nėra slapukų, statistikos ar reklamos, ir tau nereikia paskyros. Svetainę talpina GitHub Pages. Kaip ir bet kuris žiniatinklio serveris, GitHub, kai prašoma puslapio, gali tvarkyti techninius duomenis, pavyzdžiui, tavo IP adresą; mes prie jų neturime prieigos. Žr. <a href="https://docs.github.com/site-policy/privacy-policies/github-general-privacy-statement">GitHub privatumo pranešimą</a>.</p>
+<h2>Žaidimai</h2>
+<p>Žaidimai veikia visiškai tavo naršyklėje ir nieko nesiunčia nei mums, nei kitiems. Tavo pažanga ir nustatymai saugomi tavo paties naršyklės saugykloje, tavo paties įrenginyje. Jei naršyklėje išvalysi šios svetainės duomenis, pažanga dings. Tavo kalbos pasirinkimas saugomas taip pat (raktas galadin_taal); jis niekur nesiunčiamas ir nenaudojamas sekimui. Kai kuriuose žaidimuose gali įkelti modą iš failo arba įklijuoto teksto savo įrenginyje; jis lieka tavo įrenginyje ir niekas neįkeliama.</p>
+<h2>Amžius</h2>
+<p>Šios svetainės žaidimai skirti vyresnei auditorijai. 12+, 16+ ir 18+ yra mūsų pačių amžiaus žymos, o ne PEGI ar USK vertinimas; žiūrėk kiekvieno žaidimo žymą. Kai kuriuose žaidimuose yra smurto arba jie imituoja azartinius lošimus žaidimų pinigais (nieko tikra laimėti ar nusipirkti negalima). Tėvai ir globėjai sprendžia, kas tinkama.</p>
+<h2>Duomenų peržiūra ar ištrynimas</h2>
+<p>Neturime jokių duomenų apie tave. Tai, kas yra tavo įrenginyje, pašalini naršyklės nustatymuose.</p>
+<h2>Kontaktai</h2>
+<p>Klausimų? Rašyk adresu <a href="mailto:gaidaxgames@gmail.com">gaidaxgames@gmail.com</a>.</p>
+<p><small>Paskutinį kartą atnaujinta: 2026 m. spalio 17 d.</small></p>
+</div>
+
+<div data-l="pl" hidden>
+<h1>Prywatność</h1>
+<p><strong>W skrócie: ta strona i gry niczego nie zbierają.</strong></p>
+<h2>Strona internetowa</h2>
+<p>galadin.eu to strona Galadin, małego niezależnego studia z Holandii. Nie ma plików cookie, statystyk ani reklam, a konto nie jest potrzebne. Stronę hostuje GitHub Pages. Jak każdy serwer internetowy, GitHub może przetwarzać dane techniczne, takie jak Twój adres IP, gdy strona jest pobierana; nie mamy do nich dostępu. Zobacz <a href="https://docs.github.com/site-policy/privacy-policies/github-general-privacy-statement">oświadczenie o prywatności GitHub</a>.</p>
+<h2>Gry</h2>
+<p>Gry działają w całości w Twojej przeglądarce i niczego nie wysyłają ani do nas, ani do nikogo innego. Twój postęp i ustawienia są zapisywane w pamięci Twojej przeglądarki, na Twoim urządzeniu. Jeśli wyczyścisz dane tej strony w przeglądarce, postęp zniknie. Twój wybór języka jest zapisywany w ten sam sposób (klucz galadin_taal); nie jest nigdzie wysyłany ani używany do śledzenia. W niektórych grach możesz wczytać mod z pliku lub wklejonego tekstu na swoim urządzeniu; pozostaje on na Twoim urządzeniu i nic nie jest przesyłane.</p>
+<h2>Wiek</h2>
+<p>Gry na tej stronie są przeznaczone dla starszych odbiorców. 12+, 16+ i 18+ to nasze własne oznaczenia wieku, a nie ocena PEGI ani USK; sprawdź oznaczenie przy każdej grze. Niektóre gry zawierają przemoc lub naśladują hazard za pomocą pieniędzy do gry (nie można wygrać ani kupić niczego prawdziwego). Rodzice i opiekunowie decydują, co jest odpowiednie.</p>
+<h2>Wgląd w dane lub ich usunięcie</h2>
+<p>Nie mamy żadnych danych o Tobie. To, co jest na Twoim urządzeniu, usuwasz w ustawieniach przeglądarki.</p>
+<h2>Kontakt</h2>
+<p>Pytania? Napisz na <a href="mailto:gaidaxgames@gmail.com">gaidaxgames@gmail.com</a>.</p>
+<p><small>Ostatnia aktualizacja: 17 października 2026</small></p>
+</div>
+
+<div data-l="cs" hidden>
+<h1>Soukromí</h1>
+<p><strong>Stručně: tento web a hry nic neshromažďují.</strong></p>
+<h2>Web</h2>
+<p>galadin.eu je web Galadinu, malého nezávislého studia z Nizozemska. Nemá cookies, statistiky ani reklamy a nepotřebuješ účet. Web hostuje GitHub Pages. Jako každý webový server může GitHub při vyžádání stránky zpracovávat technické údaje, například tvou IP adresu; k těm nemáme přístup. Viz <a href="https://docs.github.com/site-policy/privacy-policies/github-general-privacy-statement">zásady ochrany soukromí GitHubu</a>.</p>
+<h2>Hry</h2>
+<p>Hry běží zcela ve tvém prohlížeči a nic neposílají nám ani nikomu jinému. Tvůj postup a nastavení se ukládají do úložiště tvého vlastního prohlížeče, na tvém vlastním zařízení. Vymažeš-li data tohoto webu v prohlížeči, postup zmizí. Tvoje volba jazyka se ukládá stejným způsobem (klíč galadin_taal); nikam se neodesílá a nepoužívá se ke sledování. V některých hrách můžeš načíst mód ze souboru nebo vloženého textu na svém vlastním zařízení; zůstane na tvém zařízení a nic se nenahrává.</p>
+<h2>Věk</h2>
+<p>Hry na tomto webu jsou určeny pro starší publikum. 12+, 16+ a 18+ jsou naše vlastní věkové značky, nikoli hodnocení PEGI nebo USK; podívej se na značku u každé hry. Některé hry obsahují násilí nebo napodobují hazard s herními penězi (nic skutečného nelze vyhrát ani koupit). Rodiče a opatrovníci rozhodují, co je vhodné.</p>
+<h2>Nahlížení do údajů nebo jejich smazání</h2>
+<p>Nemáme o tobě žádné údaje. To, co je na tvém zařízení, odstraníš v nastavení prohlížeče.</p>
+<h2>Kontakt</h2>
+<p>Máš otázky? Napiš na <a href="mailto:gaidaxgames@gmail.com">gaidaxgames@gmail.com</a>.</p>
+<p><small>Naposledy aktualizováno: 17. října 2026</small></p>
+</div>
+
+<div data-l="sk" hidden>
+<h1>Súkromie</h1>
+<p><strong>Stručne: tento web a hry nič nezhromažďujú.</strong></p>
+<h2>Web</h2>
+<p>galadin.eu je web Galadinu, malého nezávislého štúdia z Holandska. Nemá cookies, štatistiky ani reklamy a nepotrebuješ účet. Web hostuje GitHub Pages. Ako každý webový server môže GitHub pri vyžiadaní stránky spracúvať technické údaje, napríklad tvoju IP adresu; k tým nemáme prístup. Pozri <a href="https://docs.github.com/site-policy/privacy-policies/github-general-privacy-statement">zásady ochrany súkromia GitHubu</a>.</p>
+<h2>Hry</h2>
+<p>Hry bežia úplne vo tvojom prehliadači a nič neposielajú nám ani nikomu inému. Tvoj postup a nastavenia sa ukladajú do úložiska tvojho vlastného prehliadača, na tvojom vlastnom zariadení. Ak vymažeš údaje tohto webu v prehliadači, postup zmizne. Tvoja voľba jazyka sa ukladá rovnakým spôsobom (kľúč galadin_taal); nikam sa neodosiela a nepoužíva sa na sledovanie. V niektorých hrách môžeš načítať mód zo súboru alebo vloženého textu na svojom vlastnom zariadení; zostane na tvojom zariadení a nič sa nenahráva.</p>
+<h2>Vek</h2>
+<p>Hry na tomto webe sú určené pre staršie publikum. 12+, 16+ a 18+ sú naše vlastné vekové označenia, nie hodnotenie PEGI ani USK; pozri si označenie pri každej hre. Niektoré hry obsahujú násilie alebo napodobňujú hazard s hernými peniazmi (nič skutočné sa nedá vyhrať ani kúpiť). Rodičia a opatrovatelia rozhodujú, čo je vhodné.</p>
+<h2>Nahliadnutie do údajov alebo ich vymazanie</h2>
+<p>Nemáme o tebe žiadne údaje. To, čo je na tvojom zariadení, odstrániš v nastaveniach prehliadača.</p>
+<h2>Kontakt</h2>
+<p>Máš otázky? Napíš na <a href="mailto:gaidaxgames@gmail.com">gaidaxgames@gmail.com</a>.</p>
+<p><small>Naposledy aktualizované: 17. októbra 2026</small></p>
+</div>
+
+<div data-l="sl" hidden>
+<h1>Zasebnost</h1>
+<p><strong>Na kratko: to spletno mesto in igre ničesar ne zbirajo.</strong></p>
+<h2>Spletno mesto</h2>
+<p>galadin.eu je spletno mesto Galadina, majhnega neodvisnega studia z Nizozemske. Nima piškotkov, statistike ali oglasov, račun pa ni potreben. Spletno mesto gosti GitHub Pages. Kot vsak spletni strežnik lahko GitHub ob zahtevi strani obdeluje tehnične podatke, na primer tvoj naslov IP; do teh nimamo dostopa. Glej <a href="https://docs.github.com/site-policy/privacy-policies/github-general-privacy-statement">izjavo GitHuba o zasebnosti</a>.</p>
+<h2>Igre</h2>
+<p>Igre delujejo v celoti v tvojem brskalniku in nič ne pošiljajo nam ali komu drugemu. Tvoj napredek in nastavitve se shranijo v shrambo tvojega brskalnika, v tvoji napravi. Če v brskalniku počistiš podatke tega spletnega mesta, napredek izgine. Tvoja izbira jezika se shrani na enak način (ključ galadin_taal); nikamor se ne pošilja in se ne uporablja za sledenje. V nekaterih igrah lahko naložiš mod iz datoteke ali prilepljenega besedila v svoji napravi; ostane v tvoji napravi in nič se ne nalaga.</p>
+<h2>Starost</h2>
+<p>Igre na tem spletnem mestu so namenjene starejšemu občinstvu. 12+, 16+ in 18+ so naše lastne starostne oznake, ne ocena PEGI ali USK; preveri oznako pri vsaki igri. Nekatere igre vsebujejo nasilje ali posnemajo igre na srečo z igralnim denarjem (ničesar resničnega ni mogoče zmagati ali kupiti). Starši in skrbniki odločajo, kaj je primerno.</p>
+<h2>Vpogled v podatke ali njihov izbris</h2>
+<p>O tebi nimamo nobenih podatkov. Kar je v tvoji napravi, odstraniš v nastavitvah brskalnika.</p>
+<h2>Stik</h2>
+<p>Vprašanja? Piši na <a href="mailto:gaidaxgames@gmail.com">gaidaxgames@gmail.com</a>.</p>
+<p><small>Zadnja posodobitev: 17. oktober 2026</small></p>
+</div>
+
+<div data-l="hr" hidden>
+<h1>Privatnost</h1>
+<p><strong>Ukratko: ova web stranica i igre ništa ne prikupljaju.</strong></p>
+<h2>Web stranica</h2>
+<p>galadin.eu web je stranica Galadina, malog neovisnog studija iz Nizozemske. Nema kolačića, statistike ni oglasa, a račun nije potreban. Web stranicu hostira GitHub Pages. Kao i svaki web poslužitelj, GitHub pri traženju stranice može obrađivati tehničke podatke, poput tvoje IP adrese; do njih nemamo pristup. Pogledaj <a href="https://docs.github.com/site-policy/privacy-policies/github-general-privacy-statement">GitHubovu izjavu o privatnosti</a>.</p>
+<h2>Igre</h2>
+<p>Igre rade u potpunosti u tvom pregledniku i ništa ne šalju nama ni nikome drugome. Tvoj napredak i postavke spremaju se u pohranu tvog preglednika, na tvom uređaju. Ako u pregledniku izbrišeš podatke ove web stranice, napredak nestaje. Tvoj odabir jezika sprema se na isti način (ključ galadin_taal); ne šalje se nigdje i ne koristi se za praćenje. U nekim igrama možeš učitati mod iz datoteke ili zalijepljenog teksta na svom uređaju; ostaje na tvom uređaju i ništa se ne učitava.</p>
+<h2>Dob</h2>
+<p>Igre na ovoj web stranici namijenjene su starijoj publici. 12+, 16+ i 18+ naše su vlastite dobne oznake, a ne PEGI ili USK ocjena; provjeri oznaku uz svaku igru. Neke igre sadrže nasilje ili oponašaju kockanje novcem za igru (ništa stvarno ne može se osvojiti niti kupiti). Roditelji i skrbnici odlučuju što je prikladno.</p>
+<h2>Uvid u podatke ili njihovo brisanje</h2>
+<p>Nemamo nikakvih podataka o tebi. Ono što je na tvom uređaju uklanjaš u postavkama preglednika.</p>
+<h2>Kontakt</h2>
+<p>Pitanja? Piši na <a href="mailto:gaidaxgames@gmail.com">gaidaxgames@gmail.com</a>.</p>
+<p><small>Zadnje ažuriranje: 17. listopada 2026.</small></p>
+</div>
+
+<div data-l="hu" hidden>
+<h1>Adatvédelem</h1>
+<p><strong>Röviden: ez a weboldal és a játékok semmit nem gyűjtenek.</strong></p>
+<h2>A weboldal</h2>
+<p>A galadin.eu a Galadin, egy kis független holland stúdió weboldala. Nincsenek sütik, statisztikák vagy hirdetések, és nincs szükséged fiókra. A weboldalt a GitHub Pages üzemelteti. Mint minden webszerver, a GitHub is kezelhet technikai adatokat, például az IP-címedet, amikor egy oldalt lekérnek; ezekhez nincs hozzáférésünk. Lásd a <a href="https://docs.github.com/site-policy/privacy-policies/github-general-privacy-statement">GitHub adatvédelmi nyilatkozatát</a>.</p>
+<h2>A játékok</h2>
+<p>A játékok teljes egészében a böngésződben futnak, és semmit nem küldenek sem nekünk, sem másoknak. A haladásod és a beállításaid a saját böngésződ tárolójában, a saját eszközödön vannak mentve. Ha a böngészőben törlöd az oldal adatait, a haladásod elvész. A nyelvválasztásod ugyanígy van mentve (kulcs: galadin_taal); sehová nem küldjük el, és nem használjuk követésre. Egyes játékokban betölthetsz egy modot fájlból vagy beillesztett szövegből a saját eszközödön; az az eszközödön marad, és semmi nem kerül feltöltésre.</p>
+<h2>Életkor</h2>
+<p>Az oldal játékai idősebb közönségnek szólnak. A 12+, 16+ és 18+ a saját korhatár-jelzéseink, nem PEGI vagy USK besorolás; nézd meg a jelzést minden játéknál. Egyes játékok erőszakot tartalmaznak, vagy játékpénzzel szerencsejátékot utánoznak (semmi valódit nem lehet nyerni vagy venni). A szülők és gondviselők döntik el, mi megfelelő.</p>
+<h2>Adatok megtekintése vagy törlése</h2>
+<p>Nincs rólad semmilyen adatunk. Ami az eszközödön van, azt a böngésző beállításaiban törölheted.</p>
+<h2>Kapcsolat</h2>
+<p>Kérdésed van? Írj ide: <a href="mailto:gaidaxgames@gmail.com">gaidaxgames@gmail.com</a>.</p>
+<p><small>Utolsó frissítés: 2026. október 17.</small></p>
+</div>
+
+<div data-l="ro" hidden>
+<h1>Confidențialitate</h1>
+<p><strong>Pe scurt: acest site și jocurile nu colectează nimic.</strong></p>
+<h2>Site-ul</h2>
+<p>galadin.eu este site-ul Galadin, un mic studio independent din Țările de Jos. Nu are cookie-uri, statistici sau reclame și nu ai nevoie de cont. Site-ul este găzduit de GitHub Pages. Ca orice server web, GitHub poate prelucra date tehnice, precum adresa ta IP, când este solicitată o pagină; noi nu avem acces la ele. Vezi <a href="https://docs.github.com/site-policy/privacy-policies/github-general-privacy-statement">declarația de confidențialitate GitHub</a>.</p>
+<h2>Jocurile</h2>
+<p>Jocurile rulează în întregime în browserul tău și nu trimit nimic nici nouă, nici altcuiva. Progresul și setările tale sunt salvate în spațiul de stocare al propriului tău browser, pe propriul tău dispozitiv. Dacă ștergi datele acestui site din browser, progresul dispare. Alegerea limbii tale este salvată în același mod (cheia galadin_taal); nu este trimisă nicăieri și nu este folosită pentru urmărire. În unele jocuri poți încărca un mod dintr-un fișier sau dintr-un text lipit, pe propriul tău dispozitiv; rămâne pe dispozitivul tău și nimic nu este încărcat.</p>
+<h2>Vârsta</h2>
+<p>Jocurile de pe acest site sunt pentru un public mai în vârstă. 12+, 16+ și 18+ sunt propriile noastre indicații de vârstă, nu o clasificare PEGI sau USK; verifică eticheta fiecărui joc. Unele jocuri conțin violență sau imită jocurile de noroc cu bani de joc (nimic real nu poate fi câștigat sau cumpărat). Părinții și îngrijitorii decid ce este potrivit.</p>
+<h2>Consultarea sau ștergerea datelor</h2>
+<p>Nu avem date despre tine. Ce se află pe dispozitivul tău elimini din setările browserului.</p>
+<h2>Contact</h2>
+<p>Întrebări? Scrie la <a href="mailto:gaidaxgames@gmail.com">gaidaxgames@gmail.com</a>.</p>
+<p><small>Ultima actualizare: 17 octombrie 2026</small></p>
+</div>
+
+<div data-l="bg" hidden>
+<h1>Поверителност</h1>
+<p><strong>Накратко: този уебсайт и игрите не събират нищо.</strong></p>
+<h2>Уебсайтът</h2>
+<p>galadin.eu е уебсайт на Galadin, малко независимо студио от Нидерландия. Няма бисквитки, статистика или реклами и не ти е нужен акаунт. Уебсайтът се хоства от GitHub Pages. Като всеки уеб сървър, GitHub може да обработва технически данни, като например твоя IP адрес, когато се заявява страница; ние нямаме достъп до тях. Вж. <a href="https://docs.github.com/site-policy/privacy-policies/github-general-privacy-statement">декларацията за поверителност на GitHub</a>.</p>
+<h2>Игрите</h2>
+<p>Игрите работят изцяло в твоя браузър и не изпращат нищо нито до нас, нито до други. Прогресът и настройките ти се съхраняват в хранилището на твоя собствен браузър, на твоето собствено устройство. Ако изчистиш данните на този сайт в браузъра, прогресът изчезва. Изборът ти на език се съхранява по същия начин (ключ galadin_taal); не се изпраща никъде и не се използва за проследяване. В някои игри можеш да заредиш мод от файл или от поставен текст на собственото си устройство; той остава на устройството ти и нищо не се качва.</p>
+<h2>Възраст</h2>
+<p>Игрите на този уебсайт са за по-възрастна аудитория. 12+, 16+ и 18+ са наши собствени възрастови означения, а не оценка по PEGI или USK; провери означението на всяка игра. Някои игри съдържат насилие или имитират хазарт с игрални пари (нищо реално не може да се спечели или купи). Родителите и настойниците решават кое е подходящо.</p>
+<h2>Преглед или изтриване на данни</h2>
+<p>Нямаме никакви данни за теб. Това, което е на твоето устройство, премахваш от настройките на браузъра.</p>
+<h2>Контакт</h2>
+<p>Въпроси? Пиши на <a href="mailto:gaidaxgames@gmail.com">gaidaxgames@gmail.com</a>.</p>
+<p><small>Последна актуализация: 17 октомври 2026 г.</small></p>
+</div>
+
+<div data-l="el" hidden>
+<h1>Απόρρητο</h1>
+<p><strong>Εν συντομία: αυτός ο ιστότοπος και τα παιχνίδια δεν συλλέγουν τίποτα.</strong></p>
+<h2>Ο ιστότοπος</h2>
+<p>Το galadin.eu είναι ιστότοπος της Galadin, ενός μικρού ανεξάρτητου στούντιο από τις Κάτω Χώρες. Δεν έχει cookies, στατιστικά ή διαφημίσεις και δεν χρειάζεσαι λογαριασμό. Ο ιστότοπος φιλοξενείται από το GitHub Pages. Όπως κάθε διακομιστής ιστού, το GitHub μπορεί να επεξεργάζεται τεχνικά δεδομένα, όπως τη διεύθυνση IP σου, όταν ζητείται μια σελίδα· εμείς δεν έχουμε πρόσβαση σε αυτά. Δες τη <a href="https://docs.github.com/site-policy/privacy-policies/github-general-privacy-statement">δήλωση απορρήτου του GitHub</a>.</p>
+<h2>Τα παιχνίδια</h2>
+<p>Τα παιχνίδια τρέχουν εξ ολοκλήρου στο πρόγραμμα περιήγησής σου και δεν στέλνουν τίποτα σε εμάς ή σε άλλους. Η πρόοδος και οι ρυθμίσεις σου αποθηκεύονται στον χώρο αποθήκευσης του δικού σου προγράμματος περιήγησης, στη δική σου συσκευή. Αν διαγράψεις τα δεδομένα αυτού του ιστότοπου από το πρόγραμμα περιήγησης, η πρόοδος χάνεται. Η επιλογή γλώσσας σου αποθηκεύεται με τον ίδιο τρόπο (κλειδί galadin_taal)· δεν στέλνεται πουθενά και δεν χρησιμοποιείται για παρακολούθηση. Σε ορισμένα παιχνίδια μπορείς να φορτώσεις ένα mod από αρχείο ή από επικολλημένο κείμενο στη δική σου συσκευή· μένει στη συσκευή σου και τίποτα δεν ανεβαίνει.</p>
+<h2>Ηλικία</h2>
+<p>Τα παιχνίδια αυτού του ιστότοπου απευθύνονται σε μεγαλύτερο κοινό. Τα 12+, 16+ και 18+ είναι δικές μας ενδείξεις ηλικίας, όχι αξιολόγηση PEGI ή USK· δες την ένδειξη σε κάθε παιχνίδι. Ορισμένα παιχνίδια περιέχουν βία ή μιμούνται τυχερά παιχνίδια με πλαστά χρήματα (τίποτα πραγματικό δεν μπορεί να κερδηθεί ή να αγοραστεί). Οι γονείς και οι φροντιστές αποφασίζουν τι είναι κατάλληλο.</p>
+<h2>Πρόσβαση ή διαγραφή δεδομένων</h2>
+<p>Δεν έχουμε κανένα δεδομένο για σένα. Ό,τι υπάρχει στη συσκευή σου το αφαιρείς από τις ρυθμίσεις του προγράμματος περιήγησης.</p>
+<h2>Επικοινωνία</h2>
+<p>Ερωτήσεις; Γράψε στο <a href="mailto:gaidaxgames@gmail.com">gaidaxgames@gmail.com</a>.</p>
+<p><small>Τελευταία ενημέρωση: 17 Οκτωβρίου 2026</small></p>
+</div>
+
+<div data-l="mt" hidden>
+<h1>Privatezza</h1>
+<p><strong>Fil-qosor: dan is-sit u l-logħob ma jiġbru xejn.</strong></p>
+<h2>Is-sit</h2>
+<p>galadin.eu huwa sit ta' Galadin, studio żgħir indipendenti mill-Pajjiżi l-Baxxi. M'għandux cookies, statistika jew reklami, u m'għandekx bżonn kont. Is-sit huwa ospitat minn GitHub Pages. Bħal kull server tal-web, GitHub jista' jipproċessa dejta teknika, bħall-indirizz IP tiegħek, meta tintalab paġna; aħna m'għandniex aċċess għaliha. Ara d-<a href="https://docs.github.com/site-policy/privacy-policies/github-general-privacy-statement">dikjarazzjoni tal-privatezza ta' GitHub</a>.</p>
+<h2>Il-logħob</h2>
+<p>Il-logħob jaħdem kompletament fil-brawżer tiegħek u ma jibgħat xejn lilna jew lil ħaddieħor. Il-progress u l-issettjar tiegħek jinżammu fil-ħażna tal-brawżer tiegħek stess, fuq l-apparat tiegħek stess. Jekk tħassar id-dejta ta' dan is-sit fil-brawżer, il-progress jinqered. L-għażla tal-lingwa tiegħek tinżamm bl-istess mod (ċavetta galadin_taal); ma tintbagħat imkien u ma tintużax biex isegwuk. F'xi logħob tista' tgħabbi mod minn fajl jew minn test impejjet fuq l-apparat tiegħek stess; jibqa' fuq l-apparat tiegħek u xejn ma jintbagħat.</p>
+<h2>Età</h2>
+<p>Il-logħob ta' dan is-sit huwa għal udjenza akbar. 12+, 16+ u 18+ huma t-tikketti tal-età tagħna stess, mhux klassifikazzjoni PEGI jew USK; iċċekkja t-tikketta ta' kull logħba. Xi logħob fih vjolenza jew jimita l-logħob tal-azzard bi flus tal-logħob (xejn reali ma jista' jinkiseb jew jinxtara). Il-ġenituri u dawk li jieħdu ħsieb jiddeċiedu x'inhu xieraq.</p>
+<h2>Aċċess jew tħassir tad-dejta</h2>
+<p>M'għandna ebda dejta dwarek. Dak li hemm fuq l-apparat tiegħek tneħħih mill-issettjar tal-brawżer.</p>
+<h2>Kuntatt</h2>
+<p>Mistoqsijiet? Ibgħat email lil <a href="mailto:gaidaxgames@gmail.com">gaidaxgames@gmail.com</a>.</p>
+<p><small>L-aħħar aġġornament: 17 ta' Ottubru 2026</small></p>
+</div>
+
+<div data-l="ga" hidden>
+<h1>Príobháideacht</h1>
+<p><strong>Go achomair: ní bhailíonn an suíomh gréasáin seo ná na cluichí tada.</strong></p>
+<h2>An suíomh gréasáin</h2>
+<p>Is suíomh gréasáin de chuid Galadin é galadin.eu, stiúideo beag neamhspleách ón Ísiltír. Níl fianáin, staitisticí ná fógraí ann, agus níl cuntas de dhíth ort. Óstálann GitHub Pages an suíomh. Cosúil le haon fhreastalaí gréasáin, féadfaidh GitHub sonraí teicniúla, amhail do sheoladh IP, a phróiseáil nuair a iarrtar leathanach; níl rochtain againn orthu. Féach <a href="https://docs.github.com/site-policy/privacy-policies/github-general-privacy-statement">ráiteas príobháideachta GitHub</a>.</p>
+<h2>Na cluichí</h2>
+<p>Ritheann na cluichí go hiomlán i do bhrabhsálaí agus ní sheolann siad tada chugainn ná chuig aon duine eile. Stóráiltear do dhul chun cinn agus do shocruithe i stóras do bhrabhsálaí féin, ar do ghléas féin. Má ghlanann tú sonraí an tsuímh seo i do bhrabhsálaí, imíonn an dul chun cinn. Stóráiltear do rogha teanga ar an modh céanna (eochair galadin_taal); ní sheoltar áit ar bith í agus ní úsáidtear í le rianú. I roinnt cluichí, is féidir leat mod a luchtú ó chomhad nó ó théacs greamaithe ar do ghléas féin; fanann sé ar do ghléas agus ní uaslódáiltear tada.</p>
+<h2>Aois</h2>
+<p>Tá cluichí an tsuímh seo do lucht féachana is sine. Is lipéid aoise dár gcuid féin iad 12+, 16+ agus 18+, ní rátáil PEGI ná USK; seiceáil an lipéad ar gach cluiche. Tá foréigean i roinnt cluichí, nó déanann siad aithris ar chearrbhachas le hairgead súgartha (ní féidir rud ar bith fíor a bhuachan ná a cheannach). Cinneann tuismitheoirí agus cúramóirí cad atá oiriúnach.</p>
+<h2>Sonraí a fheiceáil nó a scriosadh</h2>
+<p>Níl aon sonraí againn fút. An rud atá ar do ghléas, bainfidh tú é trí shocruithe do bhrabhsálaí.</p>
+<h2>Teagmháil</h2>
+<p>Ceisteanna? Scríobh chuig <a href="mailto:gaidaxgames@gmail.com">gaidaxgames@gmail.com</a>.</p>
+<p><small>Nuashonraithe go deireanach: 17 Deireadh Fómhair 2026</small></p>
+</div>
+
+<p><small data-noot="1">Translations are provided for convenience; if they differ, the English and Dutch versions apply. / Vertalingen zijn bedoeld als gemak; bij verschil gelden de Engelse en Nederlandse tekst.</small></p>
+
 <p><a href="./">Galadin</a></p>
 <script>
+function galadinTaalKeuze(host, cfg) {
+  var langs = cfg.langs, names = cfg.names, flags = cfg.flags, cur = cfg.current, focus = 0, open = false;
+  host.classList.add('tk'); host.textContent = '';
+  var btn = document.createElement('button'); btn.type = 'button'; btn.className = 'tk-knop';
+  btn.setAttribute('aria-haspopup', 'listbox'); btn.setAttribute('aria-expanded', 'false'); btn.setAttribute('aria-label', cfg.label || 'Language');
+  var fl = document.createElement('img'); fl.className = 'tk-vlag'; fl.alt = '';
+  var nm = document.createElement('span'); var pijl = document.createElement('span'); pijl.setAttribute('aria-hidden', 'true'); pijl.textContent = '▾';
+  btn.appendChild(fl); btn.appendChild(nm); btn.appendChild(pijl);
+  var ul = document.createElement('ul'); ul.className = 'tk-lijst'; ul.setAttribute('role', 'listbox'); ul.hidden = true; ul.tabIndex = -1;
+  ul.setAttribute('aria-label', cfg.label || 'Language');
+  var opties = langs.map(function (c) {
+    var li = document.createElement('li'); li.className = 'tk-optie'; li.setAttribute('role', 'option'); li.setAttribute('lang', c); li.dataset.c = c;
+    var im = document.createElement('img'); im.className = 'tk-vlag'; im.alt = ''; im.src = flags[c];
+    var sp = document.createElement('span'); sp.textContent = names[c];
+    li.appendChild(im); li.appendChild(sp); ul.appendChild(li); return li;
+  });
+  host.appendChild(btn); host.appendChild(ul);
+  function toon() {
+    fl.src = flags[cur]; nm.textContent = names[cur]; nm.setAttribute('lang', cur);
+    opties.forEach(function (li) { li.setAttribute('aria-selected', li.dataset.c === cur ? 'true' : 'false'); });
+  }
+  function zetFocus(i) {
+    focus = (i + langs.length) % langs.length;
+    opties.forEach(function (li, k) { li.classList.toggle('tk-focus', k === focus); });
+    opties[focus].scrollIntoView({ block: 'nearest' });
+  }
+  function toggle(aan) {
+    open = aan; ul.hidden = !aan; btn.setAttribute('aria-expanded', aan ? 'true' : 'false');
+    if (aan) { zetFocus(langs.indexOf(cur)); ul.focus(); }
+  }
+  function kies(c) { toggle(false); btn.focus(); if (c !== cur) { cur = c; toon(); if (cfg.onChange) cfg.onChange(c); } }
+  btn.addEventListener('click', function () { toggle(!open); });
+  ul.addEventListener('click', function (e) { var li = e.target.closest ? e.target.closest('.tk-optie') : null; if (li) kies(li.dataset.c); });
+  ul.addEventListener('keydown', function (e) {
+    if (e.key === 'ArrowDown') { e.preventDefault(); zetFocus(focus + 1); }
+    else if (e.key === 'ArrowUp') { e.preventDefault(); zetFocus(focus - 1); }
+    else if (e.key === 'Home') { e.preventDefault(); zetFocus(0); }
+    else if (e.key === 'End') { e.preventDefault(); zetFocus(langs.length - 1); }
+    else if (e.key === 'Enter' || e.key === ' ') { e.preventDefault(); kies(langs[focus]); }
+    else if (e.key === 'Escape' || e.key === 'Tab') { toggle(false); btn.focus(); }
+  });
+  document.addEventListener('click', function (e) { if (open && !host.contains(e.target)) toggle(false); });
+  toon();
+  return { set: function (c) { cur = c; toon(); } };
+}
+
 (function () {
   'use strict';
-  var LANGS = ['nl', 'en', 'de', 'fr', 'es', 'it', 'pt', 'fi', 'da', 'sv'], KEY = 'galadin_taal';
-  var NAMES = { nl: 'Nederlands', en: 'English', de: 'Deutsch', fr: 'Français', es: 'Español', it: 'Italiano', pt: 'Português', fi: 'Suomi', da: 'Dansk', sv: 'Svenska' };
-  var LABEL = { nl: 'Taal', en: 'Language', de: 'Sprache', fr: 'Langue', es: 'Idioma', it: 'Lingua', pt: 'Idioma', fi: 'Kieli', da: 'Sprog', sv: 'Språk' };
+  var LANGS = ["nl", "en", "de", "fr", "es", "it", "pt", "da", "sv", "fi", "et", "lv", "lt", "pl", "cs", "sk", "sl", "hr", "hu", "ro", "bg", "el", "mt", "ga"], KEY = 'galadin_taal';
+  var NAMES = {"nl": "Nederlands", "en": "English", "de": "Deutsch", "fr": "Français", "es": "Español", "it": "Italiano", "pt": "Português", "da": "Dansk", "sv": "Svenska", "fi": "Suomi", "et": "Eesti", "lv": "Latviešu", "lt": "Lietuvių", "pl": "Polski", "cs": "Čeština", "sk": "Slovenčina", "sl": "Slovenščina", "hr": "Hrvatski", "hu": "Magyar", "ro": "Română", "bg": "Български", "el": "Ελληνικά", "mt": "Malti", "ga": "Gaeilge"}, FLAGS = {"nl": "data:image/svg+xml;charset=utf-8,%3Csvg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 30 20%22 width=%2230%22 height=%2220%22%3E%3Crect x=%220%22 y=%220.000%22 width=%2230%22 height=%226.687%22 fill=%22%23AE1C28%22/%3E%3Crect x=%220%22 y=%226.667%22 width=%2230%22 height=%226.687%22 fill=%22%23FFFFFF%22/%3E%3Crect x=%220%22 y=%2213.333%22 width=%2230%22 height=%226.687%22 fill=%22%2321468B%22/%3E%3C/svg%3E", "en": "data:image/svg+xml;charset=utf-8,%3Csvg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 30 20%22 width=%2230%22 height=%2220%22%3E%3Crect width=%2230%22 height=%2220%22 fill=%22%23012169%22/%3E%3Cpath d=%22M0,0 L30,20 M30,0 L0,20%22 stroke=%22%23fff%22 stroke-width=%224%22/%3E%3Cpath d=%22M0,0 L30,20 M30,0 L0,20%22 stroke=%22%23C8102E%22 stroke-width=%221.6%22/%3E%3Cpath d=%22M15,0 V20 M0,10 H30%22 stroke=%22%23fff%22 stroke-width=%226%22/%3E%3Cpath d=%22M15,0 V20 M0,10 H30%22 stroke=%22%23C8102E%22 stroke-width=%223.4%22/%3E%3C/svg%3E", "de": "data:image/svg+xml;charset=utf-8,%3Csvg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 30 20%22 width=%2230%22 height=%2220%22%3E%3Crect x=%220%22 y=%220.000%22 width=%2230%22 height=%226.687%22 fill=%22%23000000%22/%3E%3Crect x=%220%22 y=%226.667%22 width=%2230%22 height=%226.687%22 fill=%22%23DD0000%22/%3E%3Crect x=%220%22 y=%2213.333%22 width=%2230%22 height=%226.687%22 fill=%22%23FFCE00%22/%3E%3C/svg%3E", "fr": "data:image/svg+xml;charset=utf-8,%3Csvg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 30 20%22 width=%2230%22 height=%2220%22%3E%3Crect x=%220.000%22 y=%220%22 width=%2210.020%22 height=%2220%22 fill=%22%230055A4%22/%3E%3Crect x=%2210.000%22 y=%220%22 width=%2210.020%22 height=%2220%22 fill=%22%23FFFFFF%22/%3E%3Crect x=%2220.000%22 y=%220%22 width=%2210.020%22 height=%2220%22 fill=%22%23EF4135%22/%3E%3C/svg%3E", "es": "data:image/svg+xml;charset=utf-8,%3Csvg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 30 20%22 width=%2230%22 height=%2220%22%3E%3Crect x=%220%22 y=%220.000%22 width=%2230%22 height=%225.020%22 fill=%22%23AA151B%22/%3E%3Crect x=%220%22 y=%225.000%22 width=%2230%22 height=%2210.020%22 fill=%22%23F1BF00%22/%3E%3Crect x=%220%22 y=%2215.000%22 width=%2230%22 height=%225.020%22 fill=%22%23AA151B%22/%3E%3C/svg%3E", "it": "data:image/svg+xml;charset=utf-8,%3Csvg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 30 20%22 width=%2230%22 height=%2220%22%3E%3Crect x=%220.000%22 y=%220%22 width=%2210.020%22 height=%2220%22 fill=%22%23009246%22/%3E%3Crect x=%2210.000%22 y=%220%22 width=%2210.020%22 height=%2220%22 fill=%22%23FFFFFF%22/%3E%3Crect x=%2220.000%22 y=%220%22 width=%2210.020%22 height=%2220%22 fill=%22%23CE2B37%22/%3E%3C/svg%3E", "pt": "data:image/svg+xml;charset=utf-8,%3Csvg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 30 20%22 width=%2230%22 height=%2220%22%3E%3Crect width=%2212%22 height=%2220%22 fill=%22%23006600%22/%3E%3Crect x=%2212%22 width=%2218%22 height=%2220%22 fill=%22%23FF0000%22/%3E%3Ccircle cx=%2212%22 cy=%2210%22 r=%223.2%22 fill=%22%23FFE000%22/%3E%3Ccircle cx=%2212%22 cy=%2210%22 r=%221.6%22 fill=%22%23FF0000%22/%3E%3C/svg%3E", "da": "data:image/svg+xml;charset=utf-8,%3Csvg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 30 20%22 width=%2230%22 height=%2220%22%3E%3Crect width=%2230%22 height=%2220%22 fill=%22%23C8102E%22/%3E%3Crect x=%229%22 width=%224%22 height=%2220%22 fill=%22%23FFFFFF%22/%3E%3Crect y=%228%22 width=%2230%22 height=%224%22 fill=%22%23FFFFFF%22/%3E%3C/svg%3E", "sv": "data:image/svg+xml;charset=utf-8,%3Csvg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 30 20%22 width=%2230%22 height=%2220%22%3E%3Crect width=%2230%22 height=%2220%22 fill=%22%23006AA7%22/%3E%3Crect x=%229%22 width=%224%22 height=%2220%22 fill=%22%23FECC02%22/%3E%3Crect y=%228%22 width=%2230%22 height=%224%22 fill=%22%23FECC02%22/%3E%3C/svg%3E", "fi": "data:image/svg+xml;charset=utf-8,%3Csvg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 30 20%22 width=%2230%22 height=%2220%22%3E%3Crect width=%2230%22 height=%2220%22 fill=%22%23FFFFFF%22/%3E%3Crect x=%229%22 width=%224%22 height=%2220%22 fill=%22%23003580%22/%3E%3Crect y=%228%22 width=%2230%22 height=%224%22 fill=%22%23003580%22/%3E%3C/svg%3E", "et": "data:image/svg+xml;charset=utf-8,%3Csvg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 30 20%22 width=%2230%22 height=%2220%22%3E%3Crect x=%220%22 y=%220.000%22 width=%2230%22 height=%226.687%22 fill=%22%230072CE%22/%3E%3Crect x=%220%22 y=%226.667%22 width=%2230%22 height=%226.687%22 fill=%22%23000000%22/%3E%3Crect x=%220%22 y=%2213.333%22 width=%2230%22 height=%226.687%22 fill=%22%23FFFFFF%22/%3E%3C/svg%3E", "lv": "data:image/svg+xml;charset=utf-8,%3Csvg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 30 20%22 width=%2230%22 height=%2220%22%3E%3Crect x=%220%22 y=%220.000%22 width=%2230%22 height=%228.020%22 fill=%22%239E3039%22/%3E%3Crect x=%220%22 y=%228.000%22 width=%2230%22 height=%224.020%22 fill=%22%23FFFFFF%22/%3E%3Crect x=%220%22 y=%2212.000%22 width=%2230%22 height=%228.020%22 fill=%22%239E3039%22/%3E%3C/svg%3E", "lt": "data:image/svg+xml;charset=utf-8,%3Csvg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 30 20%22 width=%2230%22 height=%2220%22%3E%3Crect x=%220%22 y=%220.000%22 width=%2230%22 height=%226.687%22 fill=%22%23FDB913%22/%3E%3Crect x=%220%22 y=%226.667%22 width=%2230%22 height=%226.687%22 fill=%22%23006A44%22/%3E%3Crect x=%220%22 y=%2213.333%22 width=%2230%22 height=%226.687%22 fill=%22%23C1272D%22/%3E%3C/svg%3E", "pl": "data:image/svg+xml;charset=utf-8,%3Csvg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 30 20%22 width=%2230%22 height=%2220%22%3E%3Crect x=%220%22 y=%220.000%22 width=%2230%22 height=%2210.020%22 fill=%22%23FFFFFF%22/%3E%3Crect x=%220%22 y=%2210.000%22 width=%2230%22 height=%2210.020%22 fill=%22%23DC143C%22/%3E%3C/svg%3E", "cs": "data:image/svg+xml;charset=utf-8,%3Csvg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 30 20%22 width=%2230%22 height=%2220%22%3E%3Crect width=%2230%22 height=%2210%22 fill=%22%23FFFFFF%22/%3E%3Crect y=%2210%22 width=%2230%22 height=%2210%22 fill=%22%23D7141A%22/%3E%3Cpolygon points=%220,0 15,10 0,20%22 fill=%22%2311457E%22/%3E%3C/svg%3E", "sk": "data:image/svg+xml;charset=utf-8,%3Csvg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 30 20%22 width=%2230%22 height=%2220%22%3E%3Crect x=%220%22 y=%220.000%22 width=%2230%22 height=%226.687%22 fill=%22%23FFFFFF%22/%3E%3Crect x=%220%22 y=%226.667%22 width=%2230%22 height=%226.687%22 fill=%22%230B4EA2%22/%3E%3Crect x=%220%22 y=%2213.333%22 width=%2230%22 height=%226.687%22 fill=%22%23EE1C25%22/%3E%3C/svg%3E", "sl": "data:image/svg+xml;charset=utf-8,%3Csvg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 30 20%22 width=%2230%22 height=%2220%22%3E%3Crect x=%220%22 y=%220.000%22 width=%2230%22 height=%226.687%22 fill=%22%23FFFFFF%22/%3E%3Crect x=%220%22 y=%226.667%22 width=%2230%22 height=%226.687%22 fill=%22%23005DA4%22/%3E%3Crect x=%220%22 y=%2213.333%22 width=%2230%22 height=%226.687%22 fill=%22%23ED1C24%22/%3E%3C/svg%3E", "hr": "data:image/svg+xml;charset=utf-8,%3Csvg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 30 20%22 width=%2230%22 height=%2220%22%3E%3Crect x=%220%22 y=%220.000%22 width=%2230%22 height=%226.687%22 fill=%22%23FF0000%22/%3E%3Crect x=%220%22 y=%226.667%22 width=%2230%22 height=%226.687%22 fill=%22%23FFFFFF%22/%3E%3Crect x=%220%22 y=%2213.333%22 width=%2230%22 height=%226.687%22 fill=%22%23171796%22/%3E%3C/svg%3E", "hu": "data:image/svg+xml;charset=utf-8,%3Csvg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 30 20%22 width=%2230%22 height=%2220%22%3E%3Crect x=%220%22 y=%220.000%22 width=%2230%22 height=%226.687%22 fill=%22%23CD2A3E%22/%3E%3Crect x=%220%22 y=%226.667%22 width=%2230%22 height=%226.687%22 fill=%22%23FFFFFF%22/%3E%3Crect x=%220%22 y=%2213.333%22 width=%2230%22 height=%226.687%22 fill=%22%23436F4D%22/%3E%3C/svg%3E", "ro": "data:image/svg+xml;charset=utf-8,%3Csvg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 30 20%22 width=%2230%22 height=%2220%22%3E%3Crect x=%220.000%22 y=%220%22 width=%2210.020%22 height=%2220%22 fill=%22%23002B7F%22/%3E%3Crect x=%2210.000%22 y=%220%22 width=%2210.020%22 height=%2220%22 fill=%22%23FCD116%22/%3E%3Crect x=%2220.000%22 y=%220%22 width=%2210.020%22 height=%2220%22 fill=%22%23CE1126%22/%3E%3C/svg%3E", "bg": "data:image/svg+xml;charset=utf-8,%3Csvg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 30 20%22 width=%2230%22 height=%2220%22%3E%3Crect x=%220%22 y=%220.000%22 width=%2230%22 height=%226.687%22 fill=%22%23FFFFFF%22/%3E%3Crect x=%220%22 y=%226.667%22 width=%2230%22 height=%226.687%22 fill=%22%2300966E%22/%3E%3Crect x=%220%22 y=%2213.333%22 width=%2230%22 height=%226.687%22 fill=%22%23D62612%22/%3E%3C/svg%3E", "el": "data:image/svg+xml;charset=utf-8,%3Csvg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 30 20%22 width=%2230%22 height=%2220%22%3E%3Crect x=%220%22 y=%220.000%22 width=%2230%22 height=%222.242%22 fill=%22%230D5EAF%22/%3E%3Crect x=%220%22 y=%222.222%22 width=%2230%22 height=%222.242%22 fill=%22%23FFFFFF%22/%3E%3Crect x=%220%22 y=%224.444%22 width=%2230%22 height=%222.242%22 fill=%22%230D5EAF%22/%3E%3Crect x=%220%22 y=%226.667%22 width=%2230%22 height=%222.242%22 fill=%22%23FFFFFF%22/%3E%3Crect x=%220%22 y=%228.889%22 width=%2230%22 height=%222.242%22 fill=%22%230D5EAF%22/%3E%3Crect x=%220%22 y=%2211.111%22 width=%2230%22 height=%222.242%22 fill=%22%23FFFFFF%22/%3E%3Crect x=%220%22 y=%2213.333%22 width=%2230%22 height=%222.242%22 fill=%22%230D5EAF%22/%3E%3Crect x=%220%22 y=%2215.556%22 width=%2230%22 height=%222.242%22 fill=%22%23FFFFFF%22/%3E%3Crect x=%220%22 y=%2217.778%22 width=%2230%22 height=%222.242%22 fill=%22%230D5EAF%22/%3E%3Crect width=%2211.12%22 height=%2211.12%22 fill=%22%230D5EAF%22/%3E%3Crect x=%224.45%22 width=%222.22%22 height=%2211.12%22 fill=%22%23fff%22/%3E%3Crect y=%224.45%22 width=%2211.12%22 height=%222.22%22 fill=%22%23fff%22/%3E%3C/svg%3E", "mt": "data:image/svg+xml;charset=utf-8,%3Csvg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 30 20%22 width=%2230%22 height=%2220%22%3E%3Crect x=%220.000%22 y=%220%22 width=%2215.020%22 height=%2220%22 fill=%22%23FFFFFF%22/%3E%3Crect x=%2215.000%22 y=%220%22 width=%2215.020%22 height=%2220%22 fill=%22%23CF142B%22/%3E%3C/svg%3E", "ga": "data:image/svg+xml;charset=utf-8,%3Csvg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 30 20%22 width=%2230%22 height=%2220%22%3E%3Crect x=%220.000%22 y=%220%22 width=%2210.020%22 height=%2220%22 fill=%22%23169B62%22/%3E%3Crect x=%2210.000%22 y=%220%22 width=%2210.020%22 height=%2220%22 fill=%22%23FFFFFF%22/%3E%3Crect x=%2220.000%22 y=%220%22 width=%2210.020%22 height=%2220%22 fill=%22%23FF883E%22/%3E%3C/svg%3E"};
   function valid(c) { return LANGS.indexOf(c) > -1; }
   function fromUrl() { try { var m = /[?&]taal=([a-z]{2})(&|$)/.exec(location.search); return m && valid(m[1]) ? m[1] : null; } catch (e) { return null; } }
   function fromStore() { try { var v = localStorage.getItem(KEY); return valid(v) ? v : null; } catch (e) { return null; } }
   function fromBrowser() { var l = navigator.languages || [navigator.language || '']; for (var i = 0; i < l.length; i++) { var c = String(l[i]).slice(0, 2).toLowerCase(); if (valid(c)) return c; } return null; }
   var cur = fromUrl() || fromStore() || fromBrowser() || 'en';
-  var sel = document.getElementById('taalkeuze');
-  sel.innerHTML = LANGS.map(function (c) { return '<option value="' + c + '">' + NAMES[c] + '</option>'; }).join('');
+  var tk = galadinTaalKeuze(document.getElementById('taalhost'), {
+    langs: LANGS, names: NAMES, flags: FLAGS, current: cur, label: 'Language / Taal',
+    onChange: function (c) { cur = c; try { localStorage.setItem(KEY, c); } catch (e) { } apply(); }
+  });
   function apply() {
-    document.documentElement.lang = cur; sel.value = cur;
-    document.querySelector('label[for=taalkeuze]').textContent = LABEL[cur];
+    document.documentElement.lang = cur; tk.set(cur);
     var bl = document.querySelectorAll('[data-l]');
     for (var i = 0; i < bl.length; i++) bl[i].hidden = bl[i].getAttribute('data-l') !== cur;
   }
-  sel.addEventListener('change', function () { cur = sel.value; try { localStorage.setItem(KEY, cur); } catch (e) { } apply(); });
   apply();
 })();
 </script>
