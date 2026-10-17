@@ -25,26 +25,33 @@ canvas, img { image-rendering: pixelated; image-rendering: crisp-edges; }
 .record { margin: 0; font: 700 14px var(--kop); letter-spacing: .08em; color: var(--messing); }
 .versie { font-size: 11px; color: var(--inkt2); margin: 10px 0 0; }
 .hud { width: 100%; display: flex; align-items: center; gap: 6px; padding: 6px 8px; background: linear-gradient(180deg, #2a2230, #15101a); border-bottom: 2px solid var(--messing2); padding-top: calc(6px + env(safe-area-inset-top, 0px)); }
-.hud .vak { display: flex; flex-direction: column; min-width: 0; }
-.hud .vak small { font: 700 9px var(--kop); letter-spacing: .14em; color: var(--inkt2); }
+.hud .vak { display: flex; flex-direction: column; }
+
+.hud .vak small { font: 700 9px var(--kop); letter-spacing: .14em; color: var(--inkt2); white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
 .hud .vak b { font: 900 20px/1 var(--kop); color: var(--messing); letter-spacing: .04em; white-space: nowrap; }
 .hud .vak:not(.klein) { flex: 1; }
+.hud.krap .vak small { letter-spacing: .02em; font-size: 8px; }
+.hud.krapst .vak { flex: 1 1 auto; }
+.hud.krapst .vak small { width: 0; min-width: 100%; }
 .hud .vak.klein b { font-size: 15px; color: var(--inkt); }
+@media (max-width: 420px) { .hud { gap: 4px; padding-left: 6px; padding-right: 6px; } .hud .vak b { font-size: 17px; } .hud .vak.klein b { font-size: 13px; } }
 .letters i { font-style: normal; display: inline-block; width: 14px; text-align: center; color: #4a3a2a; }
 .letters i.aan { color: #ffd54f; text-shadow: 0 0 6px rgba(255,213,79,.9); }
 .rond { width: 32px; height: 32px; border-radius: 50%; display: grid; place-items: center; background: #2e2535; border: 1px solid var(--messing2); font: 700 18px/1 var(--kop); color: var(--inkt2); flex: none; }
 .rond[aria-pressed="false"] { opacity: .45; }
 .kast { flex: 1; display: flex; align-items: flex-start; justify-content: center; width: 100%; background: #000; overflow: hidden; }
 #doek { display: block; background: #000; }
-.knoppen { width: 100%; display: grid; grid-template-columns: 1fr auto auto 1fr; gap: 6px; padding: 6px 8px calc(8px + env(safe-area-inset-bottom, 0px)); background: #15101a; border-top: 2px solid var(--messing2); }
+.knoppen { width: 100%; display: grid; grid-template-columns: minmax(48px, 1fr) minmax(0, auto) minmax(0, auto) minmax(48px, 1fr); gap: 6px; padding: 6px 8px calc(8px + env(safe-area-inset-bottom, 0px)); background: #15101a; border-top: 2px solid var(--messing2); }
 .flipknop { height: 56px; border-radius: 10px; background: linear-gradient(180deg, #3a2f44, #1e1826); border: 1px solid var(--messing2); font: 900 24px var(--kop); color: var(--messing); box-shadow: 0 3px 0 #0b0810; }
 .flipknop:active, .lanceerknop:active, .stootknop:active { transform: translateY(2px); box-shadow: none; filter: brightness(1.2); }
 .lanceerknop { height: 56px; padding: 0 16px; border-radius: 10px; background: linear-gradient(180deg, #e74c3c, #8e1b10); color: #fff; font: 900 15px var(--kop); letter-spacing: .1em; box-shadow: 0 3px 0 #4a0a05; }
 .stootknop { height: 56px; padding: 0 10px; border-radius: 10px; background: #2e2535; border: 1px solid var(--messing2); color: var(--inkt2); font: 700 12px var(--kop); letter-spacing: .1em; box-shadow: 0 3px 0 #0b0810; }
 @media (pointer: fine) and (min-width: 700px) { .knoppen { display: none; } }
 
+.lanceerknop, .stootknop { min-width: 0; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+
 .tafels { display: grid; gap: 10px; width: min(100%, 480px); }
-.tafelkaart { display: grid; grid-template-columns: 120px 1fr; gap: 12px; align-items: center; text-align: left; padding: 8px; border-radius: 12px; background: linear-gradient(180deg, #2e2535, #1b1420); border: 2px solid var(--messing2); box-shadow: 0 6px 16px rgba(0,0,0,.5); }
+.tafelkaart { display: grid; grid-template-columns: 120px minmax(0, 1fr); gap: 12px; align-items: center; text-align: left; padding: 8px; border-radius: 12px; background: linear-gradient(180deg, #2e2535, #1b1420); border: 2px solid var(--messing2); box-shadow: 0 6px 16px rgba(0,0,0,.5); }
 .tafelkaart:active { transform: translateY(2px); }
 .tafelkaart img { width: 120px; height: 68px; object-fit: cover; border-radius: 6px; border: 1px solid #0b0810; }
 .tafelkaart .geenbeeld { display: block; width: 120px; height: 68px; border-radius: 6px; background: repeating-linear-gradient(135deg, #242838 0 8px, #1a1c26 8px 16px); }
@@ -66,6 +73,13 @@ canvas, img { image-rendering: pixelated; image-rendering: crisp-edges; }
   .zijpaneel li { margin-bottom: 6px; }
   .zijpaneel b { color: var(--inkt); }
 }
+
+.taalkeuze { display: inline-flex; align-items: center; gap: 6px; margin: 8px 0 0; font-size: 12px; color: var(--inkt2); }
+.taalkeuze select { font: inherit; color: inherit; background: rgba(255,255,255,.06); border: 1px solid rgba(255,255,255,.18); border-radius: 6px; padding: 4px 6px; }
+.taalkeuze option { color: #111; }
+
+@media (max-width: 400px) { .lanceerknop { padding: 0 10px; letter-spacing: .04em; font-size: 14px; } .stootknop { padding: 0 8px; letter-spacing: .04em; }
+  .tafelkaart { grid-template-columns: 96px minmax(0, 1fr); gap: 10px; } .tafelkaart img, .tafelkaart .geenbeeld { width: 96px; height: 54px; } .tafelkaart b { font-size: 19px; letter-spacing: .04em; } .tafelkaart small { letter-spacing: .1em; } }
 
 
 #studio { --gw: min(96vw, 66vh); position: fixed; inset: 0; z-index: 1000; display: grid; place-items: center; background: rgb(8,11,53) linear-gradient(to bottom, rgb(4,5,31) 0%, rgb(6,7,44) calc(50% + var(--gw) * -0.5195), rgb(7,8,46) calc(50% + var(--gw) * -0.4330), rgb(7,9,49) calc(50% + var(--gw) * -0.3463), rgb(8,10,50) calc(50% + var(--gw) * -0.2598), rgb(8,11,52) calc(50% + var(--gw) * -0.1732), rgb(8,11,53) calc(50% + var(--gw) * -0.0866), rgb(8,11,53) calc(50% + var(--gw) * 0.0000), rgb(8,11,52) calc(50% + var(--gw) * 0.0866), rgb(8,10,50) calc(50% + var(--gw) * 0.1732), rgb(7,9,49) calc(50% + var(--gw) * 0.2598), rgb(7,8,47) calc(50% + var(--gw) * 0.3463), rgb(6,7,44) calc(50% + var(--gw) * 0.4330), rgb(5,6,42) calc(50% + var(--gw) * 0.5195), rgb(4,5,31) 100%); transition: opacity .45s ease; }
@@ -110,6 +124,7 @@ canvas, img { image-rendering: pixelated; image-rendering: crisp-edges; }
   </section>
 </div>
 <script>
+var SPEL_VERSIE="0.9";
 
 
 
@@ -459,6 +474,1482 @@ function tril(ms) {
     else if (navigator.vibrate) navigator.vibrate(ms);
   } catch (e) {  }
 }
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+const TALEN = {
+  nl: 'Nederlands', en: 'English', de: 'Deutsch', fr: 'Français', es: 'Español', it: 'Italiano', pt: 'Português',
+  da: 'Dansk', sv: 'Svenska', fi: 'Suomi', et: 'Eesti', lv: 'Latviešu', lt: 'Lietuvių', pl: 'Polski', cs: 'Čeština',
+  sk: 'Slovenčina', sl: 'Slovenščina', hr: 'Hrvatski', hu: 'Magyar', ro: 'Română', bg: 'Български', el: 'Ελληνικά',
+  mt: 'Malti', ga: 'Gaeilge',
+};
+const TAALBOEK = {}, TAALPATROON = {};
+for (const t of Object.keys(TALEN)) if (t !== 'nl') { TAALBOEK[t] = {}; TAALPATROON[t] = []; }
+let TAAL = 'nl';
+const taalHeeft = (t) => t === 'nl' || !!(TAALBOEK[t] && Object.keys(TAALBOEK[t]).length);
+
+const spelTalen = () => Object.keys(TALEN).filter(taalHeeft);
+function taalKiezen() {
+  let gevraagd = null;
+  try { gevraagd = new URLSearchParams(location.search).get('taal'); } catch (e) { gevraagd = null; }
+  if (!TALEN[gevraagd]) { try { gevraagd = localStorage.getItem('galadin_taal'); } catch (e) { gevraagd = null; } }
+  if (!TALEN[gevraagd]) {
+    const b = (navigator.languages || [navigator.language || '']).map((x) => String(x).slice(0, 2).toLowerCase());
+    gevraagd = b.find((t) => TALEN[t] && taalHeeft(t)) || b.find((t) => TALEN[t]) || null;
+  }
+  TAAL = !gevraagd ? 'nl' : taalHeeft(gevraagd) ? gevraagd : taalHeeft('en') ? 'en' : 'nl';
+  try { document.documentElement.lang = TAAL; } catch (e) {  }
+  return TAAL;
+}
+
+function vertaal(nl, ...arg) {
+  let v = nl;
+  if (TAAL !== 'nl' && typeof nl === 'string') {
+    const boek = TAALBOEK[TAAL] || {};
+    if (boek[nl] != null) v = boek[nl];
+    else for (const [re, r] of TAALPATROON[TAAL] || []) { if (re.test(nl)) { v = nl.replace(re, r); break; } }
+  }
+  return arg.length ? String(v).replace(/\{(\d)\}/g, (m, i) => arg[i]) : v;
+}
+
+const TAAL_ATTR = ['aria-label', 'title', 'placeholder', 'alt'];
+let taalBezig = false;
+function vertaalKnoop(n) {
+  if (n.nodeType === 3) {
+    if (n.__nl == null) n.__nl = n.nodeValue;
+    const ruw = n.__nl, kern = ruw.trim();
+    if (!kern) return;
+    const nieuw = ruw.replace(kern, vertaal(kern));
+    if (n.nodeValue !== nieuw) n.nodeValue = nieuw;
+  } else if (n.nodeType === 1) {
+    if (n.tagName === 'SCRIPT' || n.tagName === 'STYLE' || n.hasAttribute('data-geen-vertaling')) return;
+    for (const a of TAAL_ATTR) {
+      if (!n.hasAttribute(a)) continue;
+      const k = 'nl_' + a.replace('-', '');
+      if (n.dataset[k] == null) n.dataset[k] = n.getAttribute(a);
+      const v = vertaal(n.dataset[k]);
+      if (n.getAttribute(a) !== v) n.setAttribute(a, v);
+    }
+    for (const c of n.childNodes) vertaalKnoop(c);
+  }
+}
+
+
+function taalVerwerk(lijst) {
+  for (const m of lijst) {
+    if (m.type === 'characterData') { m.target.__nl = m.target.nodeValue; vertaalKnoop(m.target); }
+    else if (m.type === 'attributes') { const el = m.target, k = 'nl_' + m.attributeName.replace('-', ''); el.dataset[k] = el.getAttribute(m.attributeName); vertaalKnoop(el); }
+    else for (const n of m.addedNodes) vertaalKnoop(n);
+  }
+}
+const taalWacht = new MutationObserver((lijst) => {
+  if (taalBezig) return;
+  taalBezig = true;
+  try { taalVerwerk(lijst); } finally { taalWacht.takeRecords(); taalBezig = false; }
+});
+function vertaalDom(root) {
+  taalBezig = true;
+  try { taalVerwerk(taalWacht.takeRecords()); vertaalKnoop(root || document.body); } finally { taalWacht.takeRecords(); taalBezig = false; }
+}
+
+function taalStart() {
+  taalKiezen();
+  vertaalDom(document.body);
+  taalWacht.observe(document.body, { childList: true, subtree: true, characterData: true, attributes: true, attributeFilter: TAAL_ATTR });
+  try { const t = document.querySelector('title'); if (t) { t.__nl = t.__nl || t.textContent; t.textContent = vertaal(t.__nl); } } catch (e) {  }
+}
+
+
+function zetTaal(t) {
+  if (!TALEN[t]) return;
+  TAAL = taalHeeft(t) ? t : taalHeeft('en') ? 'en' : 'nl';
+  try { localStorage.setItem('galadin_taal', t); } catch (e) {  }
+  try { document.documentElement.lang = TAAL; } catch (e) {  }
+  for (const s of document.querySelectorAll('[data-taalkeuze]')) s.value = TAAL;
+  vertaalDom(document.body);
+  try { const ti = document.querySelector('title'); if (ti && ti.__nl) ti.textContent = vertaal(ti.__nl); } catch (e) {  }
+  if (typeof window.taalVeranderd === 'function') window.taalVeranderd(TAAL);
+}
+
+function taalKiezerHtml() {
+  return '<label class="taalkeuze" data-geen-vertaling>🌐 <select data-taalkeuze aria-label="Language">' +
+    spelTalen().map((t) => '<option value="' + t + '"' + (t === TAAL ? ' selected' : '') + '>' + TALEN[t] + '</option>').join('') + '</select></label>';
+}
+document.addEventListener('change', (e) => { if (e.target && e.target.matches && e.target.matches('[data-taalkeuze]')) zetTaal(e.target.value); });
+
+
+Object.assign(TAALBOEK.bg, {
+  "KIES EEN TAFEL": "ИЗБЕРИ МАСА",
+  "Pc: Z en / voor de flippers, pijl omlaag vasthouden om de bal weg te schieten, X stoot.": "PC: Z и / за флипърите, задръж стрелка надолу, за да изстреляш топчето, X разклаща.",
+  "Telefoon: tik links of rechts op de tafel, LANCEER vasthouden.": "Телефон: докосни масата отляво или отдясно, задръж ИЗСТРЕЛ.",
+  "Terug naar de tafelkeuze": "Обратно към избора на маса",
+  "SCORE": "ТОЧКИ",
+  "BAL": "ТОПЧЕ",
+  "BONUS": "БОНУС",
+  "LANEN": "ПЪТЕКИ",
+  "RECORD": "РЕКОРД",
+  "Muziek aan of uit": "Музика вкл. или изкл.",
+  "Geluid aan of uit": "Звук вкл. или изкл.",
+  "De flipperkast": "Пинбол автоматът",
+  "Linkerflipper": "Ляв флипър",
+  "Rechterflipper": "Десен флипър",
+  "Stoot tegen de kast": "Разклати автомата",
+  "STOOT": "РАЗКЛАТИ",
+  "Veer: vasthouden en loslaten": "Пружина: задръж и пусни",
+  "LANCEER": "ИЗСТРЕЛ",
+  "Besturing en regels": "Управление и правила",
+  "Het Uurwerk": "Часовниковият механизъм",
+  "Tafel 1 · 1900": "Маса 1 · 1900",
+  "Tafel 2 · de androïde": "Маса 2 · андроидът",
+  "Tafel 3 · Wenen 1785": "Маса 3 · Виена 1785",
+  "record {0}": "рекорд {0}",
+  "nog niet gespeeld": "още не е играна",
+  " · laatste {0}": " · последно {0}",
+  "Bal {0} · trek aan de veer": "Топче {0} · дръпни пружината",
+  "Besturing": "Управление",
+  "linkerflipper": "ляв флипър",
+  "rechterflipper": "десен флипър",
+  "bal wegschieten: vasthouden, loslaten": "изстреляй топчето: задръж, пусни",
+  "stoot (vier keer in twee tellen is tilt)": "разклащане (четири пъти за две секунди е тилт)",
+  "nieuw spel": "нова игра",
+  "terug naar de tafelkeuze": "обратно към избора на маса",
+  "De lanen bovenin spellen {0}: vol is {1} en de bonus een trap hoger (tot x5).": "Горните пътеки изписват {0}: пълни дават {1} и бонусът се вдига с едно ниво (до x5).",
+  "Bumper {0}. Drie valdoelen neer: bank {1} en {2} tellen bumpers x10.": "Бъмпер {0}. И трите падащи мишени долу: редица {1} и {2} секунди бъмпери x10.",
+  "Beide staande doelen: {0} en de accu vol: het vanggat is dan {1} in plaats van {2}.": "Двете неподвижни мишени: {0} и пълна батерия: дупката тогава струва {1} вместо {2}.",
+  "Beide staande doelen: {0}.": "Двете неподвижни мишени: {0}.",
+  "De bovenbaan (vol lanceren, of langs de linkerwand omhoog): elke keer dat de bal er doorheen rolt, haal je het volgende van {0} stukken bladmuziek uit de bibliotheek ({1}); alle {0} is {2}: {3} en de multiplier omhoog.": "Горната орбита (пълен изстрел или нагоре покрай лявата стена): всеки път, когато топчето премине през нея, донасяш от библиотеката следващия от {0} нотни листа ({1}); всички {0} заедно са {2}: {3} и множителят се вдига.",
+  "Extra bal bij {0}. Bonus per bal: letters en doelen keer de multiplier.": "Допълнително топче при {0}. Бонус за топче: букви и мишени по множителя.",
+  "SPEL VOORBIJ": "КРАЙ НА ИГРАТА",
+  "{0} punten": "{0} точки",
+  " · RECORD!": " · РЕКОРД!",
+  "tik of druk op Enter voor een nieuw spel": "докосни или натисни Enter за нова игра",
+  "{0}! Multiplier x{1}": "{0}! Множител x{1}",
+  "BANK! +{0} · bumpers x10 voor {1} tellen": "РЕДИЦА! +{0} · бъмпери x10 за {1} секунди",
+  "Beide doelen! +{0}": "Двете мишени! +{0}",
+  " · accu vol: het vanggat is {0} waard": " · батерията е пълна: дупката струва {0}",
+  "OPGELADEN! +{0}": "ЗАРЕДЕНО! +{0}",
+  "Bladmuziek {0} van {1}: {2}": "Нотен лист {0} от {1}: {2}",
+  "Symfonie nr. 40": "Симфония № 40",
+  "Pianoconcert nr. 21, andante": "Концерт за пиано № 21, анданте",
+  "Die Zauberflöte, Koningin van de Nacht": "Die Zauberflöte, Царицата на нощта",
+  "Ah vous dirai-je, Maman (variaties)": "Ah vous dirai-je, Maman (вариации)",
+  "de symfonie": "симфонията",
+  "{0} compleet! +{1} · multiplier x{2}": "{0} завършена! +{1} · множител x{2}",
+  "Te zacht. Nog eens.": "Твърде слабо. Още веднъж.",
+  "TILT: de flippers zijn dood tot de volgende bal": "TILT: флипърите не работят до следващото топче",
+  "De bal zat klem; een duwtje.": "Топчето заседна; малко побутване.",
+  "Bonus {0} (x{1})": "Бонус {0} (x{1})",
+  "EXTRA BAL!": "ДОПЪЛНИТЕЛНО ТОПЧЕ!",
+  " · een hommage aan de flipperkasten van 1993": " · почит към пинбол игрите от 1993 г.",
+});
+
+
+Object.assign(TAALBOEK.cs, {
+  "KIES EEN TAFEL": "VYBER STŮL",
+  "Pc: Z en / voor de flippers, pijl omlaag vasthouden om de bal weg te schieten, X stoot.": "PC: Z a / pro flippery, drž šipku dolů pro vystřelení kuličky, X zatřese.",
+  "Telefoon: tik links of rechts op de tafel, LANCEER vasthouden.": "Telefon: ťukni vlevo nebo vpravo na stůl, drž VÝSTŘEL.",
+  "Terug naar de tafelkeuze": "Zpět na výběr stolu",
+  "SCORE": "SKÓRE",
+  "BAL": "KULIČKA",
+  "BONUS": "BONUS",
+  "LANEN": "DRÁHY",
+  "RECORD": "REKORD",
+  "Muziek aan of uit": "Hudba zap. nebo vyp.",
+  "Geluid aan of uit": "Zvuk zap. nebo vyp.",
+  "De flipperkast": "Pinballový automat",
+  "Linkerflipper": "Levý flipper",
+  "Rechterflipper": "Pravý flipper",
+  "Stoot tegen de kast": "Zatřást automatem",
+  "STOOT": "ZATŘÁST",
+  "Veer: vasthouden en loslaten": "Pružina: drž a pusť",
+  "LANCEER": "VÝSTŘEL",
+  "Besturing en regels": "Ovládání a pravidla",
+  "Het Uurwerk": "Hodinový strojek",
+  "Tafel 1 · 1900": "Stůl 1 · 1900",
+  "Tafel 2 · de androïde": "Stůl 2 · android",
+  "Tafel 3 · Wenen 1785": "Stůl 3 · Vídeň 1785",
+  "record {0}": "rekord {0}",
+  "nog niet gespeeld": "zatím nehráno",
+  " · laatste {0}": " · naposledy {0}",
+  "Bal {0} · trek aan de veer": "Kulička {0} · natáhni pružinu",
+  "Besturing": "Ovládání",
+  "linkerflipper": "levý flipper",
+  "rechterflipper": "pravý flipper",
+  "bal wegschieten: vasthouden, loslaten": "vystřelit kuličku: drž, pusť",
+  "stoot (vier keer in twee tellen is tilt)": "zatřesení (čtyřikrát za dvě sekundy je tilt)",
+  "nieuw spel": "nová hra",
+  "terug naar de tafelkeuze": "zpět na výběr stolu",
+  "De lanen bovenin spellen {0}: vol is {1} en de bonus een trap hoger (tot x5).": "Horní dráhy skládají {0}: plné dají {1} a bonus stoupne o stupeň (až x5).",
+  "Bumper {0}. Drie valdoelen neer: bank {1} en {2} tellen bumpers x10.": "Bumper {0}. Všechny tři padací terče dole: řada {1} a bumpery x10 na {2} sekund.",
+  "Beide staande doelen: {0} en de accu vol: het vanggat is dan {1} in plaats van {2}.": "Oba pevné terče: {0} a plná baterie: jamka má pak hodnotu {1} místo {2}.",
+  "Beide staande doelen: {0}.": "Oba pevné terče: {0}.",
+  "De bovenbaan (vol lanceren, of langs de linkerwand omhoog): elke keer dat de bal er doorheen rolt, haal je het volgende van {0} stukken bladmuziek uit de bibliotheek ({1}); alle {0} is {2}: {3} en de multiplier omhoog.": "Horní oblouk (plný výstřel, nebo nahoru podél levé stěny): pokaždé, když jím kulička projede, doneseš z knihovny další z {0} not ({1}); všech {0} je {2}: {3} a násobitel stoupne.",
+  "Extra bal bij {0}. Bonus per bal: letters en doelen keer de multiplier.": "Kulička navíc při {0}. Bonus za kuličku: písmena a terče krát násobitel.",
+  "SPEL VOORBIJ": "KONEC HRY",
+  "{0} punten": "{0} bodů",
+  " · RECORD!": " · REKORD!",
+  "tik of druk op Enter voor een nieuw spel": "ťukni nebo stiskni Enter pro novou hru",
+  "{0}! Multiplier x{1}": "{0}! Násobitel x{1}",
+  "BANK! +{0} · bumpers x10 voor {1} tellen": "ŘADA! +{0} · bumpery x10 na {1} sekund",
+  "Beide doelen! +{0}": "Oba terče! +{0}",
+  " · accu vol: het vanggat is {0} waard": " · baterie plná: jamka má hodnotu {0}",
+  "OPGELADEN! +{0}": "NABITO! +{0}",
+  "Bladmuziek {0} van {1}: {2}": "Noty {0} z {1}: {2}",
+  "Symfonie nr. 40": "Symfonie č. 40",
+  "Pianoconcert nr. 21, andante": "Klavírní koncert č. 21, andante",
+  "Die Zauberflöte, Koningin van de Nacht": "Die Zauberflöte, Královna noci",
+  "Ah vous dirai-je, Maman (variaties)": "Ah vous dirai-je, Maman (variace)",
+  "de symfonie": "symfonie",
+  "{0} compleet! +{1} · multiplier x{2}": "{0} dokončena! +{1} · násobitel x{2}",
+  "Te zacht. Nog eens.": "Moc slabě. Ještě jednou.",
+  "TILT: de flippers zijn dood tot de volgende bal": "TILT: flippery jsou mrtvé až do další kuličky",
+  "De bal zat klem; een duwtje.": "Kulička se zasekla; malé postrčení.",
+  "Bonus {0} (x{1})": "Bonus {0} (x{1})",
+  "EXTRA BAL!": "KULIČKA NAVÍC!",
+  " · een hommage aan de flipperkasten van 1993": " · pocta pinballovým hrám z roku 1993",
+});
+
+
+Object.assign(TAALBOEK.da, {
+  "KIES EEN TAFEL": "VÆLG ET BORD",
+  "Pc: Z en / voor de flippers, pijl omlaag vasthouden om de bal weg te schieten, X stoot.": "PC: Z og / til flipperne, hold pil ned for at skyde kuglen af, X skubber.",
+  "Telefoon: tik links of rechts op de tafel, LANCEER vasthouden.": "Telefon: tryk til venstre eller højre på bordet, hold AFFYR.",
+  "Terug naar de tafelkeuze": "Tilbage til valg af bord",
+  "SCORE": "POINT",
+  "BAL": "KUGLE",
+  "BONUS": "BONUS",
+  "LANEN": "BANER",
+  "RECORD": "REKORD",
+  "Muziek aan of uit": "Musik til eller fra",
+  "Geluid aan of uit": "Lyd til eller fra",
+  "De flipperkast": "Flippermaskinen",
+  "Linkerflipper": "Venstre flipper",
+  "Rechterflipper": "Højre flipper",
+  "Stoot tegen de kast": "Skub til maskinen",
+  "STOOT": "SKUB",
+  "Veer: vasthouden en loslaten": "Fjeder: hold og slip",
+  "LANCEER": "AFFYR",
+  "Besturing en regels": "Styring og regler",
+  "Het Uurwerk": "Urværket",
+  "Tafel 1 · 1900": "Bord 1 · 1900",
+  "Tafel 2 · de androïde": "Bord 2 · androiden",
+  "Tafel 3 · Wenen 1785": "Bord 3 · Wien 1785",
+  "record {0}": "rekord {0}",
+  "nog niet gespeeld": "ikke spillet endnu",
+  " · laatste {0}": " · sidst {0}",
+  "Bal {0} · trek aan de veer": "Kugle {0} · træk i fjederen",
+  "Besturing": "Styring",
+  "linkerflipper": "venstre flipper",
+  "rechterflipper": "højre flipper",
+  "bal wegschieten: vasthouden, loslaten": "skyd kuglen af: hold, slip",
+  "stoot (vier keer in twee tellen is tilt)": "skub (fire gange på to sekunder er tilt)",
+  "nieuw spel": "nyt spil",
+  "terug naar de tafelkeuze": "tilbage til valg af bord",
+  "De lanen bovenin spellen {0}: vol is {1} en de bonus een trap hoger (tot x5).": "De øverste baner staver {0}: fulde giver de {1}, og bonussen stiger et trin (op til x5).",
+  "Bumper {0}. Drie valdoelen neer: bank {1} en {2} tellen bumpers x10.": "Bumper {0}. Alle tre faldmål nede: række {1} og bumpere x10 i {2} sekunder.",
+  "Beide staande doelen: {0} en de accu vol: het vanggat is dan {1} in plaats van {2}.": "Begge stående mål: {0} og batteriet fuldt: fanghullet er så {1} værd i stedet for {2}.",
+  "Beide staande doelen: {0}.": "Begge stående mål: {0}.",
+  "De bovenbaan (vol lanceren, of langs de linkerwand omhoog): elke keer dat de bal er doorheen rolt, haal je het volgende van {0} stukken bladmuziek uit de bibliotheek ({1}); alle {0} is {2}: {3} en de multiplier omhoog.": "Den øverste bane (fuld affyring, eller op langs venstre væg): hver gang kuglen ruller igennem, henter du det næste af {0} nodeark fra biblioteket ({1}); alle {0} er {2}: {3}, og multiplikatoren stiger.",
+  "Extra bal bij {0}. Bonus per bal: letters en doelen keer de multiplier.": "Ekstra kugle ved {0}. Bonus pr. kugle: bogstaver og mål gange multiplikatoren.",
+  "SPEL VOORBIJ": "SPILLET ER SLUT",
+  "{0} punten": "{0} point",
+  " · RECORD!": " · REKORD!",
+  "tik of druk op Enter voor een nieuw spel": "tryk på skærmen eller på Enter for et nyt spil",
+  "{0}! Multiplier x{1}": "{0}! Multiplikator x{1}",
+  "BANK! +{0} · bumpers x10 voor {1} tellen": "RÆKKE! +{0} · bumpere x10 i {1} sekunder",
+  "Beide doelen! +{0}": "Begge mål! +{0}",
+  " · accu vol: het vanggat is {0} waard": " · batteri fuldt: fanghullet er {0} værd",
+  "OPGELADEN! +{0}": "OPLADET! +{0}",
+  "Bladmuziek {0} van {1}: {2}": "Nodeark {0} af {1}: {2}",
+  "Symfonie nr. 40": "Symfoni nr. 40",
+  "Pianoconcert nr. 21, andante": "Klaverkoncert nr. 21, andante",
+  "Die Zauberflöte, Koningin van de Nacht": "Die Zauberflöte, Nattens Dronning",
+  "Ah vous dirai-je, Maman (variaties)": "Ah vous dirai-je, Maman (variationer)",
+  "de symfonie": "symfonien",
+  "{0} compleet! +{1} · multiplier x{2}": "{0} fuldendt! +{1} · multiplikator x{2}",
+  "Te zacht. Nog eens.": "For blødt. Prøv igen.",
+  "TILT: de flippers zijn dood tot de volgende bal": "TILT: flipperne er døde indtil næste kugle",
+  "De bal zat klem; een duwtje.": "Kuglen sad fast; et lille skub.",
+  "Bonus {0} (x{1})": "Bonus {0} (x{1})",
+  "EXTRA BAL!": "EKSTRA KUGLE!",
+  " · een hommage aan de flipperkasten van 1993": " · en hyldest til flipperspillene fra 1993",
+});
+
+
+Object.assign(TAALBOEK.de, {
+  'KIES EEN TAFEL': 'WÄHLE EINEN TISCH',
+  'Pc: Z en / voor de flippers, pijl omlaag vasthouden om de bal weg te schieten, X stoot.': 'PC: Z und / für die Flipper, Pfeil nach unten halten, um die Kugel abzuschießen, X rüttelt.',
+  'Telefoon: tik links of rechts op de tafel, LANCEER vasthouden.': 'Handy: links oder rechts auf den Tisch tippen, ABSCHUSS halten.',
+  'Terug naar de tafelkeuze': 'Zurück zur Tischauswahl',
+  'SCORE': 'PUNKTE', 'BAL': 'KUGEL', 'BONUS': 'BONUS', 'LANEN': 'BAHNEN', 'RECORD': 'REKORD',
+  'Muziek aan of uit': 'Musik an oder aus', 'Geluid aan of uit': 'Ton an oder aus', 'De flipperkast': 'Der Flipperautomat',
+  'Linkerflipper': 'Linker Flipper', 'Rechterflipper': 'Rechter Flipper', 'Stoot tegen de kast': 'Am Automaten rütteln', 'STOOT': 'RÜTTELN',
+  'Veer: vasthouden en loslaten': 'Feder: halten und loslassen', 'LANCEER': 'ABSCHUSS', 'Besturing en regels': 'Steuerung und Regeln',
+  'Het Uurwerk': 'Das Uhrwerk', 'Tafel 1 · 1900': 'Tisch 1 · 1900', 'Tafel 2 · de androïde': 'Tisch 2 · der Android', 'Tafel 3 · Wenen 1785': 'Tisch 3 · Wien 1785',
+  'record {0}': 'Rekord {0}', 'nog niet gespeeld': 'noch nicht gespielt', ' · laatste {0}': ' · zuletzt {0}',
+  'Bal {0} · trek aan de veer': 'Kugel {0} · zieh an der Feder',
+  'Besturing': 'Steuerung', 'linkerflipper': 'linker Flipper', 'rechterflipper': 'rechter Flipper',
+  'bal wegschieten: vasthouden, loslaten': 'Kugel abschießen: halten, loslassen', 'stoot (vier keer in twee tellen is tilt)': 'rütteln (viermal in zwei Sekunden ist Tilt)',
+  'nieuw spel': 'neues Spiel', 'terug naar de tafelkeuze': 'zurück zur Tischauswahl',
+  'De lanen bovenin spellen {0}: vol is {1} en de bonus een trap hoger (tot x5).': 'Die oberen Bahnen buchstabieren {0}: komplett gibt es {1} und der Bonus steigt eine Stufe (bis x5).',
+  'Bumper {0}. Drie valdoelen neer: bank {1} en {2} tellen bumpers x10.': 'Bumper {0}. Alle drei Fallziele unten: Bank {1} und {2} Sekunden Bumper x10.',
+  'Beide staande doelen: {0} en de accu vol: het vanggat is dan {1} in plaats van {2}.': 'Beide Stehziele: {0} und der Akku ist voll: das Fangloch ist dann {1} statt {2} wert.',
+  'Beide staande doelen: {0}.': 'Beide Stehziele: {0}.',
+  'De bovenbaan (vol lanceren, of langs de linkerwand omhoog): elke keer dat de bal er doorheen rolt, haal je het volgende van {0} stukken bladmuziek uit de bibliotheek ({1}); alle {0} is {2}: {3} en de multiplier omhoog.': 'Die obere Bahn (voll abschießen oder an der linken Wand hinauf): Jedes Mal, wenn die Kugel hindurchrollt, holst du das nächste von {0} Notenblättern aus der Bibliothek ({1}); alle {0} ergeben {2}: {3} und der Multiplikator steigt.',
+  'Extra bal bij {0}. Bonus per bal: letters en doelen keer de multiplier.': 'Extrakugel bei {0}. Bonus pro Kugel: Buchstaben und Ziele mal Multiplikator.',
+  'SPEL VOORBIJ': 'SPIEL VORBEI', '{0} punten': '{0} Punkte', ' · RECORD!': ' · REKORD!', 'tik of druk op Enter voor een nieuw spel': 'tippe oder drücke Enter für ein neues Spiel',
+  '{0}! Multiplier x{1}': '{0}! Multiplikator x{1}',
+  'BANK! +{0} · bumpers x10 voor {1} tellen': 'BANK! +{0} · Bumper x10 für {1} Sekunden',
+  'Beide doelen! +{0}': 'Beide Ziele! +{0}', ' · accu vol: het vanggat is {0} waard': ' · Akku voll: das Fangloch ist {0} wert',
+  'OPGELADEN! +{0}': 'AUFGELADEN! +{0}',
+  'Bladmuziek {0} van {1}: {2}': 'Notenblatt {0} von {1}: {2}',
+  'Symfonie nr. 40': 'Sinfonie Nr. 40', 'Pianoconcert nr. 21, andante': 'Klavierkonzert Nr. 21, Andante',
+  'Die Zauberflöte, Koningin van de Nacht': 'Die Zauberflöte, Königin der Nacht', 'Ah vous dirai-je, Maman (variaties)': 'Ah vous dirai-je, Maman (Variationen)',
+  'de symfonie': 'die Sinfonie',
+  '{0} compleet! +{1} · multiplier x{2}': '{0} komplett! +{1} · Multiplikator x{2}',
+  'Te zacht. Nog eens.': 'Zu schwach. Noch einmal.',
+  'TILT: de flippers zijn dood tot de volgende bal': 'TILT: Die Flipper sind bis zur nächsten Kugel tot',
+  'De bal zat klem; een duwtje.': 'Die Kugel steckte fest; ein kleiner Schubs.',
+  'Bonus {0} (x{1})': 'Bonus {0} (x{1})',
+  'EXTRA BAL!': 'EXTRAKUGEL!',
+  ' · een hommage aan de flipperkasten van 1993': ' · eine Hommage an die Flipperspiele von 1993',
+});
+
+
+Object.assign(TAALBOEK.el, {
+  "KIES EEN TAFEL": "ΔΙΑΛΕΞΕ ΤΡΑΠΕΖΙ",
+  "Pc: Z en / voor de flippers, pijl omlaag vasthouden om de bal weg te schieten, X stoot.": "PC: Z και / για τα φλίπερ, κράτα το κάτω βέλος για να εκτοξεύσεις την μπίλια, X ταρακουνά.",
+  "Telefoon: tik links of rechts op de tafel, LANCEER vasthouden.": "Κινητό: άγγιξε αριστερά ή δεξιά στο τραπέζι, κράτα ΒΟΛΗ.",
+  "Terug naar de tafelkeuze": "Πίσω στην επιλογή τραπεζιού",
+  "SCORE": "ΠΟΝΤΟΙ",
+  "BAL": "ΜΠΙΛΙΑ",
+  "BONUS": "ΜΠΟΝΟΥΣ",
+  "LANEN": "ΔΙΑΔΡΟΜΟΙ",
+  "RECORD": "ΡΕΚΟΡ",
+  "Muziek aan of uit": "Μουσική ανοιχτή ή κλειστή",
+  "Geluid aan of uit": "Ήχος ανοιχτός ή κλειστός",
+  "De flipperkast": "Το φλιπεράκι",
+  "Linkerflipper": "Αριστερό φλίπερ",
+  "Rechterflipper": "Δεξί φλίπερ",
+  "Stoot tegen de kast": "Ταρακούνησε το μηχάνημα",
+  "STOOT": "ΚΟΥΝΗΜΑ",
+  "Veer: vasthouden en loslaten": "Ελατήριο: κράτα και άφησε",
+  "LANCEER": "ΒΟΛΗ",
+  "Besturing en regels": "Χειρισμός και κανόνες",
+  "Het Uurwerk": "Ο Ωρολογιακός Μηχανισμός",
+  "Tafel 1 · 1900": "Τραπέζι 1 · 1900",
+  "Tafel 2 · de androïde": "Τραπέζι 2 · το ανδροειδές",
+  "Tafel 3 · Wenen 1785": "Τραπέζι 3 · Βιέννη 1785",
+  "record {0}": "ρεκόρ {0}",
+  "nog niet gespeeld": "δεν έχει παιχτεί ακόμα",
+  " · laatste {0}": " · τελευταίο {0}",
+  "Bal {0} · trek aan de veer": "Μπίλια {0} · τράβα το ελατήριο",
+  "Besturing": "Χειρισμός",
+  "linkerflipper": "αριστερό φλίπερ",
+  "rechterflipper": "δεξί φλίπερ",
+  "bal wegschieten: vasthouden, loslaten": "εκτόξευση μπίλιας: κράτα, άφησε",
+  "stoot (vier keer in twee tellen is tilt)": "ταρακούνημα (τέσσερις φορές σε δύο δευτερόλεπτα είναι tilt)",
+  "nieuw spel": "νέο παιχνίδι",
+  "terug naar de tafelkeuze": "πίσω στην επιλογή τραπεζιού",
+  "De lanen bovenin spellen {0}: vol is {1} en de bonus een trap hoger (tot x5).": "Οι πάνω διάδρομοι σχηματίζουν {0}: γεμάτοι δίνουν {1} και το μπόνους ανεβαίνει ένα σκαλί (έως x5).",
+  "Bumper {0}. Drie valdoelen neer: bank {1} en {2} tellen bumpers x10.": "Μπάμπερ {0}. Και οι τρεις πτυσσόμενοι στόχοι κάτω: σειρά {1} και {2} δευτερόλεπτα μπάμπερ x10.",
+  "Beide staande doelen: {0} en de accu vol: het vanggat is dan {1} in plaats van {2}.": "Και οι δύο σταθεροί στόχοι: {0} και η μπαταρία γεμάτη: η τρύπα αξίζει τότε {1} αντί για {2}.",
+  "Beide staande doelen: {0}.": "Και οι δύο σταθεροί στόχοι: {0}.",
+  "De bovenbaan (vol lanceren, of langs de linkerwand omhoog): elke keer dat de bal er doorheen rolt, haal je het volgende van {0} stukken bladmuziek uit de bibliotheek ({1}); alle {0} is {2}: {3} en de multiplier omhoog.": "Η πάνω τροχιά (πλήρης εκτόξευση ή προς τα πάνω κατά μήκος του αριστερού τοίχου): κάθε φορά που η μπίλια περνά από μέσα, φέρνεις από τη βιβλιοθήκη την επόμενη από {0} παρτιτούρες ({1}); και οι {0} μαζί είναι {2}: {3} και ο πολλαπλασιαστής ανεβαίνει.",
+  "Extra bal bij {0}. Bonus per bal: letters en doelen keer de multiplier.": "Έξτρα μπίλια στους {0}. Μπόνους ανά μπίλια: γράμματα και στόχοι επί τον πολλαπλασιαστή.",
+  "SPEL VOORBIJ": "ΤΕΛΟΣ ΠΑΙΧΝΙΔΙΟΥ",
+  "{0} punten": "{0} πόντοι",
+  " · RECORD!": " · ΡΕΚΟΡ!",
+  "tik of druk op Enter voor een nieuw spel": "άγγιξε ή πάτα Enter για νέο παιχνίδι",
+  "{0}! Multiplier x{1}": "{0}! Πολλαπλασιαστής x{1}",
+  "BANK! +{0} · bumpers x10 voor {1} tellen": "ΣΕΙΡΑ! +{0} · μπάμπερ x10 για {1} δευτερόλεπτα",
+  "Beide doelen! +{0}": "Και οι δύο στόχοι! +{0}",
+  " · accu vol: het vanggat is {0} waard": " · μπαταρία γεμάτη: η τρύπα αξίζει {0}",
+  "OPGELADEN! +{0}": "ΦΟΡΤΙΣΤΗΚΕ! +{0}",
+  "Bladmuziek {0} van {1}: {2}": "Παρτιτούρα {0} από {1}: {2}",
+  "Symfonie nr. 40": "Συμφωνία αρ. 40",
+  "Pianoconcert nr. 21, andante": "Κοντσέρτο για πιάνο αρ. 21, andante",
+  "Die Zauberflöte, Koningin van de Nacht": "Die Zauberflöte, Βασίλισσα της Νύχτας",
+  "Ah vous dirai-je, Maman (variaties)": "Ah vous dirai-je, Maman (παραλλαγές)",
+  "de symfonie": "η συμφωνία",
+  "{0} compleet! +{1} · multiplier x{2}": "{0} ολοκληρώθηκε! +{1} · πολλαπλασιαστής x{2}",
+  "Te zacht. Nog eens.": "Πολύ απαλά. Ξανά.",
+  "TILT: de flippers zijn dood tot de volgende bal": "TILT: τα φλίπερ είναι νεκρά μέχρι την επόμενη μπίλια",
+  "De bal zat klem; een duwtje.": "Η μπίλια κόλλησε· ένα μικρό σπρώξιμο.",
+  "Bonus {0} (x{1})": "Μπόνους {0} (x{1})",
+  "EXTRA BAL!": "ΕΞΤΡΑ ΜΠΙΛΙΑ!",
+  " · een hommage aan de flipperkasten van 1993": " · φόρος τιμής στα φλιπεράκια του 1993",
+});
+
+
+
+Object.assign(TAALBOEK.en, {
+  'KIES EEN TAFEL': 'CHOOSE A TABLE',
+  'Pc: Z en / voor de flippers, pijl omlaag vasthouden om de bal weg te schieten, X stoot.': 'PC: Z and / for the flippers, hold arrow down to launch the ball, X nudges.',
+  'Telefoon: tik links of rechts op de tafel, LANCEER vasthouden.': 'Phone: tap left or right on the table, hold LAUNCH.',
+  'Terug naar de tafelkeuze': 'Back to the table choice',
+  'SCORE': 'SCORE', 'BAL': 'BALL', 'BONUS': 'BONUS', 'LANEN': 'LANES', 'RECORD': 'RECORD',
+  'Muziek aan of uit': 'Music on or off', 'Geluid aan of uit': 'Sound on or off', 'De flipperkast': 'The pinball table',
+  'Linkerflipper': 'Left flipper', 'Rechterflipper': 'Right flipper', 'Stoot tegen de kast': 'Nudge the cabinet', 'STOOT': 'NUDGE',
+  'Veer: vasthouden en loslaten': 'Plunger: hold and release', 'LANCEER': 'LAUNCH', 'Besturing en regels': 'Controls and rules',
+  'Het Uurwerk': 'The Clockwork', 'Tafel 1 · 1900': 'Table 1 · 1900', 'Tafel 2 · de androïde': 'Table 2 · the android', 'Tafel 3 · Wenen 1785': 'Table 3 · Vienna 1785',
+  'record {0}': 'record {0}', 'nog niet gespeeld': 'not played yet', ' · laatste {0}': ' · last {0}',
+  'Bal {0} · trek aan de veer': 'Ball {0} · pull the plunger',
+  'Besturing': 'Controls', 'linkerflipper': 'left flipper', 'rechterflipper': 'right flipper',
+  'bal wegschieten: vasthouden, loslaten': 'launch the ball: hold, release', 'stoot (vier keer in twee tellen is tilt)': 'nudge (four times in two seconds is tilt)',
+  'nieuw spel': 'new game', 'terug naar de tafelkeuze': 'back to the table choice',
+  'De lanen bovenin spellen {0}: vol is {1} en de bonus een trap hoger (tot x5).': 'The top lanes spell {0}: complete them for {1} and the bonus goes up a step (up to x5).',
+  'Bumper {0}. Drie valdoelen neer: bank {1} en {2} tellen bumpers x10.': 'Bumper {0}. All three drop targets down: bank {1} and bumpers x10 for {2} seconds.',
+  'Beide staande doelen: {0} en de accu vol: het vanggat is dan {1} in plaats van {2}.': 'Both standup targets: {0} and the battery is charged: the saucer is then worth {1} instead of {2}.',
+  'Beide staande doelen: {0}.': 'Both standup targets: {0}.',
+  'De bovenbaan (vol lanceren, of langs de linkerwand omhoog): elke keer dat de bal er doorheen rolt, haal je het volgende van {0} stukken bladmuziek uit de bibliotheek ({1}); alle {0} is {2}: {3} en de multiplier omhoog.': 'The top orbit (full plunge, or up along the left wall): each time the ball rolls through, you fetch the next of {0} pieces of sheet music from the library ({1}); all {0} make {2}: {3} and the multiplier goes up.',
+  'Extra bal bij {0}. Bonus per bal: letters en doelen keer de multiplier.': 'Extra ball at {0}. Bonus per ball: letters and targets times the multiplier.',
+  'SPEL VOORBIJ': 'GAME OVER', '{0} punten': '{0} points', ' · RECORD!': ' · RECORD!', 'tik of druk op Enter voor een nieuw spel': 'tap or press Enter for a new game',
+  '{0}! Multiplier x{1}': '{0}! Multiplier x{1}',
+  'BANK! +{0} · bumpers x10 voor {1} tellen': 'BANK! +{0} · bumpers x10 for {1} seconds',
+  'Beide doelen! +{0}': 'Both targets! +{0}', ' · accu vol: het vanggat is {0} waard': ' · battery charged: the saucer is worth {0}',
+  'OPGELADEN! +{0}': 'CHARGED! +{0}',
+  'Bladmuziek {0} van {1}: {2}': 'Sheet music {0} of {1}: {2}',
+  'Symfonie nr. 40': 'Symphony No. 40', 'Pianoconcert nr. 21, andante': 'Piano Concerto No. 21, andante',
+  'Die Zauberflöte, Koningin van de Nacht': 'Die Zauberflöte, Queen of the Night', 'Ah vous dirai-je, Maman (variaties)': 'Ah vous dirai-je, Maman (variations)',
+  'de symfonie': 'the symphony',
+  '{0} compleet! +{1} · multiplier x{2}': '{0} complete! +{1} · multiplier x{2}',
+  'Te zacht. Nog eens.': 'Too soft. Try again.',
+  'TILT: de flippers zijn dood tot de volgende bal': 'TILT: the flippers are dead until the next ball',
+  'De bal zat klem; een duwtje.': 'The ball was stuck; a little push.',
+  'Bonus {0} (x{1})': 'Bonus {0} (x{1})',
+  'EXTRA BAL!': 'EXTRA BALL!',
+  ' · een hommage aan de flipperkasten van 1993': ' · a tribute to the pinball games of 1993',
+});
+
+
+Object.assign(TAALBOEK.es, {
+  'KIES EEN TAFEL': 'ELIGE UNA MESA',
+  'Pc: Z en / voor de flippers, pijl omlaag vasthouden om de bal weg te schieten, X stoot.': 'PC: Z y / para los flippers, mantén la flecha abajo para lanzar la bola, X sacude.',
+  'Telefoon: tik links of rechts op de tafel, LANCEER vasthouden.': 'Móvil: toca a la izquierda o a la derecha de la mesa, mantén LANZAR.',
+  'Terug naar de tafelkeuze': 'Volver a la elección de mesa',
+  'SCORE': 'PUNTOS', 'BAL': 'BOLA', 'BONUS': 'BONO', 'LANEN': 'CARRILES', 'RECORD': 'RÉCORD',
+  'Muziek aan of uit': 'Activar o quitar la música', 'Geluid aan of uit': 'Activar o quitar el sonido', 'De flipperkast': 'La máquina de pinball',
+  'Linkerflipper': 'Flipper izquierdo', 'Rechterflipper': 'Flipper derecho', 'Stoot tegen de kast': 'Sacudir la máquina', 'STOOT': 'SACUDIR',
+  'Veer: vasthouden en loslaten': 'Muelle: mantener y soltar', 'LANCEER': 'LANZAR', 'Besturing en regels': 'Controles y reglas',
+  'Het Uurwerk': 'El Reloj', 'Tafel 1 · 1900': 'Mesa 1 · 1900', 'Tafel 2 · de androïde': 'Mesa 2 · el androide', 'Tafel 3 · Wenen 1785': 'Mesa 3 · Viena 1785',
+  'record {0}': 'récord {0}', 'nog niet gespeeld': 'aún sin jugar', ' · laatste {0}': ' · último {0}',
+  'Bal {0} · trek aan de veer': 'Bola {0} · tira del muelle',
+  'Besturing': 'Controles', 'linkerflipper': 'flipper izquierdo', 'rechterflipper': 'flipper derecho',
+  'bal wegschieten: vasthouden, loslaten': 'lanzar la bola: mantener, soltar', 'stoot (vier keer in twee tellen is tilt)': 'sacudir (cuatro veces en dos segundos es tilt)',
+  'nieuw spel': 'partida nueva', 'terug naar de tafelkeuze': 'volver a la elección de mesa',
+  'De lanen bovenin spellen {0}: vol is {1} en de bonus een trap hoger (tot x5).': 'Los carriles de arriba forman {0}: completos dan {1} y el bono sube un nivel (hasta x5).',
+  'Bumper {0}. Drie valdoelen neer: bank {1} en {2} tellen bumpers x10.': 'Bumper {0}. Las tres dianas abatibles abajo: fila {1} y {2} segundos de bumpers x10.',
+  'Beide staande doelen: {0} en de accu vol: het vanggat is dan {1} in plaats van {2}.': 'Las dos dianas fijas: {0} y la batería cargada: el agujero de captura vale entonces {1} en vez de {2}.',
+  'Beide staande doelen: {0}.': 'Las dos dianas fijas: {0}.',
+  'De bovenbaan (vol lanceren, of langs de linkerwand omhoog): elke keer dat de bal er doorheen rolt, haal je het volgende van {0} stukken bladmuziek uit de bibliotheek ({1}); alle {0} is {2}: {3} en de multiplier omhoog.': 'La órbita de arriba (lanzamiento a tope, o subiendo por la pared izquierda): cada vez que la bola pasa por ella, traes de la biblioteca la siguiente de {0} partituras ({1}); las {0} juntas son {2}: {3} y el multiplicador sube.',
+  'Extra bal bij {0}. Bonus per bal: letters en doelen keer de multiplier.': 'Bola extra con {0}. Bono por bola: letras y dianas por el multiplicador.',
+  'SPEL VOORBIJ': 'FIN DE LA PARTIDA', '{0} punten': '{0} puntos', ' · RECORD!': ' · ¡RÉCORD!', 'tik of druk op Enter voor een nieuw spel': 'toca o pulsa Enter para jugar otra vez',
+  '{0}! Multiplier x{1}': '¡{0}! Multiplicador x{1}',
+  'BANK! +{0} · bumpers x10 voor {1} tellen': '¡FILA! +{0} · bumpers x10 durante {1} segundos',
+  'Beide doelen! +{0}': '¡Las dos dianas! +{0}', ' · accu vol: het vanggat is {0} waard': ' · batería cargada: el agujero de captura vale {0}',
+  'OPGELADEN! +{0}': '¡CARGADA! +{0}',
+  'Bladmuziek {0} van {1}: {2}': 'Partitura {0} de {1}: {2}',
+  'Symfonie nr. 40': 'Sinfonía n.º 40', 'Pianoconcert nr. 21, andante': 'Concierto para piano n.º 21, andante',
+  'Die Zauberflöte, Koningin van de Nacht': 'Die Zauberflöte, Reina de la Noche', 'Ah vous dirai-je, Maman (variaties)': 'Ah vous dirai-je, Maman (variaciones)',
+  'de symfonie': 'la sinfonía',
+  '{0} compleet! +{1} · multiplier x{2}': '¡{0} completa! +{1} · multiplicador x{2}',
+  'Te zacht. Nog eens.': 'Demasiado flojo. Otra vez.',
+  'TILT: de flippers zijn dood tot de volgende bal': 'TILT: los flippers no funcionan hasta la próxima bola',
+  'De bal zat klem; een duwtje.': 'La bola estaba atascada; un empujoncito.',
+  'Bonus {0} (x{1})': 'Bono {0} (x{1})',
+  'EXTRA BAL!': '¡BOLA EXTRA!',
+  ' · een hommage aan de flipperkasten van 1993': ' · un homenaje a los pinballs de 1993',
+});
+
+
+Object.assign(TAALBOEK.et, {
+  "KIES EEN TAFEL": "VALI LAUD",
+  "Pc: Z en / voor de flippers, pijl omlaag vasthouden om de bal weg te schieten, X stoot.": "PC: Z ja / on hoovad, hoia allanoolt all, et kuul välja lasta, X raputab.",
+  "Telefoon: tik links of rechts op de tafel, LANCEER vasthouden.": "Telefon: puuduta lauda vasakult või paremalt, hoia all LASE.",
+  "Terug naar de tafelkeuze": "Tagasi laua valikusse",
+  "SCORE": "PUNKTID",
+  "BAL": "KUUL",
+  "BONUS": "BOONUS",
+  "LANEN": "RAJAD",
+  "RECORD": "REKORD",
+  "Muziek aan of uit": "Muusika sisse või välja",
+  "Geluid aan of uit": "Heli sisse või välja",
+  "De flipperkast": "Pinball-masin",
+  "Linkerflipper": "Vasak hoob",
+  "Rechterflipper": "Parem hoob",
+  "Stoot tegen de kast": "Raputa masinat",
+  "STOOT": "RAPUTA",
+  "Veer: vasthouden en loslaten": "Vedru: hoia ja lase lahti",
+  "LANCEER": "LASE",
+  "Besturing en regels": "Juhtimine ja reeglid",
+  "Het Uurwerk": "Kellavärk",
+  "Tafel 1 · 1900": "Laud 1 · 1900",
+  "Tafel 2 · de androïde": "Laud 2 · android",
+  "Tafel 3 · Wenen 1785": "Laud 3 · Viin 1785",
+  "record {0}": "rekord {0}",
+  "nog niet gespeeld": "veel mängimata",
+  " · laatste {0}": " · viimati {0}",
+  "Bal {0} · trek aan de veer": "Kuul {0} · tõmba vedrust",
+  "Besturing": "Juhtimine",
+  "linkerflipper": "vasak hoob",
+  "rechterflipper": "parem hoob",
+  "bal wegschieten: vasthouden, loslaten": "lase kuul välja: hoia, lase lahti",
+  "stoot (vier keer in twee tellen is tilt)": "raputus (neli korda kahe sekundi jooksul on tilt)",
+  "nieuw spel": "uus mäng",
+  "terug naar de tafelkeuze": "tagasi laua valikusse",
+  "De lanen bovenin spellen {0}: vol is {1} en de bonus een trap hoger (tot x5).": "Ülemised rajad moodustavad {0}: täis annab {1} ja boonus tõuseb astme võrra (kuni x5).",
+  "Bumper {0}. Drie valdoelen neer: bank {1} en {2} tellen bumpers x10.": "Põrkur {0}. Kõik kolm kukkuvat sihtmärki maas: rida {1} ja {2} sekundit põrkurid x10.",
+  "Beide staande doelen: {0} en de accu vol: het vanggat is dan {1} in plaats van {2}.": "Mõlemad püstised sihtmärgid: {0} ja aku täis: püüdeauk on siis väärt {1}, mitte {2}.",
+  "Beide staande doelen: {0}.": "Mõlemad püstised sihtmärgid: {0}.",
+  "De bovenbaan (vol lanceren, of langs de linkerwand omhoog): elke keer dat de bal er doorheen rolt, haal je het volgende van {0} stukken bladmuziek uit de bibliotheek ({1}); alle {0} is {2}: {3} en de multiplier omhoog.": "Ülemine orbiit (täislask või üles mööda vasakut seina): iga kord, kui kuul sealt läbi veereb, tood raamatukogust järgmise {0} noodilehest ({1}); kõik {0} koos on {2}: {3} ja kordaja tõuseb.",
+  "Extra bal bij {0}. Bonus per bal: letters en doelen keer de multiplier.": "Lisakuul {0} juures. Boonus kuuli kohta: tähed ja sihtmärgid korda kordaja.",
+  "SPEL VOORBIJ": "MÄNG LÄBI",
+  "{0} punten": "{0} punkti",
+  " · RECORD!": " · REKORD!",
+  "tik of druk op Enter voor een nieuw spel": "puuduta või vajuta Enter uue mängu jaoks",
+  "{0}! Multiplier x{1}": "{0}! Kordaja x{1}",
+  "BANK! +{0} · bumpers x10 voor {1} tellen": "RIDA! +{0} · põrkurid x10 {1} sekundit",
+  "Beide doelen! +{0}": "Mõlemad sihtmärgid! +{0}",
+  " · accu vol: het vanggat is {0} waard": " · aku täis: püüdeauk on väärt {0}",
+  "OPGELADEN! +{0}": "LAETUD! +{0}",
+  "Bladmuziek {0} van {1}: {2}": "Noodileht {0}/{1}: {2}",
+  "Symfonie nr. 40": "Sümfoonia nr 40",
+  "Pianoconcert nr. 21, andante": "Klaverikontsert nr 21, andante",
+  "Die Zauberflöte, Koningin van de Nacht": "Die Zauberflöte, Öökuninganna",
+  "Ah vous dirai-je, Maman (variaties)": "Ah vous dirai-je, Maman (variatsioonid)",
+  "de symfonie": "sümfoonia",
+  "{0} compleet! +{1} · multiplier x{2}": "{0} valmis! +{1} · kordaja x{2}",
+  "Te zacht. Nog eens.": "Liiga nõrk. Veel kord.",
+  "TILT: de flippers zijn dood tot de volgende bal": "TILT: hoovad ei tööta järgmise kuulini",
+  "De bal zat klem; een duwtje.": "Kuul jäi kinni; väike tõuge.",
+  "Bonus {0} (x{1})": "Boonus {0} (x{1})",
+  "EXTRA BAL!": "LISAKUUL!",
+  " · een hommage aan de flipperkasten van 1993": " · austusavaldus 1993. aasta pinball-mängudele",
+});
+
+
+Object.assign(TAALBOEK.fi, {
+  'KIES EEN TAFEL': 'VALITSE PÖYTÄ',
+  'Pc: Z en / voor de flippers, pijl omlaag vasthouden om de bal weg te schieten, X stoot.': 'PC: Z ja / läpille, pidä alanuolta painettuna laukaistaksesi pallon, X tönäisee.',
+  'Telefoon: tik links of rechts op de tafel, LANCEER vasthouden.': 'Puhelin: napauta pöydän vasenta tai oikeaa puolta, pidä LAUKAISE painettuna.',
+  'Terug naar de tafelkeuze': 'Takaisin pöydän valintaan',
+  'SCORE': 'PISTEET', 'BAL': 'PALLO', 'BONUS': 'BONUS', 'LANEN': 'KAISTAT', 'RECORD': 'ENNÄTYS',
+  'Muziek aan of uit': 'Musiikki päälle tai pois', 'Geluid aan of uit': 'Äänet päälle tai pois', 'De flipperkast': 'Flipperi',
+  'Linkerflipper': 'Vasen läppä', 'Rechterflipper': 'Oikea läppä', 'Stoot tegen de kast': 'Tönäise konetta', 'STOOT': 'TÖNÄISE',
+  'Veer: vasthouden en loslaten': 'Jousi: pidä ja päästä irti', 'LANCEER': 'LAUKAISE', 'Besturing en regels': 'Ohjaus ja säännöt',
+  'Het Uurwerk': 'Kellokoneisto', 'Tafel 1 · 1900': 'Pöytä 1 · 1900', 'Tafel 2 · de androïde': 'Pöytä 2 · androidi', 'Tafel 3 · Wenen 1785': 'Pöytä 3 · Wien 1785',
+  'record {0}': 'ennätys {0}', 'nog niet gespeeld': 'ei vielä pelattu', ' · laatste {0}': ' · viimeksi {0}',
+  'Bal {0} · trek aan de veer': 'Pallo {0} · vedä jousesta',
+  'Besturing': 'Ohjaus', 'linkerflipper': 'vasen läppä', 'rechterflipper': 'oikea läppä',
+  'bal wegschieten: vasthouden, loslaten': 'laukaise pallo: pidä, päästä irti', 'stoot (vier keer in twee tellen is tilt)': 'tönäisy (neljä kertaa kahdessa sekunnissa on tilt)',
+  'nieuw spel': 'uusi peli', 'terug naar de tafelkeuze': 'takaisin pöydän valintaan',
+  'De lanen bovenin spellen {0}: vol is {1} en de bonus een trap hoger (tot x5).': 'Yläkaistat muodostavat sanan {0}: täysinä ne antavat {1} ja bonus nousee askeleen (enintään x5).',
+  'Bumper {0}. Drie valdoelen neer: bank {1} en {2} tellen bumpers x10.': 'Puskuri {0}. Kaikki kolme pudotuskohdetta alas: sarja {1} ja puskurit x10 {2} sekunnin ajan.',
+  'Beide staande doelen: {0} en de accu vol: het vanggat is dan {1} in plaats van {2}.': 'Molemmat pystykohteet: {0} ja akku täynnä: sieppausreikä on silloin arvoltaan {1} eikä {2}.',
+  'Beide staande doelen: {0}.': 'Molemmat pystykohteet: {0}.',
+  'De bovenbaan (vol lanceren, of langs de linkerwand omhoog): elke keer dat de bal er doorheen rolt, haal je het volgende van {0} stukken bladmuziek uit de bibliotheek ({1}); alle {0} is {2}: {3} en de multiplier omhoog.': 'Yläkierto (täysi laukaisu, tai ylös vasenta seinää pitkin): aina kun pallo vierii sen läpi, haet kirjastosta seuraavan nuottiarkin ({1}); kaikki {0} arkkia yhdessä ovat {2}: {3} ja kerroin nousee.',
+  'Extra bal bij {0}. Bonus per bal: letters en doelen keer de multiplier.': 'Lisäpallo {0} pisteessä. Bonus per pallo: kirjaimet ja kohteet kertaa kerroin.',
+  'SPEL VOORBIJ': 'PELI OHI', '{0} punten': '{0} pistettä', ' · RECORD!': ' · ENNÄTYS!', 'tik of druk op Enter voor een nieuw spel': 'napauta tai paina Enter aloittaaksesi uuden pelin',
+  '{0}! Multiplier x{1}': '{0}! Kerroin x{1}',
+  'BANK! +{0} · bumpers x10 voor {1} tellen': 'SARJA! +{0} · puskurit x10 {1} sekunnin ajan',
+  'Beide doelen! +{0}': 'Molemmat kohteet! +{0}', ' · accu vol: het vanggat is {0} waard': ' · akku täynnä: sieppausreikä on arvoltaan {0}',
+  'OPGELADEN! +{0}': 'LADATTU! +{0}',
+  'Bladmuziek {0} van {1}: {2}': 'Nuottiarkki {0}/{1}: {2}',
+  'Symfonie nr. 40': 'Sinfonia nro 40', 'Pianoconcert nr. 21, andante': 'Pianokonsertto nro 21, andante',
+  'Die Zauberflöte, Koningin van de Nacht': 'Die Zauberflöte, Yön kuningatar', 'Ah vous dirai-je, Maman (variaties)': 'Ah vous dirai-je, Maman (muunnelmat)',
+  'de symfonie': 'sinfonia',
+  '{0} compleet! +{1} · multiplier x{2}': '{0} valmis! +{1} · kerroin x{2}',
+  'Te zacht. Nog eens.': 'Liian heikosti. Uudestaan.',
+  'TILT: de flippers zijn dood tot de volgende bal': 'TILT: läpät ovat pois käytöstä seuraavaan palloon asti',
+  'De bal zat klem; een duwtje.': 'Pallo oli jumissa; pieni tönäisy.',
+  'Bonus {0} (x{1})': 'Bonus {0} (x{1})',
+  'EXTRA BAL!': 'LISÄPALLO!',
+  ' · een hommage aan de flipperkasten van 1993': ' · kunnianosoitus vuoden 1993 flipperipeleille',
+});
+
+
+Object.assign(TAALBOEK.fr, {
+  'KIES EEN TAFEL': 'CHOISIS UNE TABLE',
+  'Pc: Z en / voor de flippers, pijl omlaag vasthouden om de bal weg te schieten, X stoot.': 'PC : Z et / pour les flippers, maintiens la flèche bas pour lancer la bille, X secoue.',
+  'Telefoon: tik links of rechts op de tafel, LANCEER vasthouden.': 'Téléphone : touche à gauche ou à droite de la table, maintiens LANCER.',
+  'Terug naar de tafelkeuze': 'Retour au choix de la table',
+  'SCORE': 'SCORE', 'BAL': 'BILLE', 'BONUS': 'BONUS', 'LANEN': 'COULOIRS', 'RECORD': 'RECORD',
+  'Muziek aan of uit': 'Activer ou couper la musique', 'Geluid aan of uit': 'Activer ou couper le son', 'De flipperkast': 'Le flipper',
+  'Linkerflipper': 'Flipper gauche', 'Rechterflipper': 'Flipper droit', 'Stoot tegen de kast': 'Secouer la machine', 'STOOT': 'SECOUER',
+  'Veer: vasthouden en loslaten': 'Ressort : maintenir et relâcher', 'LANCEER': 'LANCER', 'Besturing en regels': 'Commandes et règles',
+  'Het Uurwerk': "L'Horloge", 'Tafel 1 · 1900': 'Table 1 · 1900', 'Tafel 2 · de androïde': "Table 2 · l'androïde", 'Tafel 3 · Wenen 1785': 'Table 3 · Vienne 1785',
+  'record {0}': 'record {0}', 'nog niet gespeeld': 'pas encore jouée', ' · laatste {0}': ' · dernier {0}',
+  'Bal {0} · trek aan de veer': 'Bille {0} · tire le ressort',
+  'Besturing': 'Commandes', 'linkerflipper': 'flipper gauche', 'rechterflipper': 'flipper droit',
+  'bal wegschieten: vasthouden, loslaten': 'lancer la bille : maintenir, relâcher', 'stoot (vier keer in twee tellen is tilt)': "secouer (quatre fois en deux secondes, c'est le tilt)",
+  'nieuw spel': 'nouvelle partie', 'terug naar de tafelkeuze': 'retour au choix de la table',
+  'De lanen bovenin spellen {0}: vol is {1} en de bonus een trap hoger (tot x5).': "Les couloirs du haut épellent {0} : complets, ils rapportent {1} et le bonus monte d'un cran (jusqu'à x5).",
+  'Bumper {0}. Drie valdoelen neer: bank {1} en {2} tellen bumpers x10.': 'Bumper {0}. Les trois cibles tombantes à terre : rangée {1} et bumpers x10 pendant {2} secondes.',
+  'Beide staande doelen: {0} en de accu vol: het vanggat is dan {1} in plaats van {2}.': 'Les deux cibles fixes : {0} et la batterie est chargée : le trou de capture vaut alors {1} au lieu de {2}.',
+  'Beide staande doelen: {0}.': 'Les deux cibles fixes : {0}.',
+  'De bovenbaan (vol lanceren, of langs de linkerwand omhoog): elke keer dat de bal er doorheen rolt, haal je het volgende van {0} stukken bladmuziek uit de bibliotheek ({1}); alle {0} is {2}: {3} en de multiplier omhoog.': "L'orbite du haut (lancer à fond, ou monter le long du mur gauche) : chaque fois que la bille y passe, tu rapportes de la bibliothèque la suivante des {0} partitions ({1}) ; les {0} forment {2} : {3} et le multiplicateur monte.",
+  'Extra bal bij {0}. Bonus per bal: letters en doelen keer de multiplier.': 'Bille supplémentaire à {0}. Bonus par bille : lettres et cibles fois le multiplicateur.',
+  'SPEL VOORBIJ': 'PARTIE TERMINÉE', '{0} punten': '{0} points', ' · RECORD!': ' · RECORD !', 'tik of druk op Enter voor een nieuw spel': 'touche ou appuie sur Entrée pour rejouer',
+  '{0}! Multiplier x{1}': '{0} ! Multiplicateur x{1}',
+  'BANK! +{0} · bumpers x10 voor {1} tellen': 'RANGÉE ! +{0} · bumpers x10 pendant {1} secondes',
+  'Beide doelen! +{0}': 'Les deux cibles ! +{0}', ' · accu vol: het vanggat is {0} waard': ' · batterie chargée : le trou de capture vaut {0}',
+  'OPGELADEN! +{0}': 'CHARGÉE ! +{0}',
+  'Bladmuziek {0} van {1}: {2}': 'Partition {0} sur {1} : {2}',
+  'Symfonie nr. 40': 'Symphonie n° 40', 'Pianoconcert nr. 21, andante': 'Concerto pour piano n° 21, andante',
+  'Die Zauberflöte, Koningin van de Nacht': 'Die Zauberflöte, Reine de la nuit', 'Ah vous dirai-je, Maman (variaties)': 'Ah vous dirai-je, Maman (variations)',
+  'de symfonie': 'la symphonie',
+  '{0} compleet! +{1} · multiplier x{2}': '{0} complète ! +{1} · multiplicateur x{2}',
+  'Te zacht. Nog eens.': 'Trop faible. Encore une fois.',
+  'TILT: de flippers zijn dood tot de volgende bal': "TILT : les flippers sont morts jusqu'à la prochaine bille",
+  'De bal zat klem; een duwtje.': 'La bille était coincée ; un petit coup de pouce.',
+  'Bonus {0} (x{1})': 'Bonus {0} (x{1})',
+  'EXTRA BAL!': 'BILLE EN PLUS !',
+  ' · een hommage aan de flipperkasten van 1993': ' · un hommage aux flippers de 1993',
+});
+
+
+Object.assign(TAALBOEK.ga, {
+  "KIES EEN TAFEL": "ROGHNAIGH BORD",
+  "Pc: Z en / voor de flippers, pijl omlaag vasthouden om de bal weg te schieten, X stoot.": "PC: Z agus / do na smeachóirí, coinnigh an tsaighead síos chun an liathróid a lainseáil, X croitheann.",
+  "Telefoon: tik links of rechts op de tafel, LANCEER vasthouden.": "Fón: tapáil ar chlé nó ar dheis ar an mbord, coinnigh LAINSEÁIL.",
+  "Terug naar de tafelkeuze": "Ar ais chuig rogha an bhoird",
+  "SCORE": "SCÓR",
+  "BAL": "LIATHRÓID",
+  "BONUS": "BÓNAS",
+  "LANEN": "LÁNAÍ",
+  "RECORD": "CURIARRACHT",
+  "Muziek aan of uit": "Ceol ar siúl nó as",
+  "Geluid aan of uit": "Fuaim ar siúl nó as",
+  "De flipperkast": "An meaisín pinball",
+  "Linkerflipper": "Smeachóir clé",
+  "Rechterflipper": "Smeachóir deas",
+  "Stoot tegen de kast": "Croith an meaisín",
+  "STOOT": "CROITH",
+  "Veer: vasthouden en loslaten": "Sprionga: coinnigh agus scaoil",
+  "LANCEER": "LAINSEÁIL",
+  "Besturing en regels": "Rialuithe agus rialacha",
+  "Het Uurwerk": "An Meicníocht Chloig",
+  "Tafel 1 · 1900": "Bord 1 · 1900",
+  "Tafel 2 · de androïde": "Bord 2 · an t-android",
+  "Tafel 3 · Wenen 1785": "Bord 3 · Vín 1785",
+  "record {0}": "curiarracht {0}",
+  "nog niet gespeeld": "níor imríodh fós",
+  " · laatste {0}": " · an ceann deireanach {0}",
+  "Bal {0} · trek aan de veer": "Liathróid {0} · tarraing an sprionga",
+  "Besturing": "Rialuithe",
+  "linkerflipper": "smeachóir clé",
+  "rechterflipper": "smeachóir deas",
+  "bal wegschieten: vasthouden, loslaten": "lainseáil an liathróid: coinnigh, scaoil",
+  "stoot (vier keer in twee tellen is tilt)": "croitheadh (ceithre huaire in dhá shoicind = tilt)",
+  "nieuw spel": "cluiche nua",
+  "terug naar de tafelkeuze": "ar ais chuig rogha an bhoird",
+  "De lanen bovenin spellen {0}: vol is {1} en de bonus een trap hoger (tot x5).": "Litríonn na lánaí thuas {0}: iad uile lán, faigheann tú {1} agus ardaíonn an bónas céim (suas go x5).",
+  "Bumper {0}. Drie valdoelen neer: bank {1} en {2} tellen bumpers x10.": "Bumper {0}. Na trí sprioc thitime thíos: sraith {1} agus bumpers x10 ar feadh {2} soicind.",
+  "Beide staande doelen: {0} en de accu vol: het vanggat is dan {1} in plaats van {2}.": "An dá sprioc sheasta: {0} agus an ceallra lán: is fiú {1} an poll ansin in ionad {2}.",
+  "Beide staande doelen: {0}.": "An dá sprioc sheasta: {0}.",
+  "De bovenbaan (vol lanceren, of langs de linkerwand omhoog): elke keer dat de bal er doorheen rolt, haal je het volgende van {0} stukken bladmuziek uit de bibliotheek ({1}); alle {0} is {2}: {3} en de multiplier omhoog.": "An fithis uachtarach (lainseáil iomlán, nó suas feadh an bhalla chlé): gach uair a rollann an liathróid tríd, tugann tú leat ón leabharlann an chéad cheann eile de {0} píosa ceoil ({1}); is ionann na {0} ar fad agus {2}: {3} agus ardaíonn an t-iolraitheoir.",
+  "Extra bal bij {0}. Bonus per bal: letters en doelen keer de multiplier.": "Liathróid bhreise ag {0}. Bónas in aghaidh na liathróide: litreacha agus spriocanna faoin iolraitheoir.",
+  "SPEL VOORBIJ": "CLUICHE THART",
+  "{0} punten": "{0} pointe",
+  " · RECORD!": " · CURIARRACHT!",
+  "tik of druk op Enter voor een nieuw spel": "tapáil nó brúigh Enter le haghaidh cluiche nua",
+  "{0}! Multiplier x{1}": "{0}! Iolraitheoir x{1}",
+  "BANK! +{0} · bumpers x10 voor {1} tellen": "SRAITH! +{0} · bumpers x10 ar feadh {1} soicind",
+  "Beide doelen! +{0}": "An dá sprioc! +{0}",
+  " · accu vol: het vanggat is {0} waard": " · ceallra lán: is fiú {0} an poll",
+  "OPGELADEN! +{0}": "LUCHTAITHE! +{0}",
+  "Bladmuziek {0} van {1}: {2}": "Ceol {0} de {1}: {2}",
+  "Symfonie nr. 40": "Siansa Uimh. 40",
+  "Pianoconcert nr. 21, andante": "Coinchéirtó pianó Uimh. 21, andante",
+  "Die Zauberflöte, Koningin van de Nacht": "Die Zauberflöte, Banríon na hOíche",
+  "Ah vous dirai-je, Maman (variaties)": "Ah vous dirai-je, Maman (athruithe)",
+  "de symfonie": "an siansa",
+  "{0} compleet! +{1} · multiplier x{2}": "{0} críochnaithe! +{1} · iolraitheoir x{2}",
+  "Te zacht. Nog eens.": "Ró-bhog. Arís.",
+  "TILT: de flippers zijn dood tot de volgende bal": "TILT: tá na smeachóirí marbh go dtí an chéad liathróid eile",
+  "De bal zat klem; een duwtje.": "Bhí an liathróid sáinnithe; brú beag.",
+  "Bonus {0} (x{1})": "Bónas {0} (x{1})",
+  "EXTRA BAL!": "LIATHRÓID BHREISE!",
+  " · een hommage aan de flipperkasten van 1993": " · ómós do chluichí pinball 1993",
+});
+
+
+Object.assign(TAALBOEK.hr, {
+  "KIES EEN TAFEL": "ODABERI STOL",
+  "Pc: Z en / voor de flippers, pijl omlaag vasthouden om de bal weg te schieten, X stoot.": "PC: Z i / za flipere, drži strelicu dolje za izbacivanje kuglice, X drma.",
+  "Telefoon: tik links of rechts op de tafel, LANCEER vasthouden.": "Mobitel: dodirni lijevo ili desno na stolu, drži ISPALI.",
+  "Terug naar de tafelkeuze": "Natrag na odabir stola",
+  "SCORE": "BODOVI",
+  "BAL": "KUGLICA",
+  "BONUS": "BONUS",
+  "LANEN": "STAZE",
+  "RECORD": "REKORD",
+  "Muziek aan of uit": "Glazba uklj. ili isklj.",
+  "Geluid aan of uit": "Zvuk uklj. ili isklj.",
+  "De flipperkast": "Fliper",
+  "Linkerflipper": "Lijevi fliper",
+  "Rechterflipper": "Desni fliper",
+  "Stoot tegen de kast": "Prodrmaj stroj",
+  "STOOT": "PRODRMAJ",
+  "Veer: vasthouden en loslaten": "Opruga: drži i pusti",
+  "LANCEER": "ISPALI",
+  "Besturing en regels": "Upravljanje i pravila",
+  "Het Uurwerk": "Satni mehanizam",
+  "Tafel 1 · 1900": "Stol 1 · 1900",
+  "Tafel 2 · de androïde": "Stol 2 · android",
+  "Tafel 3 · Wenen 1785": "Stol 3 · Beč 1785",
+  "record {0}": "rekord {0}",
+  "nog niet gespeeld": "još nije igrano",
+  " · laatste {0}": " · zadnji {0}",
+  "Bal {0} · trek aan de veer": "Kuglica {0} · povuci oprugu",
+  "Besturing": "Upravljanje",
+  "linkerflipper": "lijevi fliper",
+  "rechterflipper": "desni fliper",
+  "bal wegschieten: vasthouden, loslaten": "ispali kuglicu: drži, pusti",
+  "stoot (vier keer in twee tellen is tilt)": "drmanje (četiri puta u dvije sekunde je tilt)",
+  "nieuw spel": "nova igra",
+  "terug naar de tafelkeuze": "natrag na odabir stola",
+  "De lanen bovenin spellen {0}: vol is {1} en de bonus een trap hoger (tot x5).": "Gornje staze slažu {0}: pune daju {1} i bonus raste za stupanj (do x5).",
+  "Bumper {0}. Drie valdoelen neer: bank {1} en {2} tellen bumpers x10.": "Bumper {0}. Sve tri padajuće mete dolje: niz {1} i bumperi x10 na {2} sekundi.",
+  "Beide staande doelen: {0} en de accu vol: het vanggat is dan {1} in plaats van {2}.": "Obje stojeće mete: {0} i puna baterija: rupa tada vrijedi {1} umjesto {2}.",
+  "Beide staande doelen: {0}.": "Obje stojeće mete: {0}.",
+  "De bovenbaan (vol lanceren, of langs de linkerwand omhoog): elke keer dat de bal er doorheen rolt, haal je het volgende van {0} stukken bladmuziek uit de bibliotheek ({1}); alle {0} is {2}: {3} en de multiplier omhoog.": "Gornja orbita (puni izbačaj ili gore uz lijevi zid): svaki put kad se kuglica kroz nju otkotrlja, doneseš iz knjižnice sljedeću od {0} partitura ({1}); svih {0} čine {2}: {3} i množitelj raste.",
+  "Extra bal bij {0}. Bonus per bal: letters en doelen keer de multiplier.": "Dodatna kuglica na {0}. Bonus po kuglici: slova i mete puta množitelj.",
+  "SPEL VOORBIJ": "KRAJ IGRE",
+  "{0} punten": "{0} bodova",
+  " · RECORD!": " · REKORD!",
+  "tik of druk op Enter voor een nieuw spel": "dodirni ili pritisni Enter za novu igru",
+  "{0}! Multiplier x{1}": "{0}! Množitelj x{1}",
+  "BANK! +{0} · bumpers x10 voor {1} tellen": "NIZ! +{0} · bumperi x10 na {1} sekundi",
+  "Beide doelen! +{0}": "Obje mete! +{0}",
+  " · accu vol: het vanggat is {0} waard": " · baterija puna: rupa vrijedi {0}",
+  "OPGELADEN! +{0}": "NAPUNJENO! +{0}",
+  "Bladmuziek {0} van {1}: {2}": "Partitura {0} od {1}: {2}",
+  "Symfonie nr. 40": "Simfonija br. 40",
+  "Pianoconcert nr. 21, andante": "Klavirski koncert br. 21, andante",
+  "Die Zauberflöte, Koningin van de Nacht": "Die Zauberflöte, Kraljica noći",
+  "Ah vous dirai-je, Maman (variaties)": "Ah vous dirai-je, Maman (varijacije)",
+  "de symfonie": "simfonija",
+  "{0} compleet! +{1} · multiplier x{2}": "{0} dovršena! +{1} · množitelj x{2}",
+  "Te zacht. Nog eens.": "Preslabo. Još jednom.",
+  "TILT: de flippers zijn dood tot de volgende bal": "TILT: fliperi su mrtvi do sljedeće kuglice",
+  "De bal zat klem; een duwtje.": "Kuglica je zapela; mali guranac.",
+  "Bonus {0} (x{1})": "Bonus {0} (x{1})",
+  "EXTRA BAL!": "DODATNA KUGLICA!",
+  " · een hommage aan de flipperkasten van 1993": " · omaž fliperima iz 1993.",
+});
+
+
+Object.assign(TAALBOEK.hu, {
+  "KIES EEN TAFEL": "VÁLASSZ ASZTALT",
+  "Pc: Z en / voor de flippers, pijl omlaag vasthouden om de bal weg te schieten, X stoot.": "PC: Z és / a flipperekhez, tartsd lenyomva a lefelé nyilat a golyó kilövéséhez, X megrázza a gépet.",
+  "Telefoon: tik links of rechts op de tafel, LANCEER vasthouden.": "Telefon: koppints az asztal bal vagy jobb oldalára, a KILÖVÉS gombot tartsd lenyomva.",
+  "Terug naar de tafelkeuze": "Vissza az asztalválasztáshoz",
+  "SCORE": "PONTSZÁM",
+  "BAL": "GOLYÓ",
+  "BONUS": "BÓNUSZ",
+  "LANEN": "SÁVOK",
+  "RECORD": "REKORD",
+  "Muziek aan of uit": "Zene be vagy ki",
+  "Geluid aan of uit": "Hang be vagy ki",
+  "De flipperkast": "A flippergép",
+  "Linkerflipper": "Bal flipper",
+  "Rechterflipper": "Jobb flipper",
+  "Stoot tegen de kast": "A gép megrázása",
+  "STOOT": "RÁZÁS",
+  "Veer: vasthouden en loslaten": "Rugó: tartsd és engedd el",
+  "LANCEER": "KILÖVÉS",
+  "Besturing en regels": "Irányítás és szabályok",
+  "Het Uurwerk": "Az Óramű",
+  "Tafel 1 · 1900": "1. asztal · 1900",
+  "Tafel 2 · de androïde": "2. asztal · az android",
+  "Tafel 3 · Wenen 1785": "3. asztal · Bécs 1785",
+  "record {0}": "rekord {0}",
+  "nog niet gespeeld": "még nem játszott",
+  " · laatste {0}": " · legutóbb {0}",
+  "Bal {0} · trek aan de veer": "{0}. golyó · húzd meg a rugót",
+  "Besturing": "Irányítás",
+  "linkerflipper": "bal flipper",
+  "rechterflipper": "jobb flipper",
+  "bal wegschieten: vasthouden, loslaten": "golyó kilövése: tartsd, engedd el",
+  "stoot (vier keer in twee tellen is tilt)": "rázás (két másodperc alatt négyszer: tilt)",
+  "nieuw spel": "új játék",
+  "terug naar de tafelkeuze": "vissza az asztalválasztáshoz",
+  "De lanen bovenin spellen {0}: vol is {1} en de bonus een trap hoger (tot x5).": "A felső sávok betűi: {0}; ha mind megvan, {1} pont, és a bónusz egy fokkal nő (legfeljebb x5).",
+  "Bumper {0}. Drie valdoelen neer: bank {1} en {2} tellen bumpers x10.": "Bumper {0}. Mindhárom ejtőcél lent: sor {1}, és {2} másodpercig bumperek x10.",
+  "Beide staande doelen: {0} en de accu vol: het vanggat is dan {1} in plaats van {2}.": "Mindkét álló cél: {0}, és tele az akku: a lyuk ekkor {1} pontot ér {2} helyett.",
+  "Beide staande doelen: {0}.": "Mindkét álló cél: {0}.",
+  "De bovenbaan (vol lanceren, of langs de linkerwand omhoog): elke keer dat de bal er doorheen rolt, haal je het volgende van {0} stukken bladmuziek uit de bibliotheek ({1}); alle {0} is {2}: {3} en de multiplier omhoog.": "A felső pálya (teljes kilövés, vagy fel a bal fal mentén): valahányszor a golyó végiggurul rajta, elhozod a könyvtárból a következő kottalapot a(z) {0} közül ({1}); mind a(z) {0} együtt {2}: {3}, és a szorzó nő.",
+  "Extra bal bij {0}. Bonus per bal: letters en doelen keer de multiplier.": "Extra golyó {0} pontnál. Bónusz golyónként: betűk és célok szorozva a szorzóval.",
+  "SPEL VOORBIJ": "VÉGE A JÁTÉKNAK",
+  "{0} punten": "{0} pont",
+  " · RECORD!": " · REKORD!",
+  "tik of druk op Enter voor een nieuw spel": "koppints vagy nyomj Entert egy új játékhoz",
+  "{0}! Multiplier x{1}": "{0}! Szorzó x{1}",
+  "BANK! +{0} · bumpers x10 voor {1} tellen": "SOR! +{0} · bumperek x10 {1} másodpercig",
+  "Beide doelen! +{0}": "Mindkét cél! +{0}",
+  " · accu vol: het vanggat is {0} waard": " · tele az akku: a lyuk {0} pontot ér",
+  "OPGELADEN! +{0}": "FELTÖLTVE! +{0}",
+  "Bladmuziek {0} van {1}: {2}": "Kottalap {0}/{1}: {2}",
+  "Symfonie nr. 40": "40. szimfónia",
+  "Pianoconcert nr. 21, andante": "21. zongoraverseny, andante",
+  "Die Zauberflöte, Koningin van de Nacht": "Die Zauberflöte, Az Éj királynője",
+  "Ah vous dirai-je, Maman (variaties)": "Ah vous dirai-je, Maman (variációk)",
+  "de symfonie": "a szimfónia",
+  "{0} compleet! +{1} · multiplier x{2}": "{0} kész! +{1} · szorzó x{2}",
+  "Te zacht. Nog eens.": "Túl gyenge. Még egyszer.",
+  "TILT: de flippers zijn dood tot de volgende bal": "TILT: a flipperek a következő golyóig nem működnek",
+  "De bal zat klem; een duwtje.": "A golyó beszorult; egy kis lökés.",
+  "Bonus {0} (x{1})": "Bónusz {0} (x{1})",
+  "EXTRA BAL!": "EXTRA GOLYÓ!",
+  " · een hommage aan de flipperkasten van 1993": " · tisztelgés az 1993-as flipperjátékok előtt",
+});
+
+
+Object.assign(TAALBOEK.it, {
+  'KIES EEN TAFEL': 'SCEGLI UN TAVOLO',
+  'Pc: Z en / voor de flippers, pijl omlaag vasthouden om de bal weg te schieten, X stoot.': 'PC: Z e / per i flipper, tieni premuta la freccia giù per lanciare la pallina, X scuote.',
+  'Telefoon: tik links of rechts op de tafel, LANCEER vasthouden.': 'Telefono: tocca a sinistra o a destra del tavolo, tieni premuto LANCIA.',
+  'Terug naar de tafelkeuze': 'Torna alla scelta del tavolo',
+  'SCORE': 'PUNTI', 'BAL': 'PALLINA', 'BONUS': 'BONUS', 'LANEN': 'CORSIE', 'RECORD': 'RECORD',
+  'Muziek aan of uit': 'Attiva o disattiva la musica', 'Geluid aan of uit': 'Attiva o disattiva il suono', 'De flipperkast': 'Il flipper',
+  'Linkerflipper': 'Flipper sinistro', 'Rechterflipper': 'Flipper destro', 'Stoot tegen de kast': 'Scuoti la macchina', 'STOOT': 'SCUOTI',
+  'Veer: vasthouden en loslaten': 'Molla: tieni premuto e rilascia', 'LANCEER': 'LANCIA', 'Besturing en regels': 'Comandi e regole',
+  'Het Uurwerk': "L'Orologio", 'Tafel 1 · 1900': 'Tavolo 1 · 1900', 'Tafel 2 · de androïde': "Tavolo 2 · l'androide", 'Tafel 3 · Wenen 1785': 'Tavolo 3 · Vienna 1785',
+  'record {0}': 'record {0}', 'nog niet gespeeld': 'non ancora giocato', ' · laatste {0}': ' · ultimo {0}',
+  'Bal {0} · trek aan de veer': 'Pallina {0} · tira la molla',
+  'Besturing': 'Comandi', 'linkerflipper': 'flipper sinistro', 'rechterflipper': 'flipper destro',
+  'bal wegschieten: vasthouden, loslaten': 'lanciare la pallina: tieni premuto, rilascia', 'stoot (vier keer in twee tellen is tilt)': 'scuotere (quattro volte in due secondi è tilt)',
+  'nieuw spel': 'nuova partita', 'terug naar de tafelkeuze': 'torna alla scelta del tavolo',
+  'De lanen bovenin spellen {0}: vol is {1} en de bonus een trap hoger (tot x5).': 'Le corsie in alto compongono {0}: complete valgono {1} e il bonus sale di un gradino (fino a x5).',
+  'Bumper {0}. Drie valdoelen neer: bank {1} en {2} tellen bumpers x10.': 'Bumper {0}. Tutti e tre i bersagli a scomparsa giù: fila {1} e {2} secondi di bumper x10.',
+  'Beide staande doelen: {0} en de accu vol: het vanggat is dan {1} in plaats van {2}.': 'Entrambi i bersagli fissi: {0} e la batteria carica: la buca di cattura vale allora {1} invece di {2}.',
+  'Beide staande doelen: {0}.': 'Entrambi i bersagli fissi: {0}.',
+  'De bovenbaan (vol lanceren, of langs de linkerwand omhoog): elke keer dat de bal er doorheen rolt, haal je het volgende van {0} stukken bladmuziek uit de bibliotheek ({1}); alle {0} is {2}: {3} en de multiplier omhoog.': "L'orbita in alto (lancio pieno, o su lungo la parete sinistra): ogni volta che la pallina ci passa, prendi dalla biblioteca il successivo di {0} spartiti ({1}); tutti e {0} formano {2}: {3} e il moltiplicatore sale.",
+  'Extra bal bij {0}. Bonus per bal: letters en doelen keer de multiplier.': 'Pallina extra a {0}. Bonus per pallina: lettere e bersagli per il moltiplicatore.',
+  'SPEL VOORBIJ': 'PARTITA FINITA', '{0} punten': '{0} punti', ' · RECORD!': ' · RECORD!', 'tik of druk op Enter voor een nieuw spel': 'tocca o premi Invio per una nuova partita',
+  '{0}! Multiplier x{1}': '{0}! Moltiplicatore x{1}',
+  'BANK! +{0} · bumpers x10 voor {1} tellen': 'FILA! +{0} · bumper x10 per {1} secondi',
+  'Beide doelen! +{0}': 'Entrambi i bersagli! +{0}', ' · accu vol: het vanggat is {0} waard': ' · batteria carica: la buca di cattura vale {0}',
+  'OPGELADEN! +{0}': 'CARICATA! +{0}',
+  'Bladmuziek {0} van {1}: {2}': 'Spartito {0} di {1}: {2}',
+  'Symfonie nr. 40': 'Sinfonia n. 40', 'Pianoconcert nr. 21, andante': 'Concerto per pianoforte n. 21, andante',
+  'Die Zauberflöte, Koningin van de Nacht': 'Die Zauberflöte, Regina della Notte', 'Ah vous dirai-je, Maman (variaties)': 'Ah vous dirai-je, Maman (variazioni)',
+  'de symfonie': 'la sinfonia',
+  '{0} compleet! +{1} · multiplier x{2}': '{0} completa! +{1} · moltiplicatore x{2}',
+  'Te zacht. Nog eens.': 'Troppo piano. Ancora.',
+  'TILT: de flippers zijn dood tot de volgende bal': 'TILT: i flipper sono morti fino alla prossima pallina',
+  'De bal zat klem; een duwtje.': 'La pallina era incastrata; una spintarella.',
+  'Bonus {0} (x{1})': 'Bonus {0} (x{1})',
+  'EXTRA BAL!': 'PALLINA EXTRA!',
+  ' · een hommage aan de flipperkasten van 1993': ' · un omaggio ai flipper del 1993',
+});
+
+
+Object.assign(TAALBOEK.lt, {
+  "KIES EEN TAFEL": "PASIRINK STALĄ",
+  "Pc: Z en / voor de flippers, pijl omlaag vasthouden om de bal weg te schieten, X stoot.": "PC: Z ir / valdo plaktukus, laikyk rodyklę žemyn, kad iššautum kamuoliuką, X supurto.",
+  "Telefoon: tik links of rechts op de tafel, LANCEER vasthouden.": "Telefonas: paliesk kairę arba dešinę stalo pusę, laikyk ŠAUTI.",
+  "Terug naar de tafelkeuze": "Atgal į stalo pasirinkimą",
+  "SCORE": "TAŠKAI",
+  "BAL": "KAMUOLYS",
+  "BONUS": "PREMIJA",
+  "LANEN": "TAKELIAI",
+  "RECORD": "REKORDAS",
+  "Muziek aan of uit": "Muzika įjungta arba išjungta",
+  "Geluid aan of uit": "Garsas įjungtas arba išjungtas",
+  "De flipperkast": "Pinbolo automatas",
+  "Linkerflipper": "Kairysis plaktukas",
+  "Rechterflipper": "Dešinysis plaktukas",
+  "Stoot tegen de kast": "Supurtyti automatą",
+  "STOOT": "SUPURTYTI",
+  "Veer: vasthouden en loslaten": "Spyruoklė: laikyk ir paleisk",
+  "LANCEER": "ŠAUTI",
+  "Besturing en regels": "Valdymas ir taisyklės",
+  "Het Uurwerk": "Laikrodžio mechanizmas",
+  "Tafel 1 · 1900": "1 stalas · 1900",
+  "Tafel 2 · de androïde": "2 stalas · androidas",
+  "Tafel 3 · Wenen 1785": "3 stalas · Viena 1785",
+  "record {0}": "rekordas {0}",
+  "nog niet gespeeld": "dar nežaista",
+  " · laatste {0}": " · paskutinis {0}",
+  "Bal {0} · trek aan de veer": "Kamuoliukas {0} · patrauk spyruoklę",
+  "Besturing": "Valdymas",
+  "linkerflipper": "kairysis plaktukas",
+  "rechterflipper": "dešinysis plaktukas",
+  "bal wegschieten: vasthouden, loslaten": "iššauti kamuoliuką: laikyk, paleisk",
+  "stoot (vier keer in twee tellen is tilt)": "supurtymas (keturis kartus per dvi sekundes yra tilt)",
+  "nieuw spel": "naujas žaidimas",
+  "terug naar de tafelkeuze": "atgal į stalo pasirinkimą",
+  "De lanen bovenin spellen {0}: vol is {1} en de bonus een trap hoger (tot x5).": "Viršutiniai takeliai sudaro {0}: visi kartu duoda {1}, o premija pakyla viena pakopa (iki x5).",
+  "Bumper {0}. Drie valdoelen neer: bank {1} en {2} tellen bumpers x10.": "Buferis {0}. Visi trys krentantys taikiniai nuversti: eilė {1} ir {2} sekundžių buferiai x10.",
+  "Beide staande doelen: {0} en de accu vol: het vanggat is dan {1} in plaats van {2}.": "Abu stovintys taikiniai: {0}, o akumuliatorius pilnas: gaudymo duobutė tada verta {1}, o ne {2}.",
+  "Beide staande doelen: {0}.": "Abu stovintys taikiniai: {0}.",
+  "De bovenbaan (vol lanceren, of langs de linkerwand omhoog): elke keer dat de bal er doorheen rolt, haal je het volgende van {0} stukken bladmuziek uit de bibliotheek ({1}); alle {0} is {2}: {3} en de multiplier omhoog.": "Viršutinė orbita (pilnas šūvis arba aukštyn palei kairę sieną): kiekvieną kartą, kai kamuoliukas pro ją prarieda, iš bibliotekos parneši kitą iš {0} natų lapų ({1}); visi {0} kartu yra {2}: {3}, o daugiklis padidėja.",
+  "Extra bal bij {0}. Bonus per bal: letters en doelen keer de multiplier.": "Papildomas kamuoliukas ties {0}. Premija už kamuoliuką: raidės ir taikiniai, padauginti iš daugiklio.",
+  "SPEL VOORBIJ": "ŽAIDIMAS BAIGTAS",
+  "{0} punten": "{0} taškų",
+  " · RECORD!": " · REKORDAS!",
+  "tik of druk op Enter voor een nieuw spel": "paliesk arba paspausk Enter naujam žaidimui",
+  "{0}! Multiplier x{1}": "{0}! Daugiklis x{1}",
+  "BANK! +{0} · bumpers x10 voor {1} tellen": "EILĖ! +{0} · buferiai x10 {1} sekundžių",
+  "Beide doelen! +{0}": "Abu taikiniai! +{0}",
+  " · accu vol: het vanggat is {0} waard": " · akumuliatorius pilnas: gaudymo duobutė verta {0}",
+  "OPGELADEN! +{0}": "ĮKRAUTA! +{0}",
+  "Bladmuziek {0} van {1}: {2}": "Natų lapas {0} iš {1}: {2}",
+  "Symfonie nr. 40": "Simfonija Nr. 40",
+  "Pianoconcert nr. 21, andante": "Koncertas fortepijonui Nr. 21, andante",
+  "Die Zauberflöte, Koningin van de Nacht": "Die Zauberflöte, Nakties karalienė",
+  "Ah vous dirai-je, Maman (variaties)": "Ah vous dirai-je, Maman (variacijos)",
+  "de symfonie": "simfonija",
+  "{0} compleet! +{1} · multiplier x{2}": "{0} baigta! +{1} · daugiklis x{2}",
+  "Te zacht. Nog eens.": "Per silpnai. Dar kartą.",
+  "TILT: de flippers zijn dood tot de volgende bal": "TILT: plaktukai neveiks iki kito kamuoliuko",
+  "De bal zat klem; een duwtje.": "Kamuoliukas įstrigo; mažas stumtelėjimas.",
+  "Bonus {0} (x{1})": "Premija {0} (x{1})",
+  "EXTRA BAL!": "PAPILDOMAS KAMUOLIUKAS!",
+  " · een hommage aan de flipperkasten van 1993": " · duoklė 1993 m. pinbolo žaidimams",
+});
+
+
+Object.assign(TAALBOEK.lv, {
+  "KIES EEN TAFEL": "IZVĒLIES GALDU",
+  "Pc: Z en / voor de flippers, pijl omlaag vasthouden om de bal weg te schieten, X stoot.": "PC: Z un / fliperiem, turi bultiņu uz leju, lai izšautu bumbiņu, X sakrata.",
+  "Telefoon: tik links of rechts op de tafel, LANCEER vasthouden.": "Tālrunis: pieskaries galda kreisajai vai labajai pusei, turi ŠAUT.",
+  "Terug naar de tafelkeuze": "Atpakaļ uz galda izvēli",
+  "SCORE": "PUNKTI",
+  "BAL": "BUMBIŅA",
+  "BONUS": "BONUSS",
+  "LANEN": "CELIŅI",
+  "RECORD": "REKORDS",
+  "Muziek aan of uit": "Mūzika ieslēgta vai izslēgta",
+  "Geluid aan of uit": "Skaņa ieslēgta vai izslēgta",
+  "De flipperkast": "Pinbola automāts",
+  "Linkerflipper": "Kreisais flipers",
+  "Rechterflipper": "Labais flipers",
+  "Stoot tegen de kast": "Sakratīt automātu",
+  "STOOT": "SAKRATĪT",
+  "Veer: vasthouden en loslaten": "Atspere: turi un atlaid",
+  "LANCEER": "ŠAUT",
+  "Besturing en regels": "Vadība un noteikumi",
+  "Het Uurwerk": "Pulksteņa mehānisms",
+  "Tafel 1 · 1900": "1. galds · 1900",
+  "Tafel 2 · de androïde": "2. galds · androīds",
+  "Tafel 3 · Wenen 1785": "3. galds · Vīne 1785",
+  "record {0}": "rekords {0}",
+  "nog niet gespeeld": "vēl nav spēlēts",
+  " · laatste {0}": " · pēdējais {0}",
+  "Bal {0} · trek aan de veer": "{0}. bumbiņa · pavelc atsperi",
+  "Besturing": "Vadība",
+  "linkerflipper": "kreisais flipers",
+  "rechterflipper": "labais flipers",
+  "bal wegschieten: vasthouden, loslaten": "izšaut bumbiņu: turi, atlaid",
+  "stoot (vier keer in twee tellen is tilt)": "sakratīšana (četras reizes divās sekundēs ir tilt)",
+  "nieuw spel": "jauna spēle",
+  "terug naar de tafelkeuze": "atpakaļ uz galda izvēli",
+  "De lanen bovenin spellen {0}: vol is {1} en de bonus een trap hoger (tot x5).": "Augšējie celiņi veido {0}: pilni dod {1}, un bonuss paaugstinās par pakāpi (līdz x5).",
+  "Bumper {0}. Drie valdoelen neer: bank {1} en {2} tellen bumpers x10.": "Bamperis {0}. Visi trīs krītošie mērķi nogāzti: rinda {1} un {2} sekundes bamperi x10.",
+  "Beide staande doelen: {0} en de accu vol: het vanggat is dan {1} in plaats van {2}.": "Abi stāvošie mērķi: {0}, un akumulators pilns: ķeršanas caurums tad ir {1} vērts, nevis {2}.",
+  "Beide staande doelen: {0}.": "Abi stāvošie mērķi: {0}.",
+  "De bovenbaan (vol lanceren, of langs de linkerwand omhoog): elke keer dat de bal er doorheen rolt, haal je het volgende van {0} stukken bladmuziek uit de bibliotheek ({1}); alle {0} is {2}: {3} en de multiplier omhoog.": "Augšējā orbīta (pilns šāviens vai augšup gar kreiso sienu): katru reizi, kad bumbiņa tai izripo cauri, tu atnes no bibliotēkas nākamo no {0} nošu lapām ({1}); visas {0} kopā ir {2}: {3}, un reizinātājs palielinās.",
+  "Extra bal bij {0}. Bonus per bal: letters en doelen keer de multiplier.": "Papildu bumbiņa pie {0}. Bonuss par bumbiņu: burti un mērķi reiz reizinātājs.",
+  "SPEL VOORBIJ": "SPĒLE BEIGUSIES",
+  "{0} punten": "{0} punkti",
+  " · RECORD!": " · REKORDS!",
+  "tik of druk op Enter voor een nieuw spel": "pieskaries vai nospied Enter jaunai spēlei",
+  "{0}! Multiplier x{1}": "{0}! Reizinātājs x{1}",
+  "BANK! +{0} · bumpers x10 voor {1} tellen": "RINDA! +{0} · bamperi x10 {1} sekundes",
+  "Beide doelen! +{0}": "Abi mērķi! +{0}",
+  " · accu vol: het vanggat is {0} waard": " · akumulators pilns: ķeršanas caurums ir {0} vērts",
+  "OPGELADEN! +{0}": "UZLĀDĒTS! +{0}",
+  "Bladmuziek {0} van {1}: {2}": "Nošu lapa {0} no {1}: {2}",
+  "Symfonie nr. 40": "Simfonija nr. 40",
+  "Pianoconcert nr. 21, andante": "Klavierkoncerts nr. 21, andante",
+  "Die Zauberflöte, Koningin van de Nacht": "Die Zauberflöte, Nakts karaliene",
+  "Ah vous dirai-je, Maman (variaties)": "Ah vous dirai-je, Maman (variācijas)",
+  "de symfonie": "simfonija",
+  "{0} compleet! +{1} · multiplier x{2}": "{0} pabeigta! +{1} · reizinātājs x{2}",
+  "Te zacht. Nog eens.": "Pārāk vāji. Vēlreiz.",
+  "TILT: de flippers zijn dood tot de volgende bal": "TILT: fliperi nedarbojas līdz nākamajai bumbiņai",
+  "De bal zat klem; een duwtje.": "Bumbiņa iestrēga; neliels grūdiens.",
+  "Bonus {0} (x{1})": "Bonuss {0} (x{1})",
+  "EXTRA BAL!": "PAPILDU BUMBIŅA!",
+  " · een hommage aan de flipperkasten van 1993": " · veltījums 1993. gada pinbola spēlēm",
+});
+
+
+Object.assign(TAALBOEK.mt, {
+  "KIES EEN TAFEL": "AGĦŻEL MEJDA",
+  "Pc: Z en / voor de flippers, pijl omlaag vasthouden om de bal weg te schieten, X stoot.": "PC: Z u / għall-flippers, żomm il-vleġġa 'l isfel biex tispara l-ballun, X tħawwad.",
+  "Telefoon: tik links of rechts op de tafel, LANCEER vasthouden.": "Mowbajl: agħfas fuq ix-xellug jew il-lemin tal-mejda, żomm SPARA.",
+  "Terug naar de tafelkeuze": "Lura għall-għażla tal-mejda",
+  "SCORE": "PUNTI",
+  "BAL": "BALLUN",
+  "BONUS": "BONUS",
+  "LANEN": "KORSIJIET",
+  "RECORD": "REKORD",
+  "Muziek aan of uit": "Mużika mixgħula jew mitfija",
+  "Geluid aan of uit": "Ħoss mixgħul jew mitfi",
+  "De flipperkast": "Il-magna tal-pinball",
+  "Linkerflipper": "Flipper tax-xellug",
+  "Rechterflipper": "Flipper tal-lemin",
+  "Stoot tegen de kast": "Ħawwad il-magna",
+  "STOOT": "ĦAWWAD",
+  "Veer: vasthouden en loslaten": "Molla: żomm u ħalli",
+  "LANCEER": "SPARA",
+  "Besturing en regels": "Kontrolli u regoli",
+  "Het Uurwerk": "Il-Mekkaniżmu tal-Arloġġ",
+  "Tafel 1 · 1900": "Mejda 1 · 1900",
+  "Tafel 2 · de androïde": "Mejda 2 · l-android",
+  "Tafel 3 · Wenen 1785": "Mejda 3 · Vjenna 1785",
+  "record {0}": "rekord {0}",
+  "nog niet gespeeld": "għadha ma ntlagħbitx",
+  " · laatste {0}": " · l-aħħar {0}",
+  "Bal {0} · trek aan de veer": "Ballun {0} · iġbed il-molla",
+  "Besturing": "Kontrolli",
+  "linkerflipper": "flipper tax-xellug",
+  "rechterflipper": "flipper tal-lemin",
+  "bal wegschieten: vasthouden, loslaten": "spara l-ballun: żomm, ħalli",
+  "stoot (vier keer in twee tellen is tilt)": "ħawwad (erba' darbiet f'żewġ sekondi huwa tilt)",
+  "nieuw spel": "logħba ġdida",
+  "terug naar de tafelkeuze": "lura għall-għażla tal-mejda",
+  "De lanen bovenin spellen {0}: vol is {1} en de bonus een trap hoger (tot x5).": "Il-korsijiet ta' fuq jiktbu {0}: kompluti jagħtu {1} u l-bonus jitla' grad (sa x5).",
+  "Bumper {0}. Drie valdoelen neer: bank {1} en {2} tellen bumpers x10.": "Bumper {0}. It-tliet miri li jaqgħu kollha 'l isfel: ringiela {1} u {2} sekondi ta' bumpers x10.",
+  "Beide staande doelen: {0} en de accu vol: het vanggat is dan {1} in plaats van {2}.": "Iż-żewġ miri wieqfa: {0} u l-batterija mimlija: it-toqba mbagħad tiswa {1} minflok {2}.",
+  "Beide staande doelen: {0}.": "Iż-żewġ miri wieqfa: {0}.",
+  "De bovenbaan (vol lanceren, of langs de linkerwand omhoog): elke keer dat de bal er doorheen rolt, haal je het volgende van {0} stukken bladmuziek uit de bibliotheek ({1}); alle {0} is {2}: {3} en de multiplier omhoog.": "L-orbita ta' fuq (sparatura sħiħa, jew 'il fuq mal-ħajt tax-xellug): kull darba li l-ballun jgħaddi minnha, iġġib mil-librerija l-biċċa li jmiss minn {0} biċċiet mużika ({1}); it-{0} kollha flimkien huma {2}: {3} u l-multiplikatur jitla'.",
+  "Extra bal bij {0}. Bonus per bal: letters en doelen keer de multiplier.": "Ballun żejjed f'{0}. Bonus għal kull ballun: ittri u miri darba l-multiplikatur.",
+  "SPEL VOORBIJ": "SPIĊĊAT IL-LOGĦBA",
+  "{0} punten": "{0} punti",
+  " · RECORD!": " · REKORD!",
+  "tik of druk op Enter voor een nieuw spel": "agħfas l-iskrin jew Enter għal logħba ġdida",
+  "{0}! Multiplier x{1}": "{0}! Multiplikatur x{1}",
+  "BANK! +{0} · bumpers x10 voor {1} tellen": "RINGIELA! +{0} · bumpers x10 għal {1} sekondi",
+  "Beide doelen! +{0}": "Iż-żewġ miri! +{0}",
+  " · accu vol: het vanggat is {0} waard": " · batterija mimlija: it-toqba tiswa {0}",
+  "OPGELADEN! +{0}": "IĊĊARĠJAT! +{0}",
+  "Bladmuziek {0} van {1}: {2}": "Mużika {0} minn {1}: {2}",
+  "Symfonie nr. 40": "Sinfonija Nru 40",
+  "Pianoconcert nr. 21, andante": "Kunċert għall-pjanu Nru 21, andante",
+  "Die Zauberflöte, Koningin van de Nacht": "Die Zauberflöte, Is-Sultana tal-Lejl",
+  "Ah vous dirai-je, Maman (variaties)": "Ah vous dirai-je, Maman (varjazzjonijiet)",
+  "de symfonie": "is-sinfonija",
+  "{0} compleet! +{1} · multiplier x{2}": "{0} lesta! +{1} · multiplikatur x{2}",
+  "Te zacht. Nog eens.": "Bil-mod wisq. Erġa' pprova.",
+  "TILT: de flippers zijn dood tot de volgende bal": "TILT: il-flippers huma mejta sal-ballun li jmiss",
+  "De bal zat klem; een duwtje.": "Il-ballun kien imwaħħal; imbuttatura żgħira.",
+  "Bonus {0} (x{1})": "Bonus {0} (x{1})",
+  "EXTRA BAL!": "BALLUN ŻEJJED!",
+  " · een hommage aan de flipperkasten van 1993": " · tifkira tal-logħob tal-pinball tal-1993",
+});
+
+
+Object.assign(TAALBOEK.pl, {
+  "KIES EEN TAFEL": "WYBIERZ STÓŁ",
+  "Pc: Z en / voor de flippers, pijl omlaag vasthouden om de bal weg te schieten, X stoot.": "PC: Z i / to łapki, przytrzymaj strzałkę w dół, aby wystrzelić kulkę, X potrząsa.",
+  "Telefoon: tik links of rechts op de tafel, LANCEER vasthouden.": "Telefon: dotknij lewej lub prawej strony stołu, przytrzymaj STRZAŁ.",
+  "Terug naar de tafelkeuze": "Powrót do wyboru stołu",
+  "SCORE": "WYNIK",
+  "BAL": "KULKA",
+  "BONUS": "BONUS",
+  "LANEN": "TORY",
+  "RECORD": "REKORD",
+  "Muziek aan of uit": "Muzyka wł. lub wył.",
+  "Geluid aan of uit": "Dźwięk wł. lub wył.",
+  "De flipperkast": "Automat do pinballa",
+  "Linkerflipper": "Lewa łapka",
+  "Rechterflipper": "Prawa łapka",
+  "Stoot tegen de kast": "Potrząśnij automatem",
+  "STOOT": "POTRZĄŚNIJ",
+  "Veer: vasthouden en loslaten": "Sprężyna: przytrzymaj i puść",
+  "LANCEER": "STRZAŁ",
+  "Besturing en regels": "Sterowanie i zasady",
+  "Het Uurwerk": "Mechanizm Zegarowy",
+  "Tafel 1 · 1900": "Stół 1 · 1900",
+  "Tafel 2 · de androïde": "Stół 2 · android",
+  "Tafel 3 · Wenen 1785": "Stół 3 · Wiedeń 1785",
+  "record {0}": "rekord {0}",
+  "nog niet gespeeld": "jeszcze nie grano",
+  " · laatste {0}": " · ostatnio {0}",
+  "Bal {0} · trek aan de veer": "Kulka {0} · pociągnij sprężynę",
+  "Besturing": "Sterowanie",
+  "linkerflipper": "lewa łapka",
+  "rechterflipper": "prawa łapka",
+  "bal wegschieten: vasthouden, loslaten": "wystrzel kulkę: przytrzymaj, puść",
+  "stoot (vier keer in twee tellen is tilt)": "potrząśnięcie (cztery razy w dwie sekundy to tilt)",
+  "nieuw spel": "nowa gra",
+  "terug naar de tafelkeuze": "powrót do wyboru stołu",
+  "De lanen bovenin spellen {0}: vol is {1} en de bonus een trap hoger (tot x5).": "Górne tory tworzą słowo {0}: komplet daje {1}, a bonus rośnie o stopień (do x5).",
+  "Bumper {0}. Drie valdoelen neer: bank {1} en {2} tellen bumpers x10.": "Bumper {0}. Wszystkie trzy opadające cele w dół: rząd {1} i bumpery x10 przez {2} sekund.",
+  "Beide staande doelen: {0} en de accu vol: het vanggat is dan {1} in plaats van {2}.": "Oba stałe cele: {0} i pełny akumulator: dziura jest wtedy warta {1} zamiast {2}.",
+  "Beide staande doelen: {0}.": "Oba stałe cele: {0}.",
+  "De bovenbaan (vol lanceren, of langs de linkerwand omhoog): elke keer dat de bal er doorheen rolt, haal je het volgende van {0} stukken bladmuziek uit de bibliotheek ({1}); alle {0} is {2}: {3} en de multiplier omhoog.": "Górna orbita (pełny strzał lub w górę wzdłuż lewej ściany): za każdym razem, gdy kulka przez nią przejedzie, przynosisz z biblioteki kolejną z {0} partytur ({1}); wszystkie {0} to {2}: {3} i mnożnik w górę.",
+  "Extra bal bij {0}. Bonus per bal: letters en doelen keer de multiplier.": "Dodatkowa kulka przy {0}. Bonus za kulkę: litery i cele razy mnożnik.",
+  "SPEL VOORBIJ": "KONIEC GRY",
+  "{0} punten": "{0} punktów",
+  " · RECORD!": " · REKORD!",
+  "tik of druk op Enter voor een nieuw spel": "dotknij lub naciśnij Enter, aby zagrać ponownie",
+  "{0}! Multiplier x{1}": "{0}! Mnożnik x{1}",
+  "BANK! +{0} · bumpers x10 voor {1} tellen": "RZĄD! +{0} · bumpery x10 przez {1} sekund",
+  "Beide doelen! +{0}": "Oba cele! +{0}",
+  " · accu vol: het vanggat is {0} waard": " · akumulator pełny: dziura jest warta {0}",
+  "OPGELADEN! +{0}": "NAŁADOWANY! +{0}",
+  "Bladmuziek {0} van {1}: {2}": "Partytura {0} z {1}: {2}",
+  "Symfonie nr. 40": "Symfonia nr 40",
+  "Pianoconcert nr. 21, andante": "Koncert fortepianowy nr 21, andante",
+  "Die Zauberflöte, Koningin van de Nacht": "Die Zauberflöte, Królowa Nocy",
+  "Ah vous dirai-je, Maman (variaties)": "Ah vous dirai-je, Maman (wariacje)",
+  "de symfonie": "symfonia",
+  "{0} compleet! +{1} · multiplier x{2}": "{0} ukończona! +{1} · mnożnik x{2}",
+  "Te zacht. Nog eens.": "Za słabo. Jeszcze raz.",
+  "TILT: de flippers zijn dood tot de volgende bal": "TILT: łapki nie działają do następnej kulki",
+  "De bal zat klem; een duwtje.": "Kulka utknęła; małe pchnięcie.",
+  "Bonus {0} (x{1})": "Bonus {0} (x{1})",
+  "EXTRA BAL!": "DODATKOWA KULKA!",
+  " · een hommage aan de flipperkasten van 1993": " · hołd dla gier pinballowych z 1993 roku",
+});
+
+
+Object.assign(TAALBOEK.pt, {
+  "KIES EEN TAFEL": "ESCOLHE UMA MESA",
+  "Pc: Z en / voor de flippers, pijl omlaag vasthouden om de bal weg te schieten, X stoot.": "PC: Z e / para os flippers, mantém a seta para baixo para lançar a bola, X abana.",
+  "Telefoon: tik links of rechts op de tafel, LANCEER vasthouden.": "Telemóvel: toca à esquerda ou à direita da mesa, mantém LANÇAR.",
+  "Terug naar de tafelkeuze": "Voltar à escolha da mesa",
+  "SCORE": "PONTOS",
+  "BAL": "BOLA",
+  "BONUS": "BÓNUS",
+  "LANEN": "CORREDORES",
+  "RECORD": "RECORDE",
+  "Muziek aan of uit": "Ligar ou desligar a música",
+  "Geluid aan of uit": "Ligar ou desligar o som",
+  "De flipperkast": "A máquina de flippers",
+  "Linkerflipper": "Flipper esquerdo",
+  "Rechterflipper": "Flipper direito",
+  "Stoot tegen de kast": "Abanar a máquina",
+  "STOOT": "ABANAR",
+  "Veer: vasthouden en loslaten": "Mola: manter e soltar",
+  "LANCEER": "LANÇAR",
+  "Besturing en regels": "Controlos e regras",
+  "Het Uurwerk": "O Relógio",
+  "Tafel 1 · 1900": "Mesa 1 · 1900",
+  "Tafel 2 · de androïde": "Mesa 2 · o androide",
+  "Tafel 3 · Wenen 1785": "Mesa 3 · Viena 1785",
+  "record {0}": "recorde {0}",
+  "nog niet gespeeld": "ainda não jogada",
+  " · laatste {0}": " · último {0}",
+  "Bal {0} · trek aan de veer": "Bola {0} · puxa a mola",
+  "Besturing": "Controlos",
+  "linkerflipper": "flipper esquerdo",
+  "rechterflipper": "flipper direito",
+  "bal wegschieten: vasthouden, loslaten": "lançar a bola: manter, soltar",
+  "stoot (vier keer in twee tellen is tilt)": "abanar (quatro vezes em dois segundos é tilt)",
+  "nieuw spel": "novo jogo",
+  "terug naar de tafelkeuze": "voltar à escolha da mesa",
+  "De lanen bovenin spellen {0}: vol is {1} en de bonus een trap hoger (tot x5).": "Os corredores de cima formam {0}: completos dão {1} e o bónus sobe um nível (até x5).",
+  "Bumper {0}. Drie valdoelen neer: bank {1} en {2} tellen bumpers x10.": "Bumper {0}. Os três alvos de queda em baixo: fila {1} e {2} segundos de bumpers x10.",
+  "Beide staande doelen: {0} en de accu vol: het vanggat is dan {1} in plaats van {2}.": "Os dois alvos fixos: {0} e a bateria carregada: o buraco de captura vale então {1} em vez de {2}.",
+  "Beide staande doelen: {0}.": "Os dois alvos fixos: {0}.",
+  "De bovenbaan (vol lanceren, of langs de linkerwand omhoog): elke keer dat de bal er doorheen rolt, haal je het volgende van {0} stukken bladmuziek uit de bibliotheek ({1}); alle {0} is {2}: {3} en de multiplier omhoog.": "A órbita de cima (lançamento total, ou a subir pela parede esquerda): sempre que a bola passa por ela, trazes da biblioteca a próxima de {0} partituras ({1}); as {0} juntas são {2}: {3} e o multiplicador sobe.",
+  "Extra bal bij {0}. Bonus per bal: letters en doelen keer de multiplier.": "Bola extra aos {0}. Bónus por bola: letras e alvos vezes o multiplicador.",
+  "SPEL VOORBIJ": "FIM DO JOGO",
+  "{0} punten": "{0} pontos",
+  " · RECORD!": " · RECORDE!",
+  "tik of druk op Enter voor een nieuw spel": "toca ou carrega em Enter para jogar outra vez",
+  "{0}! Multiplier x{1}": "{0}! Multiplicador x{1}",
+  "BANK! +{0} · bumpers x10 voor {1} tellen": "FILA! +{0} · bumpers x10 durante {1} segundos",
+  "Beide doelen! +{0}": "Os dois alvos! +{0}",
+  " · accu vol: het vanggat is {0} waard": " · bateria carregada: o buraco de captura vale {0}",
+  "OPGELADEN! +{0}": "CARREGADA! +{0}",
+  "Bladmuziek {0} van {1}: {2}": "Partitura {0} de {1}: {2}",
+  "Symfonie nr. 40": "Sinfonia n.º 40",
+  "Pianoconcert nr. 21, andante": "Concerto para piano n.º 21, andante",
+  "Die Zauberflöte, Koningin van de Nacht": "Die Zauberflöte, Rainha da Noite",
+  "Ah vous dirai-je, Maman (variaties)": "Ah vous dirai-je, Maman (variações)",
+  "de symfonie": "a sinfonia",
+  "{0} compleet! +{1} · multiplier x{2}": "{0} completa! +{1} · multiplicador x{2}",
+  "Te zacht. Nog eens.": "Demasiado fraco. Outra vez.",
+  "TILT: de flippers zijn dood tot de volgende bal": "TILT: os flippers estão mortos até à próxima bola",
+  "De bal zat klem; een duwtje.": "A bola estava presa; um empurrãozinho.",
+  "Bonus {0} (x{1})": "Bónus {0} (x{1})",
+  "EXTRA BAL!": "BOLA EXTRA!",
+  " · een hommage aan de flipperkasten van 1993": " · uma homenagem aos jogos de flippers de 1993",
+});
+
+
+Object.assign(TAALBOEK.ro, {
+  "KIES EEN TAFEL": "ALEGE O MASĂ",
+  "Pc: Z en / voor de flippers, pijl omlaag vasthouden om de bal weg te schieten, X stoot.": "PC: Z și / pentru flippere, ține apăsată săgeata în jos ca să lansezi bila, X zgâlțâie.",
+  "Telefoon: tik links of rechts op de tafel, LANCEER vasthouden.": "Telefon: atinge stânga sau dreapta mesei, ține apăsat LANSEAZĂ.",
+  "Terug naar de tafelkeuze": "Înapoi la alegerea mesei",
+  "SCORE": "SCOR",
+  "BAL": "BILA",
+  "BONUS": "BONUS",
+  "LANEN": "CULOARE",
+  "RECORD": "RECORD",
+  "Muziek aan of uit": "Muzică pornită sau oprită",
+  "Geluid aan of uit": "Sunet pornit sau oprit",
+  "De flipperkast": "Mașina de pinball",
+  "Linkerflipper": "Flipperul stâng",
+  "Rechterflipper": "Flipperul drept",
+  "Stoot tegen de kast": "Zgâlțâie aparatul",
+  "STOOT": "ZGÂLȚÂIE",
+  "Veer: vasthouden en loslaten": "Arc: ține și eliberează",
+  "LANCEER": "LANSEAZĂ",
+  "Besturing en regels": "Comenzi și reguli",
+  "Het Uurwerk": "Mecanismul de Ceas",
+  "Tafel 1 · 1900": "Masa 1 · 1900",
+  "Tafel 2 · de androïde": "Masa 2 · androidul",
+  "Tafel 3 · Wenen 1785": "Masa 3 · Viena 1785",
+  "record {0}": "record {0}",
+  "nog niet gespeeld": "încă nejucată",
+  " · laatste {0}": " · ultima {0}",
+  "Bal {0} · trek aan de veer": "Bila {0} · trage de arc",
+  "Besturing": "Comenzi",
+  "linkerflipper": "flipperul stâng",
+  "rechterflipper": "flipperul drept",
+  "bal wegschieten: vasthouden, loslaten": "lansează bila: ține, eliberează",
+  "stoot (vier keer in twee tellen is tilt)": "zgâlțâială (de patru ori în două secunde înseamnă tilt)",
+  "nieuw spel": "joc nou",
+  "terug naar de tafelkeuze": "înapoi la alegerea mesei",
+  "De lanen bovenin spellen {0}: vol is {1} en de bonus een trap hoger (tot x5).": "Culoarele de sus formează {0}: complete dau {1} și bonusul urcă o treaptă (până la x5).",
+  "Bumper {0}. Drie valdoelen neer: bank {1} en {2} tellen bumpers x10.": "Bumper {0}. Toate cele trei ținte căzătoare jos: rând {1} și {2} secunde de bumpere x10.",
+  "Beide staande doelen: {0} en de accu vol: het vanggat is dan {1} in plaats van {2}.": "Ambele ținte fixe: {0} și bateria plină: gaura de captură valorează atunci {1} în loc de {2}.",
+  "Beide staande doelen: {0}.": "Ambele ținte fixe: {0}.",
+  "De bovenbaan (vol lanceren, of langs de linkerwand omhoog): elke keer dat de bal er doorheen rolt, haal je het volgende van {0} stukken bladmuziek uit de bibliotheek ({1}); alle {0} is {2}: {3} en de multiplier omhoog.": "Orbita de sus (lansare completă sau în sus pe lângă peretele stâng): de fiecare dată când bila trece prin ea, aduci din bibliotecă următoarea din cele {0} partituri ({1}); toate cele {0} sunt {2}: {3} și multiplicatorul crește.",
+  "Extra bal bij {0}. Bonus per bal: letters en doelen keer de multiplier.": "Bilă în plus la {0}. Bonus pe bilă: litere și ținte ori multiplicatorul.",
+  "SPEL VOORBIJ": "JOC TERMINAT",
+  "{0} punten": "{0} puncte",
+  " · RECORD!": " · RECORD!",
+  "tik of druk op Enter voor een nieuw spel": "atinge sau apasă Enter pentru un joc nou",
+  "{0}! Multiplier x{1}": "{0}! Multiplicator x{1}",
+  "BANK! +{0} · bumpers x10 voor {1} tellen": "RÂND! +{0} · bumpere x10 timp de {1} secunde",
+  "Beide doelen! +{0}": "Ambele ținte! +{0}",
+  " · accu vol: het vanggat is {0} waard": " · baterie plină: gaura de captură valorează {0}",
+  "OPGELADEN! +{0}": "ÎNCĂRCAT! +{0}",
+  "Bladmuziek {0} van {1}: {2}": "Partitura {0} din {1}: {2}",
+  "Symfonie nr. 40": "Simfonia nr. 40",
+  "Pianoconcert nr. 21, andante": "Concertul pentru pian nr. 21, andante",
+  "Die Zauberflöte, Koningin van de Nacht": "Die Zauberflöte, Regina Nopții",
+  "Ah vous dirai-je, Maman (variaties)": "Ah vous dirai-je, Maman (variațiuni)",
+  "de symfonie": "simfonia",
+  "{0} compleet! +{1} · multiplier x{2}": "{0} completă! +{1} · multiplicator x{2}",
+  "Te zacht. Nog eens.": "Prea slab. Încă o dată.",
+  "TILT: de flippers zijn dood tot de volgende bal": "TILT: flipperele sunt moarte până la bila următoare",
+  "De bal zat klem; een duwtje.": "Bila era blocată; un mic impuls.",
+  "Bonus {0} (x{1})": "Bonus {0} (x{1})",
+  "EXTRA BAL!": "BILĂ ÎN PLUS!",
+  " · een hommage aan de flipperkasten van 1993": " · un omagiu adus jocurilor de pinball din 1993",
+});
+
+
+Object.assign(TAALBOEK.sk, {
+  "KIES EEN TAFEL": "VYBER SI STÔL",
+  "Pc: Z en / voor de flippers, pijl omlaag vasthouden om de bal weg te schieten, X stoot.": "PC: Z a / pre flippery, drž šípku dole na vystrelenie guľôčky, X zatrasie.",
+  "Telefoon: tik links of rechts op de tafel, LANCEER vasthouden.": "Telefón: ťukni vľavo alebo vpravo na stôl, drž VÝSTREL.",
+  "Terug naar de tafelkeuze": "Späť na výber stola",
+  "SCORE": "SKÓRE",
+  "BAL": "GUĽÔČKA",
+  "BONUS": "BONUS",
+  "LANEN": "DRÁHY",
+  "RECORD": "REKORD",
+  "Muziek aan of uit": "Hudba zap. alebo vyp.",
+  "Geluid aan of uit": "Zvuk zap. alebo vyp.",
+  "De flipperkast": "Pinballový automat",
+  "Linkerflipper": "Ľavý flipper",
+  "Rechterflipper": "Pravý flipper",
+  "Stoot tegen de kast": "Zatriasť automatom",
+  "STOOT": "ZATRIASŤ",
+  "Veer: vasthouden en loslaten": "Pružina: drž a pusti",
+  "LANCEER": "VÝSTREL",
+  "Besturing en regels": "Ovládanie a pravidlá",
+  "Het Uurwerk": "Hodinový stroj",
+  "Tafel 1 · 1900": "Stôl 1 · 1900",
+  "Tafel 2 · de androïde": "Stôl 2 · android",
+  "Tafel 3 · Wenen 1785": "Stôl 3 · Viedeň 1785",
+  "record {0}": "rekord {0}",
+  "nog niet gespeeld": "ešte nehrané",
+  " · laatste {0}": " · naposledy {0}",
+  "Bal {0} · trek aan de veer": "Guľôčka {0} · natiahni pružinu",
+  "Besturing": "Ovládanie",
+  "linkerflipper": "ľavý flipper",
+  "rechterflipper": "pravý flipper",
+  "bal wegschieten: vasthouden, loslaten": "vystreliť guľôčku: drž, pusti",
+  "stoot (vier keer in twee tellen is tilt)": "zatrasenie (štyrikrát za dve sekundy je tilt)",
+  "nieuw spel": "nová hra",
+  "terug naar de tafelkeuze": "späť na výber stola",
+  "De lanen bovenin spellen {0}: vol is {1} en de bonus een trap hoger (tot x5).": "Horné dráhy skladajú {0}: plné dajú {1} a bonus stúpne o stupeň (až x5).",
+  "Bumper {0}. Drie valdoelen neer: bank {1} en {2} tellen bumpers x10.": "Bumper {0}. Všetky tri padacie terče dole: rad {1} a bumpery x10 na {2} sekúnd.",
+  "Beide staande doelen: {0} en de accu vol: het vanggat is dan {1} in plaats van {2}.": "Oba pevné terče: {0} a plná batéria: jamka má potom hodnotu {1} namiesto {2}.",
+  "Beide staande doelen: {0}.": "Oba pevné terče: {0}.",
+  "De bovenbaan (vol lanceren, of langs de linkerwand omhoog): elke keer dat de bal er doorheen rolt, haal je het volgende van {0} stukken bladmuziek uit de bibliotheek ({1}); alle {0} is {2}: {3} en de multiplier omhoog.": "Horný oblúk (plný výstrel alebo hore pozdĺž ľavej steny): zakaždým, keď ním guľôčka prejde, prinesieš z knižnice ďalšie z {0} nôt ({1}); všetkých {0} je {2}: {3} a násobiteľ stúpne.",
+  "Extra bal bij {0}. Bonus per bal: letters en doelen keer de multiplier.": "Guľôčka navyše pri {0}. Bonus za guľôčku: písmená a terče krát násobiteľ.",
+  "SPEL VOORBIJ": "KONIEC HRY",
+  "{0} punten": "{0} bodov",
+  " · RECORD!": " · REKORD!",
+  "tik of druk op Enter voor een nieuw spel": "ťukni alebo stlač Enter pre novú hru",
+  "{0}! Multiplier x{1}": "{0}! Násobiteľ x{1}",
+  "BANK! +{0} · bumpers x10 voor {1} tellen": "RAD! +{0} · bumpery x10 na {1} sekúnd",
+  "Beide doelen! +{0}": "Oba terče! +{0}",
+  " · accu vol: het vanggat is {0} waard": " · batéria plná: jamka má hodnotu {0}",
+  "OPGELADEN! +{0}": "NABITÉ! +{0}",
+  "Bladmuziek {0} van {1}: {2}": "Noty {0} z {1}: {2}",
+  "Symfonie nr. 40": "Symfónia č. 40",
+  "Pianoconcert nr. 21, andante": "Klavírny koncert č. 21, andante",
+  "Die Zauberflöte, Koningin van de Nacht": "Die Zauberflöte, Kráľovná noci",
+  "Ah vous dirai-je, Maman (variaties)": "Ah vous dirai-je, Maman (variácie)",
+  "de symfonie": "symfónia",
+  "{0} compleet! +{1} · multiplier x{2}": "{0} dokončená! +{1} · násobiteľ x{2}",
+  "Te zacht. Nog eens.": "Príliš slabo. Ešte raz.",
+  "TILT: de flippers zijn dood tot de volgende bal": "TILT: flippery sú mŕtve až do ďalšej guľôčky",
+  "De bal zat klem; een duwtje.": "Guľôčka sa zasekla; malé postrčenie.",
+  "Bonus {0} (x{1})": "Bonus {0} (x{1})",
+  "EXTRA BAL!": "GUĽÔČKA NAVYŠE!",
+  " · een hommage aan de flipperkasten van 1993": " · pocta pinballovým hrám z roku 1993",
+});
+
+
+Object.assign(TAALBOEK.sl, {
+  "KIES EEN TAFEL": "IZBERI MIZO",
+  "Pc: Z en / voor de flippers, pijl omlaag vasthouden om de bal weg te schieten, X stoot.": "PC: Z in / za loparja, drži puščico dol, da izstreliš kroglico, X strese.",
+  "Telefoon: tik links of rechts op de tafel, LANCEER vasthouden.": "Telefon: tapni levo ali desno na mizi, drži IZSTRELI.",
+  "Terug naar de tafelkeuze": "Nazaj na izbiro mize",
+  "SCORE": "TOČKE",
+  "BAL": "KROGLICA",
+  "BONUS": "BONUS",
+  "LANEN": "PROGE",
+  "RECORD": "REKORD",
+  "Muziek aan of uit": "Glasba vklop ali izklop",
+  "Geluid aan of uit": "Zvok vklop ali izklop",
+  "De flipperkast": "Fliper",
+  "Linkerflipper": "Levi lopar",
+  "Rechterflipper": "Desni lopar",
+  "Stoot tegen de kast": "Stresi avtomat",
+  "STOOT": "STRESI",
+  "Veer: vasthouden en loslaten": "Vzmet: drži in spusti",
+  "LANCEER": "IZSTRELI",
+  "Besturing en regels": "Upravljanje in pravila",
+  "Het Uurwerk": "Urni mehanizem",
+  "Tafel 1 · 1900": "Miza 1 · 1900",
+  "Tafel 2 · de androïde": "Miza 2 · android",
+  "Tafel 3 · Wenen 1785": "Miza 3 · Dunaj 1785",
+  "record {0}": "rekord {0}",
+  "nog niet gespeeld": "še ni igrano",
+  " · laatste {0}": " · zadnjič {0}",
+  "Bal {0} · trek aan de veer": "Kroglica {0} · povleci vzmet",
+  "Besturing": "Upravljanje",
+  "linkerflipper": "levi lopar",
+  "rechterflipper": "desni lopar",
+  "bal wegschieten: vasthouden, loslaten": "izstreli kroglico: drži, spusti",
+  "stoot (vier keer in twee tellen is tilt)": "stresanje (štirikrat v dveh sekundah je tilt)",
+  "nieuw spel": "nova igra",
+  "terug naar de tafelkeuze": "nazaj na izbiro mize",
+  "De lanen bovenin spellen {0}: vol is {1} en de bonus een trap hoger (tot x5).": "Zgornje proge sestavijo {0}: polne dajo {1} in bonus se dvigne za stopnjo (do x5).",
+  "Bumper {0}. Drie valdoelen neer: bank {1} en {2} tellen bumpers x10.": "Odbijač {0}. Vse tri padajoče tarče dol: niz {1} in odbijači x10 za {2} sekund.",
+  "Beide staande doelen: {0} en de accu vol: het vanggat is dan {1} in plaats van {2}.": "Obe stoječi tarči: {0} in polna baterija: luknja je takrat vredna {1} namesto {2}.",
+  "Beide staande doelen: {0}.": "Obe stoječi tarči: {0}.",
+  "De bovenbaan (vol lanceren, of langs de linkerwand omhoog): elke keer dat de bal er doorheen rolt, haal je het volgende van {0} stukken bladmuziek uit de bibliotheek ({1}); alle {0} is {2}: {3} en de multiplier omhoog.": "Zgornji lok (poln izstrel ali gor ob levi steni): vsakič, ko se kroglica skozenj zakotali, iz knjižnice prineseš naslednjo od {0} partitur ({1}); vseh {0} je {2}: {3} in množitelj se dvigne.",
+  "Extra bal bij {0}. Bonus per bal: letters en doelen keer de multiplier.": "Dodatna kroglica pri {0}. Bonus na kroglico: črke in tarče krat množitelj.",
+  "SPEL VOORBIJ": "KONEC IGRE",
+  "{0} punten": "{0} točk",
+  " · RECORD!": " · REKORD!",
+  "tik of druk op Enter voor een nieuw spel": "tapni ali pritisni Enter za novo igro",
+  "{0}! Multiplier x{1}": "{0}! Množitelj x{1}",
+  "BANK! +{0} · bumpers x10 voor {1} tellen": "NIZ! +{0} · odbijači x10 za {1} sekund",
+  "Beide doelen! +{0}": "Obe tarči! +{0}",
+  " · accu vol: het vanggat is {0} waard": " · baterija polna: luknja je vredna {0}",
+  "OPGELADEN! +{0}": "NAPOLNJENO! +{0}",
+  "Bladmuziek {0} van {1}: {2}": "Partitura {0} od {1}: {2}",
+  "Symfonie nr. 40": "Simfonija št. 40",
+  "Pianoconcert nr. 21, andante": "Klavirski koncert št. 21, andante",
+  "Die Zauberflöte, Koningin van de Nacht": "Die Zauberflöte, Kraljica noči",
+  "Ah vous dirai-je, Maman (variaties)": "Ah vous dirai-je, Maman (variacije)",
+  "de symfonie": "simfonija",
+  "{0} compleet! +{1} · multiplier x{2}": "{0} dokončana! +{1} · množitelj x{2}",
+  "Te zacht. Nog eens.": "Prešibko. Še enkrat.",
+  "TILT: de flippers zijn dood tot de volgende bal": "TILT: loparja sta mrtva do naslednje kroglice",
+  "De bal zat klem; een duwtje.": "Kroglica se je zataknila; majhen sunek.",
+  "Bonus {0} (x{1})": "Bonus {0} (x{1})",
+  "EXTRA BAL!": "DODATNA KROGLICA!",
+  " · een hommage aan de flipperkasten van 1993": " · poklon fliperjem iz leta 1993",
+});
+
+
+Object.assign(TAALBOEK.sv, {
+  "KIES EEN TAFEL": "VÄLJ ETT BORD",
+  "Pc: Z en / voor de flippers, pijl omlaag vasthouden om de bal weg te schieten, X stoot.": "PC: Z och / för flipprarna, håll pil ned för att skjuta iväg kulan, X knuffar.",
+  "Telefoon: tik links of rechts op de tafel, LANCEER vasthouden.": "Telefon: tryck till vänster eller höger på bordet, håll SKJUT.",
+  "Terug naar de tafelkeuze": "Tillbaka till val av bord",
+  "SCORE": "POÄNG",
+  "BAL": "KULA",
+  "BONUS": "BONUS",
+  "LANEN": "BANOR",
+  "RECORD": "REKORD",
+  "Muziek aan of uit": "Musik på eller av",
+  "Geluid aan of uit": "Ljud på eller av",
+  "De flipperkast": "Flipperspelet",
+  "Linkerflipper": "Vänster flipper",
+  "Rechterflipper": "Höger flipper",
+  "Stoot tegen de kast": "Knuffa maskinen",
+  "STOOT": "KNUFFA",
+  "Veer: vasthouden en loslaten": "Fjäder: håll och släpp",
+  "LANCEER": "SKJUT",
+  "Besturing en regels": "Styrning och regler",
+  "Het Uurwerk": "Urverket",
+  "Tafel 1 · 1900": "Bord 1 · 1900",
+  "Tafel 2 · de androïde": "Bord 2 · androiden",
+  "Tafel 3 · Wenen 1785": "Bord 3 · Wien 1785",
+  "record {0}": "rekord {0}",
+  "nog niet gespeeld": "inte spelat än",
+  " · laatste {0}": " · senast {0}",
+  "Bal {0} · trek aan de veer": "Kula {0} · dra i fjädern",
+  "Besturing": "Styrning",
+  "linkerflipper": "vänster flipper",
+  "rechterflipper": "höger flipper",
+  "bal wegschieten: vasthouden, loslaten": "skjut iväg kulan: håll, släpp",
+  "stoot (vier keer in twee tellen is tilt)": "knuff (fyra gånger på två sekunder är tilt)",
+  "nieuw spel": "nytt spel",
+  "terug naar de tafelkeuze": "tillbaka till val av bord",
+  "De lanen bovenin spellen {0}: vol is {1} en de bonus een trap hoger (tot x5).": "De övre banorna stavar {0}: fulla ger de {1} och bonusen höjs ett steg (upp till x5).",
+  "Bumper {0}. Drie valdoelen neer: bank {1} en {2} tellen bumpers x10.": "Bumper {0}. Alla tre fallmål nere: rad {1} och bumprar x10 i {2} sekunder.",
+  "Beide staande doelen: {0} en de accu vol: het vanggat is dan {1} in plaats van {2}.": "Båda stående målen: {0} och batteriet fullt: fånghålet är då värt {1} i stället för {2}.",
+  "Beide staande doelen: {0}.": "Båda stående målen: {0}.",
+  "De bovenbaan (vol lanceren, of langs de linkerwand omhoog): elke keer dat de bal er doorheen rolt, haal je het volgende van {0} stukken bladmuziek uit de bibliotheek ({1}); alle {0} is {2}: {3} en de multiplier omhoog.": "Den övre banan (full utskjutning, eller upp längs vänster vägg): varje gång kulan rullar igenom hämtar du nästa av {0} notblad från biblioteket ({1}); alla {0} är {2}: {3} och multiplikatorn höjs.",
+  "Extra bal bij {0}. Bonus per bal: letters en doelen keer de multiplier.": "Extra kula vid {0}. Bonus per kula: bokstäver och mål gånger multiplikatorn.",
+  "SPEL VOORBIJ": "SPELET ÄR SLUT",
+  "{0} punten": "{0} poäng",
+  " · RECORD!": " · REKORD!",
+  "tik of druk op Enter voor een nieuw spel": "tryck på skärmen eller på Enter för ett nytt spel",
+  "{0}! Multiplier x{1}": "{0}! Multiplikator x{1}",
+  "BANK! +{0} · bumpers x10 voor {1} tellen": "RAD! +{0} · bumprar x10 i {1} sekunder",
+  "Beide doelen! +{0}": "Båda målen! +{0}",
+  " · accu vol: het vanggat is {0} waard": " · batteriet fullt: fånghålet är värt {0}",
+  "OPGELADEN! +{0}": "LADDAT! +{0}",
+  "Bladmuziek {0} van {1}: {2}": "Notblad {0} av {1}: {2}",
+  "Symfonie nr. 40": "Symfoni nr 40",
+  "Pianoconcert nr. 21, andante": "Pianokonsert nr 21, andante",
+  "Die Zauberflöte, Koningin van de Nacht": "Die Zauberflöte, Nattens drottning",
+  "Ah vous dirai-je, Maman (variaties)": "Ah vous dirai-je, Maman (variationer)",
+  "de symfonie": "symfonin",
+  "{0} compleet! +{1} · multiplier x{2}": "{0} fullbordad! +{1} · multiplikator x{2}",
+  "Te zacht. Nog eens.": "För löst. Försök igen.",
+  "TILT: de flippers zijn dood tot de volgende bal": "TILT: flipprarna är döda till nästa kula",
+  "De bal zat klem; een duwtje.": "Kulan satt fast; en liten knuff.",
+  "Bonus {0} (x{1})": "Bonus {0} (x{1})",
+  "EXTRA BAL!": "EXTRA KULA!",
+  " · een hommage aan de flipperkasten van 1993": " · en hyllning till flipperspelen från 1993",
+});
 
 
 
@@ -929,18 +2420,29 @@ function renderTitel() {
   $('tafels').innerHTML = TAFELS.map((t) => {
     const r = UI.records[t.id] || 0, l = UI.laatste[t.id] || 0, url = sprUrl(t.id + '/titel');
     return '<button class="tafelkaart" data-tafel="' + t.id + '">' + (url ? '<img src="' + url + '" alt="">' : '<span class="geenbeeld"></span>') +
-      '<span class="tekst"><b>' + t.naam + '</b><small>' + t.onder + '</small><em>' + (r ? 'record ' + getal(r) : 'nog niet gespeeld') + (l ? ' · laatste ' + getal(l) : '') + '</em></span></button>';
+      '<span class="tekst"><b>' + vertaal(t.naam) + '</b><small>' + vertaal(t.onder) + '</small><em>' + (r ? vertaal('record {0}', getal(r)) : vertaal('nog niet gespeeld')) + (l ? vertaal(' · laatste {0}', getal(l)) : '') + '</em></span></button>';
   }).join('');
+  kaartNamenPassen();
+}
+
+
+function kaartNamenPassen() {
+  for (const b of document.querySelectorAll('.tafelkaart b')) {
+    b.style.fontSize = ''; b.style.overflowWrap = '';
+    let px = parseFloat(getComputedStyle(b).fontSize);
+    while (b.scrollWidth > b.clientWidth + 1 && px > 14) { px -= 1; b.style.fontSize = px + 'px'; }
+    if (b.scrollWidth > b.clientWidth + 1) b.style.overflowWrap = 'break-word';
+  }
 }
 function nieuwSpel(tafelId) {
   UI.tafelKeuze = tafelId || UI.tafelKeuze;
   UI.st = tafelNieuw((Date.now() % 2147483646) | 0, UI.tafelKeuze);
   UI.camY = TAFEL.H - UI.zichtH; UI.deeltjes = []; UI.flits = {}; UI.bericht = '';
   naarScherm('tafel');
-  $('tafelNaam').textContent = tafelVan(UI.st).naam.toUpperCase();
+  $('tafelNaam').textContent = vertaal('SCORE');
   renderZijpaneel();
   muziekStart();
-  zegt('Bal 1 · trek aan de veer', 2500);
+  zegt(vertaal('Bal {0} · trek aan de veer', 1), 2500);
   renderHud();
 }
 function zegt(tekst, ms) { UI.bericht = tekst; UI.berichtTot = performance.now() + (ms || 1800); }
@@ -948,13 +2450,13 @@ function zegt(tekst, ms) { UI.bericht = tekst; UI.berichtTot = performance.now()
 function renderZijpaneel() {
   const tafel = tafelVan(UI.st), P = TAFEL.punten, rij = (k, w) => '<div class="rij"><kbd>' + k + '</kbd><span>' + w + '</span></div>';
   $('zijpaneel').innerHTML =
-    '<h2>Besturing</h2>' + rij('Z', 'linkerflipper') + rij('/', 'rechterflipper') + rij('&darr;', 'bal wegschieten: vasthouden, loslaten') + rij('X', 'stoot (vier keer in twee tellen is tilt)') + rij('Enter', 'nieuw spel') + rij('Esc', 'terug naar de tafelkeuze') +
-    '<h2>' + tafel.naam + '</h2><ul>' +
-    '<li>De lanen bovenin spellen <b>' + tafel.letters.join('-') + '</b>: vol is ' + getal(P.letters) + ' en de bonus een trap hoger (tot x5).</li>' +
-    '<li>Bumper ' + P.bumper + '. Drie valdoelen neer: bank ' + getal(P.bank) + ' en ' + TAFEL.opwindDuur + ' tellen bumpers x10.</li>' +
-    '<li>Beide staande doelen: ' + getal(P.staandPaar) + (tafel.delen.gaten.length ? ' en de accu vol: het vanggat is dan ' + getal(P.gatVol) + ' in plaats van ' + getal(P.gat) + '.' : '.') + '</li>' +
-    (tafel.verzamel ? '<li>De bovenbaan (vol lanceren, of langs de linkerwand omhoog): elke keer dat de bal er doorheen rolt, haal je het volgende van ' + tafel.verzamel.stukken.length + ' stukken bladmuziek uit de bibliotheek (' + getal(tafel.verzamel.punten) + '); alle ' + tafel.verzamel.stukken.length + ' is ' + tafel.verzamel.naam + ': ' + getal(tafel.verzamel.volPunten) + ' en de multiplier omhoog.</li>' : '') +
-    '<li>Extra bal bij ' + getal(TAFEL.extraBalBij) + '. Bonus per bal: letters en doelen keer de multiplier.</li></ul>';
+    '<h2>' + vertaal('Besturing') + '</h2>' + rij('Z', vertaal('linkerflipper')) + rij('/', vertaal('rechterflipper')) + rij('&darr;', vertaal('bal wegschieten: vasthouden, loslaten')) + rij('X', vertaal('stoot (vier keer in twee tellen is tilt)')) + rij('Enter', vertaal('nieuw spel')) + rij('Esc', vertaal('terug naar de tafelkeuze')) +
+    '<h2>' + vertaal(tafel.naam) + '</h2><ul>' +
+    '<li>' + vertaal('De lanen bovenin spellen {0}: vol is {1} en de bonus een trap hoger (tot x5).', '<b>' + tafel.letters.join('-') + '</b>', getal(P.letters)) + '</li>' +
+    '<li>' + vertaal('Bumper {0}. Drie valdoelen neer: bank {1} en {2} tellen bumpers x10.', P.bumper, getal(P.bank), TAFEL.opwindDuur) + '</li>' +
+    '<li>' + (tafel.delen.gaten.length ? vertaal('Beide staande doelen: {0} en de accu vol: het vanggat is dan {1} in plaats van {2}.', getal(P.staandPaar), getal(P.gatVol), getal(P.gat)) : vertaal('Beide staande doelen: {0}.', getal(P.staandPaar))) + '</li>' +
+    (tafel.verzamel ? '<li>' + vertaal('De bovenbaan (vol lanceren, of langs de linkerwand omhoog): elke keer dat de bal er doorheen rolt, haal je het volgende van {0} stukken bladmuziek uit de bibliotheek ({1}); alle {0} is {2}: {3} en de multiplier omhoog.', tafel.verzamel.stukken.length, getal(tafel.verzamel.punten), vertaal(tafel.verzamel.naam), getal(tafel.verzamel.volPunten)) + '</li>' : '') +
+    '<li>' + vertaal('Extra bal bij {0}. Bonus per bal: letters en doelen keer de multiplier.', getal(TAFEL.extraBalBij)) + '</li></ul>';
 }
 
 
@@ -1052,7 +2554,7 @@ function tekenTafel(nu, dt) {
 
   if (st.tilt) { c.fillStyle = 'rgba(120,0,0,.45)'; c.fillRect(0, 0, W, H); c.fillStyle = '#fff'; c.font = '900 28px "Roboto Condensed", sans-serif'; c.textAlign = 'center'; c.fillText('TILT', W / 2, H / 2); }
   if (UI.bericht && nu < UI.berichtTot) { c.fillStyle = 'rgba(0,0,0,.55)'; c.fillRect(0, H - 26, W, 22); c.fillStyle = '#ffd54f'; c.font = '700 11px "Roboto Condensed", sans-serif'; c.textAlign = 'center'; c.textBaseline = 'middle'; c.fillText(UI.bericht, W / 2, H - 15); }
-  if (st.fase === 'klaar') { c.fillStyle = 'rgba(0,0,0,.6)'; c.fillRect(0, H / 2 - 40, W, 80); c.fillStyle = '#fff'; c.font = '900 20px "Roboto Condensed", sans-serif'; c.textAlign = 'center'; c.textBaseline = 'middle'; c.fillText('SPEL VOORBIJ', W / 2, H / 2 - 14); c.font = '700 13px "Roboto Condensed", sans-serif'; c.fillText(getal(st.score) + ' punten' + (st.score >= (UI.records[st.tafel] || 0) && st.score > 0 ? ' · RECORD!' : ''), W / 2, H / 2 + 10); c.font = '600 10px sans-serif'; c.fillText('tik of druk op Enter voor een nieuw spel', W / 2, H / 2 + 28); }
+  if (st.fase === 'klaar') { c.fillStyle = 'rgba(0,0,0,.6)'; c.fillRect(0, H / 2 - 40, W, 80); c.fillStyle = '#fff'; c.font = '900 20px "Roboto Condensed", sans-serif'; c.textAlign = 'center'; c.textBaseline = 'middle'; c.fillText(vertaal('SPEL VOORBIJ'), W / 2, H / 2 - 14); c.font = '700 13px "Roboto Condensed", sans-serif'; c.fillText(vertaal('{0} punten', getal(st.score)) + (st.score >= (UI.records[st.tafel] || 0) && st.score > 0 ? vertaal(' · RECORD!') : ''), W / 2, H / 2 + 10); c.font = '600 10px sans-serif'; c.fillText(vertaal('tik of druk op Enter voor een nieuw spel'), W / 2, H / 2 + 28); }
 }
 function tekenFlipperLijn(c) {
   c.fillStyle = '#e0a030'; c.strokeStyle = '#3a2000'; c.lineWidth = 1.5;
@@ -1082,26 +2584,26 @@ function gebeurd(g, nu) {
     case 'sling': geluid('sling'); UI.flits[g.wie] = nu + 90; break;
     case 'wand': geluid('wand'); break;
     case 'lamp': geluid('lamp'); punt(D.lampen.find((l) => l.id === g.wie).x, 80, g.wie + ' +' + TAFEL.punten.lamp, false, nu); break;
-    case 'letters': geluid('letters'); zegt(g.woord + '! Multiplier x' + g.multiplier, 2200); break;
+    case 'letters': geluid('letters'); zegt(vertaal('{0}! Multiplier x{1}', g.woord, g.multiplier), 2200); break;
     case 'doel': geluid('doel'); punt(g.x + (g.x < 160 ? 14 : -14), g.y, '+' + TAFEL.punten.doel, false, nu); break;
-    case 'bank': geluid('bank'); zegt('BANK! +' + getal(TAFEL.punten.bank) + ' · bumpers x10 voor ' + TAFEL.opwindDuur + ' tellen', 3000); UI.schud = 0.25; break;
+    case 'bank': geluid('bank'); zegt(vertaal('BANK! +{0} · bumpers x10 voor {1} tellen', getal(TAFEL.punten.bank), TAFEL.opwindDuur), 3000); UI.schud = 0.25; break;
     case 'staand': geluid('staand'); punt(g.x + (g.x < 160 ? 14 : -14), g.y, '+' + TAFEL.punten.staand, false, nu); break;
-    case 'staandPaar': geluid('staandPaar'); zegt('Beide doelen! +' + getal(TAFEL.punten.staandPaar) + (D.gaten.length ? ' · accu vol: het vanggat is ' + getal(TAFEL.punten.gatVol) + ' waard' : ''), 2600); break;
-    case 'gat': geluid(g.vol ? 'bank' : 'gat'); punt(g.x + 20, g.y - 10, '+' + getal(g.punten), g.vol, nu); if (g.vol) { zegt('OPGELADEN! +' + getal(g.punten), 2500); UI.schud = 0.25; } break;
+    case 'staandPaar': geluid('staandPaar'); zegt(vertaal('Beide doelen! +{0}', getal(TAFEL.punten.staandPaar)) + (D.gaten.length ? vertaal(' · accu vol: het vanggat is {0} waard', getal(TAFEL.punten.gatVol)) : ''), 2600); break;
+    case 'gat': geluid(g.vol ? 'bank' : 'gat'); punt(g.x + 20, g.y - 10, '+' + getal(g.punten), g.vol, nu); if (g.vol) { zegt(vertaal('OPGELADEN! +{0}', getal(g.punten)), 2500); UI.schud = 0.25; } break;
     case 'gatUit': geluid('lanceer'); break;
     case 'sensor': if (!tafelVan(st).verzamel) geluid('sensor'); break;
-    case 'stuk': { const V = tafelVan(st).verzamel; speelStukje(g.stuk.noten); punt(g.x, g.y + 30, '+' + getal(g.punten), true, nu); zegt('Bladmuziek ' + g.nr + ' van ' + V.stukken.length + ': ' + g.stuk.naam, 3200); break; }
-    case 'verzamelVol': geluid('symfonie'); zegt(g.naam.charAt(0).toUpperCase() + g.naam.slice(1) + ' compleet! +' + getal(g.punten) + ' · multiplier x' + g.multiplier, 3500); UI.schud = 0.3; break;
+    case 'stuk': { const V = tafelVan(st).verzamel; speelStukje(g.stuk.noten); punt(g.x, g.y + 30, '+' + getal(g.punten), true, nu); zegt(vertaal('Bladmuziek {0} van {1}: {2}', g.nr, V.stukken.length, vertaal(g.stuk.naam)), 3200); break; }
+    case 'verzamelVol': geluid('symfonie'); { const nm = vertaal(g.naam); zegt(vertaal('{0} compleet! +{1} · multiplier x{2}', nm.charAt(0).toUpperCase() + nm.slice(1), getal(g.punten), g.multiplier), 3500); } UI.schud = 0.3; break;
     case 'lanceer': geluid('lanceer'); tril(15); break;
-    case 'terugInLaan': zegt('Te zacht. Nog eens.', 1500); break;
+    case 'terugInLaan': zegt(vertaal('Te zacht. Nog eens.'), 1500); break;
     case 'stoot': geluid('stoot'); UI.schud = 0.12; tril(20); break;
-    case 'tilt': geluid('tilt'); zegt('TILT: de flippers zijn dood tot de volgende bal', 3000); tril(60); break;
-    case 'los': zegt('De bal zat klem; een duwtje.', 1200); break;
+    case 'tilt': geluid('tilt'); zegt(vertaal('TILT: de flippers zijn dood tot de volgende bal'), 3000); tril(60); break;
+    case 'los': zegt(vertaal('De bal zat klem; een duwtje.'), 1200); break;
     case 'balWeg': geluid('balWeg');
-      if (g.bonus) { zegt('Bonus ' + getal(g.bonus) + ' (x' + g.multiplier + ')', 2200); for (let i = 0; i < 6; i++) setTimeout(() => geluid('bonus', i), 350 + i * 90); }
-      if (st.fase !== 'klaar') setTimeout(() => zegt('Bal ' + st.balNr + ' · trek aan de veer', 2500), 2300);
+      if (g.bonus) { zegt(vertaal('Bonus {0} (x{1})', getal(g.bonus), g.multiplier), 2200); for (let i = 0; i < 6; i++) setTimeout(() => geluid('bonus', i), 350 + i * 90); }
+      if (st.fase !== 'klaar') setTimeout(() => zegt(vertaal('Bal {0} · trek aan de veer', st.balNr), 2500), 2300);
       break;
-    case 'extraBal': geluid('extraBal'); zegt('EXTRA BAL!', 2500); break;
+    case 'extraBal': geluid('extraBal'); zegt(vertaal('EXTRA BAL!'), 2500); break;
     case 'klaar': muziekStop(); UI.laatste[st.tafel] = g.score; if (g.score > (UI.records[st.tafel] || 0)) { UI.records[st.tafel] = g.score; geluid('record'); } else geluid('klaar'); bewaarNu(); break;
   }
 }
@@ -1115,6 +2617,16 @@ function renderHud() {
   $('multi').textContent = 'x' + st.multiplier;
   $('letters').innerHTML = tafel.letters.map((k) => '<i class="' + (st.lampen[k] ? 'aan' : '') + '">' + k + '</i>').join('');
   $('recordHud').textContent = UI.records[st.tafel] ? getal(UI.records[st.tafel]) : '0';
+
+  const maat = TAAL + innerWidth + '/' + $('score').textContent.length + '/' + $('recordHud').textContent.length;
+  if (UI.hudMaat !== maat) { UI.hudMaat = maat; hudPassen(); }
+}
+
+function hudPassen() {
+  const h = $('hud'), past = () => h.scrollWidth <= h.clientWidth + 1;
+  h.classList.remove('krap', 'krapst');
+  if (!past()) h.classList.add('krap');
+  if (!past()) h.classList.add('krapst');
 }
 
 
@@ -1303,7 +2815,13 @@ async function start() {
   UI.cv = $('doek'); UI.ctx = UI.cv.getContext('2d');
   $('geluidKnop').textContent = UI.instellingen.geluid ? '🔊' : '🔇';
   $('muziekKnop').setAttribute('aria-pressed', String(UI.instellingen.muziek));
-  $('versie').textContent = 'Kogelkast ' + (window.DierApp && DierApp.versie ? DierApp.versie() : 'web') + ' · een hommage aan de flipperkasten van 1993';
+
+  taalStart();
+  const versieTekst = () => { $('versie').textContent = 'Kogelkast ' + (window.DierApp && DierApp.versie ? DierApp.versie() : (typeof SPEL_VERSIE !== 'undefined' ? SPEL_VERSIE : 'web')) + vertaal(' · een hommage aan de flipperkasten van 1993'); };
+  versieTekst();
+  $('versie').insertAdjacentHTML('afterend', taalKiezerHtml());
+  addEventListener('resize', () => { if (UI.scherm === 'titel') kaartNamenPassen(); });
+  window.taalVeranderd = () => { versieTekst(); renderTitel(); if (UI.st) { $('tafelNaam').textContent = vertaal('SCORE'); renderZijpaneel(); } };
   maatDoek(); toetsen();
   document.addEventListener('visibilitychange', () => { if (document.hidden) { bewaarNu(); muziekStop(); } else if (UI.scherm === 'tafel') muziekStart(); });
   window.addEventListener('pagehide', bewaarNu);
