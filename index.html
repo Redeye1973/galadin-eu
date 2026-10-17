@@ -17,7 +17,7 @@
   .tegel p { margin: 0; opacity: .85; font-size: .92rem; }
   .etiket { display: inline-block; font-size: .72rem; font-weight: 700; letter-spacing: .06em; padding: .1rem .45rem; border-radius: .3rem; background: #fca311; color: #111; margin-left: .4rem; vertical-align: middle; }
   .let { opacity: .8; font-size: .92rem; border-left: 3px solid #fca311; padding-left: .8rem; margin: 1.5rem 0; }
-      /* taalkiezer */
+          /* taalkiezer */
   :root { --tk-bg: #1b1e25; --tk-fg: #e8e8e8; --tk-rand: #2d323d; --tk-accent: #fca311; }
   .taal { text-align: center; margin: 0 0 1rem; font-size: .9rem; }
   .tk { position: relative; display: inline-block; font: inherit; }
@@ -176,6 +176,23 @@ function galadinTaalKeuze(host, cfg) {
     var pv = document.getElementById('privlink'); if (pv) pv.setAttribute('href', 'privacy.html?taal=' + cur);
   }
   apply();
+})();
+</script>
+<script id="live-script">
+(function () {
+  'use strict';
+  var h = location.hostname.replace(/^www\./, ''), R = h === 'galadin.eu' ? 'galadin-eu' : (h === 'galadin.nl' ? 'galadin-nl' : null);
+  if (!R) return;
+  var laatste = -1;
+  function blok() { return Math.floor(Date.now() / 600000); }
+  function ping() {
+    if (document.visibilityState === 'hidden') return;
+    var n = blok(); if (n === laatste) return; laatste = n;
+    try { fetch('https://abacus.jasoncameron.dev/hit/' + R + '/live-' + n, { keepalive: true, cache: 'no-store', mode: 'no-cors' }).catch(function () { }); } catch (e) { }
+  }
+  ping();
+  setInterval(ping, 60000);
+  document.addEventListener('visibilitychange', ping);
 })();
 </script>
 </body>
