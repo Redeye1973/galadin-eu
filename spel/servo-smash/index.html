@@ -217,6 +217,7 @@ body.pad .raakknoppen, body.tweemens .raakknoppen { display: none !important; }
   </section>
 </div>
 <script>
+var SPEL_VERSIE="0.4";
 
 
 
@@ -2024,7 +2025,20 @@ function tekenDeelBeeld(c, im, a, b, s, boven, achter) {
 
 
 
+
+
+const EFFECT_BEELD = {};
+function effectBeeld(naam) {
+  if (EFFECT_BEELD[naam] !== undefined) return EFFECT_BEELD[naam];
+  const url = typeof sprUrl === 'function' ? sprUrl('effecten/' + naam) : '';
+  if (!url) return (EFFECT_BEELD[naam] = null);
+  const im = new Image(); im.src = url;
+  return (EFFECT_BEELD[naam] = im);
+}
+const EFFECT_DIK = 31.65;
 function tekenSpijkers(c, p, w, uit) {
+  const im = effectBeeld(uit < 0.6 ? 'spijkers_0' : 'spijkers_1');
+  if (beeldKlaar(im)) { const s = (w / 1.1) / EFFECT_DIK; c.save(); c.imageSmoothingEnabled = false; c.drawImage(im, p[0] - 48 * s, p[1] - 72 * s, 96 * s, 96 * s); c.restore(); return; }
   c.save(); c.translate(p[0], p[1]);
   for (let i = 0; i < 6; i++) {
     const a = -Math.PI / 2 + (i - 2.5) * 0.45, l = w * (1.2 + 1.2 * uit);
@@ -2037,6 +2051,13 @@ function tekenVlam(c, van, naar, w, kracht) {
   const dx = naar[0] - van[0], dy = naar[1] - van[1], len = Math.hypot(dx, dy) || 1, ux = dx / len, uy = dy / len;
 
   const m = [van[0] + dx * 0.55, van[1] + dy * 0.55], nx = -uy, ny = ux, l = w * (2.2 + 1.6 * kracht) * (0.85 + Math.random() * 0.3);
+  const im = effectBeeld('vlam_' + (Math.floor(performance.now() / 60) % 3));
+  if (beeldKlaar(im)) {
+    const s = w / EFFECT_DIK * (0.7 + 0.3 * kracht);
+    c.save(); c.globalCompositeOperation = 'lighter'; c.translate(m[0], m[1]); c.rotate(Math.atan2(-uy, -ux) + Math.PI / 2); c.imageSmoothingEnabled = false;
+    c.drawImage(im, -16 * s, -116 * s, 32 * s, 120 * s); c.restore();
+    return;
+  }
   c.save(); c.globalCompositeOperation = 'lighter';
   for (const [kleur, f] of [['rgba(255,120,30,.75)', 1], ['rgba(255,220,90,.85)', 0.6], ['rgba(255,255,230,.9)', 0.3]]) {
     c.fillStyle = kleur; c.beginPath(); c.moveTo(m[0] + nx * w * 0.35 * f, m[1] + ny * w * 0.35 * f); c.lineTo(m[0] - ux * l * f - nx * 0, m[1] - uy * l * f); c.lineTo(m[0] - nx * w * 0.35 * f, m[1] - ny * w * 0.35 * f); c.closePath(); c.fill();
@@ -2868,7 +2889,7 @@ async function start() {
   try { const a = localStorage.getItem(OPSLAG.mods + '_arena'); if (a !== null && a !== '' && UI.mods[+a] && UI.mods[+a].soort === 'arena') UI.arenaMod = UI.mods[+a]; } catch (e) {  }
   UI.cv = $('doek'); UI.ctx = UI.cv.getContext('2d'); UI.cv.width = ARENA.W; UI.cv.height = ARENA.H;
   $('geluidKnop').textContent = UI.instellingen.geluid ? '🔊' : '🔇';
-  $('versie').textContent = 'Servo Smash ' + (window.DierApp && DierApp.versie ? DierApp.versie() : 'web') + ' · robots en makers zijn verzonnen';
+  $('versie').textContent = 'Servo Smash ' + (window.DierApp && DierApp.versie ? DierApp.versie() : (typeof SPEL_VERSIE !== 'undefined' ? SPEL_VERSIE : 'web')) + ' · robots en makers zijn verzonnen';
   toetsen();
   document.addEventListener('click', klik);
   document.addEventListener('visibilitychange', () => { if (document.hidden) { bewaarNu(); if (UI.scherm === 'gevecht') zetPauze(true); } });

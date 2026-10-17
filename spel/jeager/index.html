@@ -41,7 +41,7 @@ main { flex: 1; overflow-y: auto; overflow-x: hidden; -webkit-overflow-scrolling
 
 .scene-kader { position: relative; border-radius: 14px; overflow: hidden; border: 2px solid #0a0e14; box-shadow: 0 6px 18px rgba(0,0,0,.4); background: #0a0e14; }
 
-.basis-beeld { display: block; width: 100%; height: auto; aspect-ratio: 2 / 1; max-height: 40vh; object-fit: cover; object-position: center top; }
+.basis-beeld { display: block; width: 100%; height: auto; aspect-ratio: 2 / 1; max-height: 40vh; object-fit: cover; object-position: center 38%; }   
 .klokje { position: absolute; right: 8px; top: 8px; font: 700 12px var(--kop); color: #fff; background: rgba(10,14,20,.65); padding: 2px 8px; border-radius: 999px; letter-spacing: 0.04em; pointer-events: none; }
 .bak-naam { position: absolute; left: 8px; top: 8px; font: 700 12px var(--kop); color: #fff; background: rgba(10,14,20,.65); padding: 2px 8px; border-radius: 999px; pointer-events: none; max-width: calc(100% - 110px); overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
 .stalmeters { display: flex; gap: 8px; flex-wrap: wrap; font-size: 12.5px; color: var(--inkt2); }
@@ -196,6 +196,7 @@ nav.onder button[aria-selected="true"] { color: var(--goud); }
 </div>
 <div id="toast" class="toast" hidden></div>
 <script>
+var SPEL_VERSIE="0.8";
 
 
 
@@ -962,6 +963,7 @@ const REGELS = {
   staatPerOnderdeel: 2,
   signaalMax: 5, signaalWacht: 6000, signaalLoon: 0.08,
   misLoon: 0.25, schotLoon: 0.5,
+  zelfTreffer: 5, zelfNeer: 25,
 };
 
 const nieuweKist = () => ({ staat: 100, brandstof: 100, vluchten: 0 });
@@ -974,7 +976,7 @@ function nieuweStaat(nu) {
     radar: { volgende: minuutVan(nu) + MIN, nr: 0, contacten: [] },
     vluchten: [], uitslag: null,
     spel: { magazijn: { record: 0, gespeeld: 0, onderdelen: 0, munten: 0 }, patrouille: { record: 0, gespeeld: 0, onderdelen: 0, munten: 0, neergehaald: 0, afstand: 0 } },
-    totaal: { vluchten: 0, gelukt: 0, genegeerd: 0, beschoten: 0, gemist: 0, verdiend: 0, signalen: 0, perSoort: {} },
+    totaal: { vluchten: 0, gelukt: 0, genegeerd: 0, beschoten: 0, gemist: 0, verdiend: 0, signalen: 0, zelf: 0, perSoort: {} },
     welkom: false, opgeslagen: 0,
   };
 }
@@ -1032,7 +1034,8 @@ function radarMinuut(S, t) {
   for (const c of S.radar.contacten) if (c.tot <= t) { S.totaal.gemist++; if (S.gebeurd) S.gebeurd.push({ t, soort: 'gemist', nr: c.nr, wat: c.soort }); }
   S.radar.contacten = S.radar.contacten.filter((c) => c.tot > t);
   if (t < S.radar.volgende) return;
-  if (isNacht(t)) { S.radar.volgende = t + 30 * MIN; return; }
+
+
   if (S.radar.contacten.length >= REGELS.wachtrij) { S.radar.volgende = t + 4 * MIN; return; }
   nieuwContact(S, t);
   const [a, b] = REGELS.contactElke;
@@ -1129,6 +1132,42 @@ function vluchtKlaar(S, m, t) {
   S.vluchten = S.vluchten.filter((x) => x !== m);
   S.uitslag = { nr: m.nr, t, contact: m.contact, kisten: m.kisten.slice(), uitslag, munten, aanzien, signalen: m.signalen, schade: m.schot ? m.schot.schade : 0, gezien: false };
   if (S.gebeurd) S.gebeurd.push({ t, soort: 'geland', nr: m.nr, wat: m.contact, uitslag, munten });
+  return S.uitslag;
+}
+
+
+
+
+function scrambleStart(S, nr, ids) {
+  const c = S.radar.contacten.find((x) => x.nr === nr);
+  if (!c) return { ok: false, reden: 'Dat contact is al van de radar verdwenen.' };
+  if (!ids.length || ids.length > 2 || new Set(ids).size !== ids.length) return { ok: false, reden: 'Kies een of twee kisten.' };
+  for (const id of ids) { const r = inzetbaar(S, id); if (!r.ok) return { ok: false, reden: KIST[id].naam + ': ' + r.reden }; }
+  ids = leiderEerst(S, c.soort, ids);
+  S.radar.contacten = S.radar.contacten.filter((x) => x.nr !== nr);
+  return { ok: true, nr, contact: c.soort, kisten: ids, staat: S.kisten[ids[0]].staat };
+}
+
+
+function scrambleAf(S, v, uit, t) {
+  const soort = CONTACT[v.contact], minuten = (uit.seconden || 60) / MIN * 1000, leider = S.kisten[v.kisten[0]], voor = leider ? leider.staat : 0;
+  v.kisten.forEach((id, i) => {
+    const k = S.kisten[id];
+    if (!k) return;
+    k.vluchten++;
+    const neer = i === 0 && uit.neer;
+    k.brandstof = neer ? 0 : Math.max(0, Math.round(k.brandstof - (35 + 6 * minuten)));
+    k.staat = neer ? Math.min(k.staat, REGELS.zelfNeer) : Math.max(5, k.staat - (8 - KIST[id].taai) - (i === 0 ? (uit.treffers || 0) * REGELS.zelfTreffer : 0));
+    if (!werkVan(S, id)) S.werk.push({ kist: id, soort: 'tanken' });
+  });
+  const u = uit.uitslag, deel = u === 'gelukt' ? 1 : u === 'beschoten' ? REGELS.schotLoon : REGELS.misLoon;
+  const loon = Math.round(soort.loon * deel * (1 + REGELS.signaalLoon * (uit.signalen || 0))), munten = loon + (uit.punten || 0);
+  const aanzien = u === 'gelukt' ? soort.aanzien : u === 'beschoten' ? 1 : 0;
+  S.munten += munten; S.aanzien += aanzien; S.onderdelen += uit.onderdelen || 0;
+  const T = S.totaal;
+  T.vluchten++; T[u]++; T.zelf = (T.zelf || 0) + 1; T.verdiend += munten; T.signalen += uit.signalen || 0; T.perSoort[v.contact] = (T.perSoort[v.contact] || 0) + 1;
+  S.uitslag = { nr: v.nr, t, contact: v.contact, kisten: v.kisten.slice(), uitslag: u, munten, loon, aanzien, signalen: uit.signalen || 0, schade: leider ? Math.round(voor - leider.staat) : 0,
+    zelf: true, neer: !!uit.neer, punten: uit.punten || 0, onderdelen: uit.onderdelen || 0, gezien: false };
   return S.uitslag;
 }
 
@@ -1397,8 +1436,36 @@ const PAT_KOMT = [
 const PAT_ROUTE = [[0, 'polder'], [1700, 'kust'], [2300, 'zee'], [4100, 'haven'], [5000, 'bos'], [6200, 'bergen'], [7600, 'polder'], [9000, null]];
 const PAT_LUS = 9000;
 
-function patrouilleNieuw(kist, zaad) {
+
+
+
+
+
+
+
+
+
+
+
+
+
+const PAT_SCRAMBLE = {
+  ontmoet: 2350,
+  meterTijd: 14,
+  begeleidMax: 50,
+  wieg: 0.1, wiegWacht: 2,
+  vak: [10, 46], vakHoog: 26,
+  drone: { hp: 7, snel: 16, zwaai: 55 },
+  schutter: { bommenwerper: 4.2, jager: 3.2 },
+};
+
+const patTempo = (kist, contact, vleugel, staat) => clamp(1 + 0.25 * (KIST[kist].indruk + (vleugel ? 1 : 0) - CONTACT[contact].koppig), 0.35, 2) * (0.7 + 0.3 * (staat === undefined ? 100 : staat) / 100);
+const patVleugel = (st) => ({ x: clamp(st.x + 22, 12, PATROUILLE.W - 12), y: Math.min(st.y + 18, PATROUILLE.H - 8) });
+
+
+function patrouilleNieuw(kist, zaad, o) {
   const k = KIST[kist], P = PATROUILLE;
+  o = o || {};
   return {
     kist, rng: (zaad | 0) || 1, t: 0, afstand: 0, scroll: 54 + 4 * k.snel, klaar: false, reden: '',
     x: P.W / 2, y: P.H - 60, snelheid: 110 + 14 * k.snel,
@@ -1406,11 +1473,15 @@ function patrouilleNieuw(kist, zaad) {
     brandstof: P.duur, jerrycans: 0, raketten: P.raketten, kogelKlok: 0, dubbel: k.indruk >= 4,
     punten: 0, onderdelen: 0, neergehaald: 0,
     dingen: [], kogels: [], volgende: 120, waarschuw: null, gebeurd: [],
+    vleugel: o.vleugel || null,
+    scramble: o.contact ? { contact: o.contact, nr: o.nr, kisten: o.kisten || [kist], fase: 'heen', baas: null, escorte: null, meter: 0, signalen: 0, wiegKlok: 0, tijd: 0,
+      koud: false, inVak: false, licht: !CONTACT[o.contact].russisch, tempo: patTempo(kist, o.contact, o.vleugel, o.staat), afloop: null, uit: 0 } : null,
   };
 }
 const patStuk = (afstand) => { const a = afstand % PAT_LUS; let s = PAT_ROUTE[0][1]; for (const [van, naam] of PAT_ROUTE) if (naam && a >= van) s = naam; return s; };
 function patKomtErbij(st) {
-  const kan = PAT_KOMT.filter(([soort, , vanaf]) => st.afstand >= vanaf && !(soort === 'bommenwerper' && st.dingen.some((d) => d.soort === 'bommenwerper')));
+  const zwaar = ['jager', 'verkenner', 'bommenwerper', 'luchtafweer'];
+  const kan = PAT_KOMT.filter(([soort, , vanaf]) => st.afstand >= vanaf && !(soort === 'bommenwerper' && st.dingen.some((d) => d.soort === 'bommenwerper')) && !(st.scramble && st.scramble.licht && zwaar.includes(soort)));
   const som = kan.reduce((s, r) => s + r[1], 0);
   let lot = rnd(st) * som, soort = kan[0][0];
   for (const r of kan) { lot -= r[1]; if (lot < 0) { soort = r[0]; break; } }
@@ -1437,21 +1508,24 @@ function patrouilleStap(st, dt, invoer) {
   st.x = clamp(st.x, 12, W - 12); st.y = clamp(st.y, 40, H - 18);
 
   st.kogelKlok -= dt;
-  if (st.kogelKlok <= 0) {
+  if (st.kogelKlok <= 0 && !(st.scramble && st.scramble.koud)) {
     st.kogelKlok = P.kogelTempo;
+    if (st.vleugel) { const v = patVleugel(st); st.kogels.push({ x: v.x, y: v.y - 10, vx: 0, vy: -P.kogelSnel, eigen: true, r: 2 }); }
     if (st.dubbel) { st.kogels.push({ x: st.x - 5, y: st.y - 10, vx: 0, vy: -P.kogelSnel, eigen: true, r: 2 }, { x: st.x + 5, y: st.y - 10, vx: 0, vy: -P.kogelSnel, eigen: true, r: 2 }); }
     else st.kogels.push({ x: st.x, y: st.y - 12, vx: 0, vy: -P.kogelSnel, eigen: true, r: 2 });
     st.gebeurd.push({ soort: 'kanon' });
   }
-  if (invoer.raket && st.raketten > 0) { st.raketten--; st.kogels.push({ x: st.x, y: st.y - 14, vx: 0, vy: -P.raketSnel, eigen: true, raket: true, r: 4 }); st.gebeurd.push({ soort: 'raket' }); }
+  if (invoer.raket && st.raketten > 0 && !(st.scramble && st.scramble.fase === 'begeleid')) { st.raketten--; st.kogels.push({ x: st.x, y: st.y - 14, vx: 0, vy: -P.raketSnel, eigen: true, raket: true, r: 4 }); st.gebeurd.push({ soort: 'raket' }); }
 
   if (st.afstand >= st.volgende) patKomtErbij(st);
   if (st.waarschuw) {
     st.waarschuw.t -= dt;
     if (st.waarschuw.t <= 0) { const w = st.waarschuw; st.dingen.push({ soort: 'lijn', x: w.links ? -30 : W + 30, y: w.y, t: 0, hp: 1, vx: (w.links ? 1 : -1) * S.lijn.dwars, schietKlok: 0, fase: 0 }); st.waarschuw = null; }
   }
+  if (st.scramble) patScrambleStap(st, dt, invoer);
 
   for (const d of st.dingen) {
+    if (d.baas || d.escorte) continue;
     const s = S[d.soort];
     d.t += dt;
     d.y += (st.scroll + (s.snel || 0)) * dt;
@@ -1503,13 +1577,68 @@ function patrouilleStap(st, dt, invoer) {
       st.gebeurd.push({ soort: 'oppak', wat: s.oppak, x: d.x, y: d.y });
     } else if (st.onkwetsbaar <= 0) {
       patTreffer(st, d.soort);
-      if (s.civiel && d.soort !== 'lijn') { dood.add(d); st.gebeurd.push({ soort: 'botsing', x: d.x, y: d.y }); }
+      if (d.baas || d.escorte) { st.y = Math.min(H - 18, st.y + 20); st.gebeurd.push({ soort: 'botsing', x: (st.x + d.x) / 2, y: (st.y + d.y) / 2 }); }
+      else if (s.civiel && d.soort !== 'lijn') { dood.add(d); st.gebeurd.push({ soort: 'botsing', x: d.x, y: d.y }); }
     }
   }
   for (const b of st.kogels) if (!b.eigen && st.onkwetsbaar <= 0 && Math.hypot(b.x - st.x, b.y - st.y) <= b.r + 8) { weg.add(b); patTreffer(st, 'kogel'); }
   st.dingen = st.dingen.filter((d) => !dood.has(d) && d.y < H + 40 && d.x > -60 && d.x < W + 60);
   st.kogels = st.kogels.filter((b) => !weg.has(b) && b.y > -20 && b.y < H + 20 && b.x > -20 && b.x < W + 20);
   if (st.brandstof <= 0 && !st.klaar) { st.klaar = true; st.reden = 'geland'; st.gebeurd.push({ soort: 'geland' }); }
+}
+
+function patScrambleStap(st, dt, invoer) {
+  const Z = st.scramble, Q = PAT_SCRAMBLE, P = PATROUILLE, W = P.W, c = CONTACT[Z.contact];
+  Z.wiegKlok = Math.max(0, Z.wiegKlok - dt);
+  if (Z.fase === 'heen') {
+    if (st.afstand < Q.ontmoet) return;
+    st.volgende = Infinity; st.waarschuw = null;
+    const drone = c.doe === 'neerhalen';
+    Z.baas = { soort: Z.contact, x: W / 2, y: -30, t: 0, hp: drone ? Q.drone.hp : Infinity, schietKlok: 9, fase: 0, baas: true };
+    st.dingen.push(Z.baas);
+    if (Z.contact === 'jager') { Z.escorte = { soort: 'jager', x: W / 2 + 30, y: -66, t: 0, hp: Infinity, schietKlok: 2, fase: 0, escorte: true }; st.dingen.push(Z.escorte); }
+    Z.fase = drone ? 'drone' : 'begeleid'; Z.koud = !drone; Z.tijd = 0;
+    st.gebeurd.push({ soort: 'ontmoeting', doe: c.doe });
+    return;
+  }
+  const d = Z.baas, e = Z.escorte;
+  if (Z.fase === 'afdraai') {
+    Z.uit -= dt; d.x += (d.vx || 0) * dt; d.y += (d.vy || 0) * dt;
+    if (e) { e.x += (d.vx || 0) * dt; e.y += (d.vy || 0) * dt; }
+    if (Z.uit <= 0 && !st.klaar) { st.klaar = true; st.reden = Z.afloop; st.gebeurd.push({ soort: 'scramble_klaar', afloop: Z.afloop }); }
+    return;
+  }
+  Z.tijd += dt; d.t += dt;
+  const klaar = (afloop, uit, vx, vy) => { Z.fase = 'afdraai'; Z.afloop = afloop; Z.uit = uit; d.vx = vx; d.vy = vy; };
+  if (Z.fase === 'drone') {
+    if (!st.dingen.includes(d)) { klaar('gelukt', 0.9, 0, 0); return; }
+    d.y += Q.drone.snel * dt; d.x = W / 2 + Math.sin(d.t * 0.9) * Q.drone.zwaai;
+    if (d.y > P.H + 10) klaar('genegeerd', 0.3, 0, 0);
+    return;
+  }
+
+  const s = PAT_SOORT[d.soort], jager = Z.contact === 'jager';
+  d.y += (92 - d.y) * Math.min(1, dt * 1.2);
+  d.x = W / 2 + Math.sin(d.t * (jager ? 0.7 : 0.35)) * (jager ? 40 : 26);
+  if (e) { e.t += dt; e.x = d.x + 30; e.y = d.y - 36; }
+  const dx = Math.abs(st.x - d.x), dy = Math.abs(st.y - d.y);
+  Z.inVak = d.y > 60 && dy < Q.vakHoog && dx >= s.r + Q.vak[0] && dx <= s.r + Q.vak[1];
+  if (Z.inVak) Z.meter += dt / Q.meterTijd * Z.tempo;
+  if (invoer.raket && Z.inVak && Z.wiegKlok <= 0 && Z.signalen < REGELS.signaalMax) { Z.signalen++; Z.wiegKlok = Q.wiegWacht; Z.meter += Q.wieg; st.gebeurd.push({ soort: 'wieg' }); }
+
+  const om = Q.schutter[Z.contact];
+  if (om) {
+    const bron = e || d;
+    bron.schietKlok -= dt;
+    if (bron.schietKlok <= 0 && d.y > 60) {
+      bron.schietKlok = om;
+      const ax = st.x - bron.x, ay = st.y - bron.y, n = Math.hypot(ax, ay) || 1, by = bron.y + (e ? 8 : s.r);
+      st.kogels.push({ x: bron.x, y: by, vx: ax / n * 95, vy: ay / n * 95, r: 2 });
+      st.gebeurd.push({ soort: 'vijandschot', x: bron.x, y: by });
+    }
+  }
+  if (Z.meter >= 1) { Z.meter = 1; klaar('gelukt', 1.6, (d.x < W / 2 ? -1 : 1) * 70, -60); st.gebeurd.push({ soort: 'afgedraaid' }); }
+  else if (Z.tijd > Q.begeleidMax) klaar('genegeerd', 1.2, 0, -90);
 }
 function patTreffer(st, door) {
   st.treffersGehad++; st.onkwetsbaar = PATROUILLE.onkwetsbaar;
@@ -1536,6 +1665,35 @@ function patrouilleKlaar(S, st) {
 
 function patrouilleRobot(st) {
   const W = PATROUILLE.W, S = PAT_SOORT;
+
+
+  const Z = st.scramble;
+  if (Z && Z.baas && Z.fase === 'begeleid') {
+    const d = Z.baas, Q = PAT_SCRAMBLE, afst = S[d.soort].r + (Q.vak[0] + Q.vak[1]) / 2;
+
+    let kant = Z.escorte ? -1 : st.x < d.x ? -1 : 1, x = clamp(d.x + kant * afst, 12, W - 12);
+    if (Math.abs(x - d.x) < S[d.soort].r + Q.vak[0] + 2) { kant = -kant; x = clamp(d.x + kant * afst, 12, W - 12); }
+
+
+    const r = S[d.soort].r, inVak = (px, py) => Math.abs(py - d.y) < Q.vakHoog - 3 && Math.abs(px - d.x) >= r + Q.vak[0] + 2 && Math.abs(px - d.x) <= r + Q.vak[1] - 2 && px >= 12 && px <= W - 12;
+    if (!(Z.robotTot > st.t)) for (const b of st.kogels) {
+      if (b.eigen) continue;
+      const v = Math.hypot(b.vx, b.vy) || 1, tot = ((st.x - b.x) * b.vx + (st.y - b.y) * b.vy) / (v * v);
+      if (tot < 0 || tot > 0.9 || Math.hypot(b.x + b.vx * tot - st.x, b.y + b.vy * tot - st.y) > 13) continue;
+      let beste = null;
+      for (const k of [1, -1]) for (const stap of [22, 14]) {
+        const px = st.x - b.vy / v * stap * k, py = st.y + b.vx / v * stap * k, mis = Math.abs((px - b.x) * b.vy - (py - b.y) * b.vx) / v;
+        const score = mis - (inVak(px, py) ? 0 : 30);
+        if (!beste || score > beste.score) beste = { px, py, score };
+      }
+      Z.robotDx = beste.px - d.x; Z.robotDy = beste.py - d.y; Z.robotTot = st.t + 0.45;
+      break;
+    }
+    if (Z.robotTot > st.t) { x = d.x + Z.robotDx; }
+    const y = Z.robotTot > st.t ? d.y + Z.robotDy : d.y;
+    return { doel: { x, y }, raket: Z.inVak && Z.wiegKlok <= 0 && Z.signalen < REGELS.signaalMax };
+  }
+  if (Z && Z.baas && Z.fase === 'drone') { const d = Z.baas; return { doel: { x: d.x, y: st.y }, raket: Math.abs(d.x - st.x) < 10 && d.y < st.y - 30 && d.hp > 2 }; }
 
 
   let doel = null, beste = 1e9;
@@ -1590,15 +1748,18 @@ function patrouilleKiesVel() {
     (M.gespeeld ? '<div class="weetje">Record: ' + getal(M.record) + ' munten in één vlucht. Verste vlucht: ' + getal(M.afstand) + ' km.</div>' : '<div class="weetje">Sleep met je vinger om te sturen. De kist vliegt boven je vinger.</div>');
   openVel('Patrouillevlucht', html);
 }
-function startPatrouille(el, kist, zaad, robot) {
-  const P = PATROUILLE, st = patrouilleNieuw(kist, zaad || (Date.now() & 0x7fffffff));
+
+function startPatrouille(el, kist, zaad, robot, o) {
+  const P = PATROUILLE, st = patrouilleNieuw(kist, zaad || (Date.now() & 0x7fffffff), o), Z = st.scramble;
   Object.assign(Patrouille, { actief: true, st, el, doel: null, toets: { dx: 0, dy: 0 }, raket: false, laatst: performance.now(), deeltjes: [], robot: !!robot, af: [] });
   el.innerHTML = '<div class="hud"><button class="rond" id="patStop" aria-label="Landen"><svg viewBox="0 0 24 24"><path d="M15.4 5 8.4 12l7 7 1.4-1.4L11.2 12l5.6-5.6z"/></svg></button>' +
-    '<div class="doel"><span><b>Patrouille: ' + esc(KIST[kist].naam) + '</b><em id="patTel" style="font-style:normal"></em></span><div class="balk"><i id="patBalk" style="width:100%"></i></div></div>' +
-    '<button class="pat-raket" id="patRaket" aria-label="Raket afvuren"><span id="patRaketTel">' + st.raketten + '</span><small>RAKET</small></button></div>' +
+    '<div class="doel"><span><b>' + (Z ? 'Scramble: ' + esc(CONTACT[Z.contact].naam) : 'Patrouille: ' + esc(KIST[kist].naam)) + '</b><em id="patTel" style="font-style:normal"></em></span><div class="balk"><i id="patBalk" style="width:100%"></i></div></div>' +
+    '<button class="pat-raket" id="patRaket" aria-label="Raket afvuren"><span id="patRaketTel">' + st.raketten + '</span><small id="patRaketNaam">RAKET</small></button></div>' +
     '<canvas id="patDoek" width="' + P.W + '" height="' + P.H + '" aria-label="De patrouillevlucht: sleep om te sturen"></canvas>' +
-    '<p id="patTip" style="margin:0;font-size:12.5px;color:var(--inkt2);text-align:center">Sleep om te sturen. Ganzen en burgervliegtuigen ontwijk je; drones en jagers schiet je neer. Tik op LANDEN om te stoppen met wat je hebt.</p>';
+    '<p id="patTip" style="margin:0;font-size:12.5px;color:var(--inkt2);text-align:center">' + (Z ? 'Vlieg naar zee: daar wacht ' + (CONTACT[Z.contact].doe === 'neerhalen' ? 'de drone. Haal hem neer voor hij de kust bereikt.' : 'het toestel. Vlieg in het vak ernaast tot het afdraait, en wieg met je vleugels voor meer loon. Niet te dichtbij!')
+      : 'Sleep om te sturen. Ganzen en burgervliegtuigen ontwijk je; drones en jagers schiet je neer. Tik op LANDEN om te stoppen met wat je hebt.') + '</p>';
   Patrouille.cv = el.querySelector('#patDoek'); Patrouille.ctx = Patrouille.cv.getContext('2d');
+  if (st.vleugel) patPlaatje('kist_' + st.vleugel);
   for (const n of ['kist_' + kist, 'drone', 'jager', 'verkenner', 'bommenwerper', 'sport', 'lijn', 'ballon', 'gans', 'radarpost', 'luchtafweer', 'jerrycan', 'onderdeel', 'munt', 'wolk_a', 'wolk_b', 'kogel', 'raket', 'kogel_vijand', 'boerderij', 'windmolen', 'booreiland', 'kerk']) patPlaatje(n);
   for (const n of ['polder', 'akker', 'sloot', 'dijk', 'strand', 'zee', 'stad', 'bos', 'berg', 'snelweg']) patPlaatje('tegel_' + n);
   for (let i = 1; i <= 4; i++) patPlaatje('explosie_' + i);
@@ -1654,15 +1815,22 @@ function patGebeurd(g, nu) {
   else if (g.soort === 'oppak') { geluid(g.wat === 'munt' ? 'munt' : 'oppak'); D.push({ x: g.x, y: g.y, vx: 0, vy: -18, t0: nu, duur: 0.9, tekst: g.wat === 'brandstof' ? '+brandstof' : g.wat === 'onderdeel' ? '+onderdeel' : '+10' }); }
   else if (g.soort === 'neer') { geluid('schietstoel'); tril(120); spat(g.x, g.y, 30, ['#fff2a0', '#ff9a3c', '#ff5a2c', '#333'], 100, 1.2); D.push({ x: g.x, y: g.y, vx: 0, vy: 0, t0: nu, duur: 0.6, explosie: true, groot: true }); }
   else if (g.soort === 'geland') geluid('geland');
+  else if (g.soort === 'wieg') { geluid('signaal'); tril(20); D.push({ x: Patrouille.st.x, y: Patrouille.st.y - 14, vx: 0, vy: -18, t0: nu, duur: 0.9, tekst: '+8%' }); }
+  else if (g.soort === 'ontmoeting') { geluid('alarm'); tril(40); }
+  else if (g.soort === 'afgedraaid') geluid('signaal');
 }
 function patrouilleHud() {
   const st = Patrouille.st, P = PATROUILLE, munten = Math.floor(st.afstand * P.muntPerPx) + st.punten;
   const tel = $('patTel'), b = $('patBalk'), r = $('patRaketTel');
-  if (tel) tel.textContent = getal(munten) + ' munten · ' + (st.afstand / 100).toFixed(1) + ' km';
+  const Z = st.scramble;
+  if (tel) tel.textContent = !Z ? getal(munten) + ' munten · ' + (st.afstand / 100).toFixed(1) + ' km'
+    : Z.fase === 'heen' ? 'nog ' + Math.max(0, (PAT_SCRAMBLE.ontmoet - st.afstand) / 100).toFixed(1) + ' km naar het contact'
+    : Z.fase === 'drone' ? 'haal de drone neer' : Z.fase === 'begeleid' ? 'begeleiden ' + Math.round(Z.meter * 100) + '%' + (Z.inVak ? '' : ' · vlieg in het vak') : '';
   if (b) { const f = st.brandstof / P.duur; b.style.width = Math.round(f * 100) + '%'; b.className = f < 0.2 ? 'slecht' : f < 0.4 ? 'let' : ''; }
-  if (r) r.textContent = st.raketten;
-  const knop = $('patRaket');
-  if (knop) knop.setAttribute('aria-disabled', String(st.raketten <= 0));
+  const wieg = Z && Z.fase === 'begeleid', knop = $('patRaket'), naam = $('patRaketNaam');
+  if (r) r.textContent = wieg ? REGELS.signaalMax - Z.signalen : st.raketten;
+  if (naam) naam.textContent = wieg ? 'WIEG' : 'RAKET';
+  if (knop) knop.setAttribute('aria-disabled', String(wieg ? !Z.inVak || Z.wiegKlok > 0 || Z.signalen >= REGELS.signaalMax : st.raketten <= 0 || (Z && Z.koud)));
 }
 
 function patTegel(stuk, kol, rij) {
@@ -1730,11 +1898,21 @@ function patrouilleTeken(nu, dt) {
     const s = S[d.soort];
     if (s.grond) continue;
     if (s.oppak) { patTekenDing(c, d.soort, d.x, d.y + Math.sin(nu / 200 + d.fase) * 2, 11, 11, 0, d.soort === 'jerrycan' ? '#e03a2a' : '#f5c23c', d.soort === 'munt' ? 'rond' : 'blok'); continue; }
-    const hoek = d.soort === 'lijn' ? (d.vx > 0 ? Math.PI / 2 : -Math.PI / 2) : s.civiel ? 0 : Math.PI;
+
+    const hoek = d.baas || d.escorte ? (d.soort === 'drone' ? Math.PI : (d.vx || 0) * 0.005) : d.soort === 'lijn' ? (d.vx > 0 ? Math.PI / 2 : -Math.PI / 2) : s.civiel ? 0 : Math.PI;
     const kleur = { gans: '#6a5035', sport: '#f4f4f4', ballon: '#e05050', lijn: '#f8f8f8', drone: '#44484e', jager: '#5a6e86', verkenner: '#8a8f96', bommenwerper: '#c0c4cc' }[d.soort];
     const vorm = d.soort === 'ballon' ? 'rond' : d.soort === 'drone' || d.soort === 'jager' ? 'driehoek' : 'kruis';
     const m = s.r * 2;
     patTekenDing(c, d.soort, d.x, d.y, m, m, d.soort === 'gans' ? 0 : hoek, kleur, vorm);
+  }
+
+  if (st.vleugel && !(st.klaar && st.reden === 'neergeschoten')) { const v = patVleugel(st); patTekenDing(c, 'kist_' + st.vleugel, v.x, v.y, 18, 22, 0, '#9fb8d8', 'driehoek'); }
+  const Z = st.scramble;
+  if (Z && Z.fase === 'begeleid' && Z.baas.y > 60) {
+    const d = Z.baas, r = S[d.soort].r, Q = PAT_SCRAMBLE, w = Q.vak[1] - Q.vak[0], h = Q.vakHoog * 2;
+    c.save(); c.setLineDash([3, 3]); c.lineWidth = 1; c.strokeStyle = Z.inVak ? '#5ef08a' : 'rgba(255,255,255,.55)';
+    for (const kant of [-1, 1]) { const x0 = kant < 0 ? d.x - r - Q.vak[1] : d.x + r + Q.vak[0]; c.strokeRect(Math.round(x0) + 0.5, Math.round(d.y - h / 2) + 0.5, w, h); }
+    c.restore();
   }
 
   for (const b of st.kogels) {
@@ -1775,10 +1953,19 @@ function patrouilleTeken(nu, dt) {
   if (st.waarschuw && Math.floor(nu / 120) % 2 === 0) { const w = st.waarschuw; c.fillStyle = '#ff5a3c'; c.beginPath(); if (w.links) { c.moveTo(2, w.y - 7); c.lineTo(12, w.y); c.lineTo(2, w.y + 7); } else { c.moveTo(W - 2, w.y - 7); c.lineTo(W - 12, w.y); c.lineTo(W - 2, w.y + 7); } c.closePath(); c.fill(); }
 
   for (let i = 0; i < st.treffers; i++) { c.fillStyle = i < st.treffers - st.treffersGehad ? '#ff5a5a' : 'rgba(0,0,0,.35)'; c.fillRect(W - 10 - i * 9, 5, 7, 7); }
+
+  if (Z && (Z.fase === 'begeleid' || (Z.fase === 'afdraai' && CONTACT[Z.contact].doe === 'begeleid'))) {
+    const bw = W - 26 - st.treffers * 9; c.fillStyle = 'rgba(0,0,0,.45)'; c.fillRect(6, 5, bw, 7); c.fillStyle = Z.meter >= 1 ? '#5ef08a' : '#ffd24d'; c.fillRect(7, 6, Math.round((bw - 2) * Math.min(1, Z.meter)), 5);
+  }
+  if (Z && Z.fase !== 'heen' && Z.fase !== 'afdraai' && Z.tijd < 2.6) {
+    c.fillStyle = 'rgba(0,0,0,.45)'; c.fillRect(0, H - 76, W, 22); c.fillStyle = '#ffd24d'; c.font = '700 10px "Roboto Condensed", sans-serif'; c.textAlign = 'center';
+    c.fillText(Z.fase === 'drone' ? 'HAAL DE DRONE NEER' : 'WAPENS KOUD · VLIEG ERNAAST', W / 2, H - 61);
+  }
   if (st.klaar) {
     c.fillStyle = 'rgba(0,0,0,.45)'; c.fillRect(0, H / 2 - 18, W, 36);
     c.fillStyle = '#fff'; c.font = '700 14px "Roboto Condensed", sans-serif'; c.textAlign = 'center';
-    c.fillText(st.reden === 'neergeschoten' ? 'SCHIETSTOEL!' : 'GELAND', W / 2, H / 2 + 5);
+    const drone = Z && CONTACT[Z.contact].doe === 'neerhalen';
+    c.fillText(st.reden === 'neergeschoten' ? 'SCHIETSTOEL!' : st.reden === 'gelukt' ? (drone ? 'NEERGEHAALD' : 'AFGEDRAAID') : st.reden === 'genegeerd' ? (drone ? 'ONTKOMEN' : 'DOORGEVLOGEN') : 'GELAND', W / 2, H / 2 + 5);
   }
 }
 function patrouilleEinde(gestopt) {
@@ -1789,6 +1976,7 @@ function patrouilleEinde(gestopt) {
   Q.af = [];
   const st = Q.st;
   if (gestopt && !st.klaar) { st.klaar = true; st.reden = 'geland'; }
+  if (st.scramble) return scrambleLevelEinde(st);
   const r = patrouilleKlaar(S, st), M = S.spel.patrouille;
   veranderd(); renderKop(); planMeldingen();
   const kop = r.neer ? 'Schietstoel!' : 'Geland';
@@ -1803,6 +1991,15 @@ function patrouilleEinde(gestopt) {
     '<div class="rij"><button class="knop2" data-spel="patrouille">Nog een keer</button><button class="knop2" data-sluit>Klaar</button></div>';
   openVel('Patrouillevlucht', html);
   if (typeof renderMagazijn === 'function') renderMagazijn();
+}
+
+function scrambleLevelEinde(st) {
+  const Z = st.scramble, uitslag = st.reden === 'gelukt' ? 'gelukt' : st.reden === 'neergeschoten' ? 'beschoten' : 'genegeerd';
+  scrambleAf(S, { nr: Z.nr, contact: Z.contact, kisten: Z.kisten }, { uitslag, signalen: Z.signalen, treffers: st.treffersGehad, neer: st.reden === 'neergeschoten', punten: st.punten, onderdelen: st.onderdelen, seconden: st.t }, Date.now());
+  veranderd(); renderKop(); planMeldingen();
+  UI.sig.radar = null;
+  if (UI.tab === 'radar') renderRadar();
+  uitslagVel();
 }
 
 
@@ -1955,6 +2152,7 @@ function kistVel(id) {
 
 
 function renderRadar() {
+  if (Patrouille.actief) return;
   const el = $('tab-radar'), klok = nuKlok(), klaar = Object.keys(S.kisten).filter((id) => inzetbaar(S, id).ok);
   const sig = JSON.stringify([S.radar.contacten.map((c) => c.nr), S.vluchten.map((m) => m.nr), isNacht(klok)]);
   if (UI.sig.radar !== sig) {
@@ -1966,7 +2164,7 @@ function renderRadar() {
       '<p class="legenda"><span><i class="geel"></i>onbekend</span><span><i class="rood"></i>Russisch</span><span><i class="blauw"></i>van ons</span></p></div></div>' +
       S.vluchten.map(vlucht).join('') +
       (S.radar.contacten.length ? '<p class="label">Op de radar</p><div class="lijst">' + S.radar.contacten.map(contact).join('') + '</div>'
-        : S.vluchten.length ? '' : '<div class="weetje">' + (isNacht(klok) ? 'Het is nacht. Tot de ochtend komt er geen nieuw alarm.' : 'Het is rustig. Zodra er iets onbekends binnenkomt, gaat hier het alarm.') + '</div>');
+        : S.vluchten.length ? '' : '<div class="weetje">' + 'Het is rustig. Zodra er iets onbekends binnenkomt, gaat hier het alarm.' + '</div>');
     Lucht.radar.cv = $('radar'); Lucht.radar.ctx = Lucht.radar.cv.getContext('2d'); Lucht.radar.buf = null;
   }
   const n = S.radar.contacten.length;
@@ -2000,11 +2198,14 @@ function scrambleVel(nr) {
   }
   const html = '<div class="groot-beeld lucht"><img class="px spiegel" src="' + sprUrl('doelen/' + c.soort) + '" alt=""></div><p style="margin:10px 0 0">' + esc(soort.tekst) + '</p>' +
     '<p class="label">Wie stuur je? Een of twee kisten</p><div class="lijst">' + ids.map(keuze).join('') + '</div><div class="weetje">' + som + '</div>' +
-    '<button class="hoofdknop" data-opstijgen="' + nr + '" aria-disabled="' + !UI.keuze.length + '">Opstijgen</button>';
+    '<button class="hoofdknop" data-zelfvliegen="' + nr + '" aria-disabled="' + !UI.keuze.length + '">Zelf vliegen</button>' +
+    '<button class="knop2" style="width:100%;margin-top:8px" data-opstijgen="' + nr + '" aria-disabled="' + !UI.keuze.length + '">Laat de piloot vliegen</button>' +
+    '<p style="margin:8px 0 0;font-size:12.5px;color:var(--inkt2)">Zelf vliegen: jij stuurt de ' + (UI.keuze.length ? esc(KIST[leiderEerst(S, c.soort, UI.keuze)[0]].naam) : 'kist') + ' naar zee' + (UI.keuze.length > 1 ? ', de andere vliegt mee als vleugelman' : '') + '. De piloot: je volgt de vlucht op de balk.</p>';
   openVel(soort.naam, html);
 }
 function uitslagTekst(u) {
   const soort = CONTACT[u.contact], eerste = KIST[u.kisten[0]].naam;
+  if (u.zelf && u.neer) return ['Schietstoel!', 'De ' + eerste + ' is neergeschoten. De piloot is met de schietstoel eruit en zit alweer op de basis; de kist komt zwaar beschadigd terug en de ploeg moet eraan.'];
   if (u.uitslag === 'beschoten') return ['Beschoten!', 'Er is op de ' + eerste + ' geschoten. Hij is beschadigd teruggekomen en niemand is gewond. De ploeg moet eraan sleutelen voordat hij weer weg kan.'];
   if (u.uitslag === 'genegeerd') return soort.doe === 'neerhalen' ? ['Gemist', 'De drone is ontkomen. Volgende keer beter.']
     : ['Niet geluisterd', (soort.id === 'jager' ? 'De jagers trokken zich niets van je aan en vlogen door.' : 'Het toestel trok zich niets van je aan en vloog door.') + ' Een kist die meer indruk maakt, of twee tegelijk, lukt het vaker.'];
@@ -2025,6 +2226,7 @@ function uitslagVel() {
   const html = '<div class="groot-beeld lucht">' + (u.uitslag === 'beschoten' ? icoon('kisten/' + u.kisten[0]) : '<img class="px spiegel" src="' + sprUrl('doelen/' + u.contact) + '" alt="">') + '</div>' +
     '<p style="text-align:center;font:700 22px var(--kop);margin:8px 0">' + esc(kop) + '</p><p style="margin:0">' + esc(tekst) + '</p>' +
     '<dl class="feiten"><dt>Munten</dt><dd>' + getal(u.munten) + bonus + '</dd><dt>Aanzien</dt><dd>' + (u.aanzien ? '+' + u.aanzien : 'blijft gelijk') + '</dd>' +
+    (u.zelf && (u.punten || u.onderdelen) ? '<dt>Onderweg</dt><dd>' + (u.punten ? getal(u.punten) + ' munten aan neergehaalde doelen' : '') + (u.punten && u.onderdelen ? ', ' : '') + (u.onderdelen ? u.onderdelen + ' onderdelen' : '') + '</dd>' : '') +
     (u.schade ? '<dt>Schade</dt><dd>' + u.schade + ' punten staat</dd>' : '') + '</dl>' +
     '<div class="rij"><button class="knop2" data-tab="basis">Naar de basis</button><button class="knop2" data-sluit>Verder</button></div>';
   openVel(CONTACT[u.contact].naam, html);
@@ -2090,7 +2292,7 @@ function instellingenVel() {
   html += '<p class="label">Geluid en trillen</p><div class="rij"><button class="knop2" data-schakel="geluid">Geluid: ' + (UI.instellingen.geluid ? 'aan' : 'uit') + '</button><button class="knop2" data-schakel="trillen">Trillen: ' + (UI.instellingen.trillen ? 'aan' : 'uit') + '</button></div>';
   html += ouderKnopHtml();
   html += '<p class="label">Opnieuw beginnen</p><p style="font-size:13px;color:var(--inkt2);margin:4px 0">Alles gaat weg: kisten, munten en aanzien.</p><button class="knop2" data-opnieuw="1" style="color:var(--slecht)">Opnieuw beginnen</button>';
-  html += '<p style="font-size:12px;color:var(--inkt2);margin-top:14px">Jeager ' + esc(window.DierApp && DierApp.versie ? DierApp.versie() : 'web') + ' · werkt helemaal offline</p>';
+  html += '<p style="font-size:12px;color:var(--inkt2);margin-top:14px">Jeager ' + esc(window.DierApp && DierApp.versie ? DierApp.versie() : (typeof SPEL_VERSIE !== 'undefined' ? SPEL_VERSIE : 'web')) + ' · werkt helemaal offline</p>';
   openVel('Instellingen', html, (el) => {
     const inv = el.querySelector('#naamInvoer');
     inv.addEventListener('change', () => { const v = inv.value.trim(); if (v) { S.naam = v.slice(0, 24); veranderd(); } });
@@ -2141,7 +2343,8 @@ function renderAlles() {
 }
 function naarTab(tab) {
 
-  const liep = (Drie.actief || Patrouille.actief) && tab !== 'magazijn';
+  const thuis = Patrouille.actief && Patrouille.st && Patrouille.st.scramble ? 'radar' : 'magazijn';
+  const liep = (Drie.actief || Patrouille.actief) && tab !== thuis;
   if (liep) { if (Drie.actief) drieEinde(true); else patrouilleEinde(true); }
   UI.tab = tab;
   if (!liep) sluitVel();
@@ -2173,6 +2376,13 @@ function klik(e) {
 
     UI.keuze = UI.keuze.includes(ds.kieskist) ? UI.keuze.filter((id) => id !== ds.kieskist) : UI.keuze.concat(ds.kieskist).slice(-2);
     geluid('klik'); return scrambleVel(+ds.nr);
+  }
+  if (ds.zelfvliegen) {
+    if (uit) return melding('Kies eerst een kist.', 'iconen/radar');
+    const r = scrambleStart(S, +ds.zelfvliegen, UI.keuze);
+    if (!r.ok) { geluid('fout'); return melding(r.reden, 'iconen/radar'); }
+    geluid('start'); tril(60); sluitVel(); UI.tab = 'radar'; renderTab(); veranderd();
+    return startPatrouille($('tab-radar'), r.kisten[0], 0, false, { contact: r.contact, nr: r.nr, kisten: r.kisten, vleugel: r.kisten[1], staat: r.staat });
   }
   if (ds.opstijgen) {
     if (uit) return melding('Kies eerst een kist.', 'iconen/radar');
@@ -2354,6 +2564,8 @@ async function start() {
 
 
 
+
+
 function zetDemo(soort) {
   const nu = Date.now(), wat = (/^[a-z]+/.exec(soort) || [soort])[0];
   S = nieuweStaat(nu); S.welkom = true; S.rng = 4242; S.radar.volgende = nu + 99 * DAG;
@@ -2368,7 +2580,8 @@ function zetDemo(soort) {
     S.spel.patrouille = { record: 410, gespeeld: 6, onderdelen: 9, munten: 1870, neergehaald: 41, afstand: 6120 };
     for (const [id, min, hoek] of [['bommenwerper', 31, 40], ['lijn', 12, 200], ['drone', 44, 300]]) S.radar.contacten.push({ nr: ++S.radar.nr, soort: id, sinds: nu, tot: nu + min * MIN, hoek });
   }
-  if (['radar', 'scramble', 'vlucht', 'schot'].includes(wat)) UI.tab = 'radar';
+  if (['radar', 'scramble', 'vlucht', 'schot'].includes(wat) || /^onderschep/.test(wat)) UI.tab = 'radar';
+  if (wat === 'onderschepjager') S.radar.contacten.push({ nr: ++S.radar.nr, soort: 'jager', sinds: nu, tot: nu + 40 * MIN, hoek: 120 });
   if (['winkel', 'logboek', 'magazijn'].includes(wat)) UI.tab = wat;
   if (wat === 'patrouille') UI.tab = 'magazijn';
   if (wat === 'vlucht' || wat === 'schot') {
@@ -2392,6 +2605,11 @@ function naDemo(soort) {
   if (wat === 'scramble') setTimeout(() => { UI.keuze = ['f35', 'f16']; scrambleVel(1); }, 300);
   if (wat === 'uitslag') setTimeout(uitslagVel, 300);
   if (wat === 'patrouille') setTimeout(() => startPatrouille($('tab-magazijn'), 'f35', 4242, true), 300);
+  if (/^onderschep/.test(wat)) setTimeout(() => {
+    const soort = wat === 'onderschepdrone' ? 'drone' : wat === 'onderschepjager' ? 'jager' : 'bommenwerper', c = S.radar.contacten.find((x) => x.soort === soort);
+    const r = scrambleStart(S, c.nr, wat === 'onderschepdrone' ? ['f35'] : ['f35', 'f16']);
+    startPatrouille($('tab-radar'), r.kisten[0], 4242, wat !== 'onderschepzelf', { contact: r.contact, nr: r.nr, kisten: r.kisten, vleugel: r.kisten[1], staat: r.staat });
+  }, 300);
 
 
 
