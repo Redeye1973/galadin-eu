@@ -3,18 +3,196 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
-<title>Credits per game – Credits – Galadin</title>
+<title>Credits – Credits – Galadin</title>
 <style>
   body { font-family: system-ui, sans-serif; max-width: 40rem; margin: 2rem auto; padding: 0 1rem; line-height: 1.5; color: #222; background: #fff; }
   h1 { font-size: 1.6rem; margin-bottom: .2rem; }
   h2 { font-size: 1.1rem; margin-top: 1.5rem; }
   pre { white-space: pre-wrap; background: #f4f4f4; padding: .8rem; border-radius: .4rem; font-size: .8rem; }
   a { color: #1a5fb4; }
+  [data-l][hidden] { display: none; }
+  .taal { text-align: right; font-size: .9rem; }
+  :root { --tk-bg: #ffffff; --tk-fg: #222; --tk-rand: #bbb; --tk-accent: #1a5fb4; }
+  @media (prefers-color-scheme: dark) { :root { --tk-bg: #1e2127; --tk-fg: #e6e6e6; --tk-rand: #3a3f48; --tk-accent: #7fb4ff; } }
+  .tk { position: relative; display: inline-block; font: inherit; }
+  .tk-knop { display: inline-flex; align-items: center; gap: .5rem; background: var(--tk-bg, #1b1e25); color: var(--tk-fg, #e8e8e8); border: 1px solid var(--tk-rand, #2d323d); border-radius: .5rem; padding: .3rem .6rem; font: inherit; cursor: pointer; }
+  .tk-knop:hover { border-color: var(--tk-accent, #fca311); }
+  .tk-vlag { width: 24px; height: 16px; border-radius: 2px; box-shadow: 0 0 0 1px rgba(128,128,128,.45); object-fit: cover; flex: none; }
+  .tk-lijst { position: absolute; z-index: 1000; top: calc(100% + 4px); left: 50%; transform: translateX(-50%); min-width: 13rem; max-height: min(60vh, 22rem); overflow: auto; margin: 0; padding: .25rem; list-style: none; text-align: left; background: var(--tk-bg, #1b1e25); color: var(--tk-fg, #e8e8e8); border: 1px solid var(--tk-rand, #2d323d); border-radius: .6rem; box-shadow: 0 8px 24px rgba(0,0,0,.4); }
+  .tk-lijst[hidden] { display: none; }
+  .tk-optie { display: flex; align-items: center; gap: .6rem; padding: .35rem .5rem; border-radius: .4rem; cursor: pointer; }
+  .tk-optie:hover, .tk-optie.tk-focus { background: rgba(252,163,17,.2); }
+  .tk-optie[aria-selected="true"] { font-weight: 700; }
   @media (prefers-color-scheme: dark) { body { background: #14161a; color: #e6e6e6; } pre { background: #1e2127; } a { color: #7fb4ff; } }
 </style>
 </head>
 <body>
-<h1>Credits per game</h1><p>Every game has its own page.</p><ul><li><a href="jeager.html">Jeager</a></li><li><a href="owes-nothing.html">Owes Nothing</a></li><li><a href="saferoom.html">Saferoom</a></li><li><a href="speelhal.html">Speelhal</a></li><li><a href="servo-smash.html">Servo Smash</a></li><li><a href="kogelkast.html">Kogelkast</a></li></ul>
-<p><a href="https://galadin.eu/">All credits</a> · <a href="https://galadin.eu/">Galadin</a></p>
+<p class="taal" id="taalhost"></p>
+<div data-l="nl" hidden>
+<h1>Credits per spel</h1><p>Elk spel heeft een eigen pagina.</p><ul><li><a href="jeager.html" data-taal="1">Jeager</a></li><li><a href="owes-nothing.html" data-taal="1">Owes Nothing</a></li><li><a href="saferoom.html" data-taal="1">Saferoom</a></li><li><a href="speelhal.html" data-taal="1">Speelhal</a></li><li><a href="servo-smash.html" data-taal="1">Servo Smash</a></li><li><a href="kogelkast.html" data-taal="1">Kogelkast</a></li></ul>
+<p><a href="https://galadin.eu/" data-taal="1">Galadin</a></p>
+</div>
+<div data-l="en">
+<h1>Credits per game</h1><p>Every game has its own page.</p><ul><li><a href="jeager.html" data-taal="1">Jeager</a></li><li><a href="owes-nothing.html" data-taal="1">Owes Nothing</a></li><li><a href="saferoom.html" data-taal="1">Saferoom</a></li><li><a href="speelhal.html" data-taal="1">Speelhal</a></li><li><a href="servo-smash.html" data-taal="1">Servo Smash</a></li><li><a href="kogelkast.html" data-taal="1">Kogelkast</a></li></ul>
+<p><a href="https://galadin.eu/" data-taal="1">Galadin</a></p>
+</div>
+<div data-l="de" hidden>
+<h1>Credits pro Spiel</h1><p>Jedes Spiel hat eine eigene Seite.</p><ul><li><a href="jeager.html" data-taal="1">Jeager</a></li><li><a href="owes-nothing.html" data-taal="1">Owes Nothing</a></li><li><a href="saferoom.html" data-taal="1">Saferoom</a></li><li><a href="speelhal.html" data-taal="1">Speelhal</a></li><li><a href="servo-smash.html" data-taal="1">Servo Smash</a></li><li><a href="kogelkast.html" data-taal="1">Kogelkast</a></li></ul>
+<p><a href="https://galadin.eu/" data-taal="1">Galadin</a></p>
+</div>
+<div data-l="fr" hidden>
+<h1>Crédits par jeu</h1><p>Chaque jeu a sa propre page.</p><ul><li><a href="jeager.html" data-taal="1">Jeager</a></li><li><a href="owes-nothing.html" data-taal="1">Owes Nothing</a></li><li><a href="saferoom.html" data-taal="1">Saferoom</a></li><li><a href="speelhal.html" data-taal="1">Speelhal</a></li><li><a href="servo-smash.html" data-taal="1">Servo Smash</a></li><li><a href="kogelkast.html" data-taal="1">Kogelkast</a></li></ul>
+<p><a href="https://galadin.eu/" data-taal="1">Galadin</a></p>
+</div>
+<div data-l="es" hidden>
+<h1>Créditos por juego</h1><p>Cada juego tiene su propia página.</p><ul><li><a href="jeager.html" data-taal="1">Jeager</a></li><li><a href="owes-nothing.html" data-taal="1">Owes Nothing</a></li><li><a href="saferoom.html" data-taal="1">Saferoom</a></li><li><a href="speelhal.html" data-taal="1">Speelhal</a></li><li><a href="servo-smash.html" data-taal="1">Servo Smash</a></li><li><a href="kogelkast.html" data-taal="1">Kogelkast</a></li></ul>
+<p><a href="https://galadin.eu/" data-taal="1">Galadin</a></p>
+</div>
+<div data-l="it" hidden>
+<h1>Crediti per gioco</h1><p>Ogni gioco ha una sua pagina.</p><ul><li><a href="jeager.html" data-taal="1">Jeager</a></li><li><a href="owes-nothing.html" data-taal="1">Owes Nothing</a></li><li><a href="saferoom.html" data-taal="1">Saferoom</a></li><li><a href="speelhal.html" data-taal="1">Speelhal</a></li><li><a href="servo-smash.html" data-taal="1">Servo Smash</a></li><li><a href="kogelkast.html" data-taal="1">Kogelkast</a></li></ul>
+<p><a href="https://galadin.eu/" data-taal="1">Galadin</a></p>
+</div>
+<div data-l="pt" hidden>
+<h1>Créditos por jogo</h1><p>Cada jogo tem a sua própria página.</p><ul><li><a href="jeager.html" data-taal="1">Jeager</a></li><li><a href="owes-nothing.html" data-taal="1">Owes Nothing</a></li><li><a href="saferoom.html" data-taal="1">Saferoom</a></li><li><a href="speelhal.html" data-taal="1">Speelhal</a></li><li><a href="servo-smash.html" data-taal="1">Servo Smash</a></li><li><a href="kogelkast.html" data-taal="1">Kogelkast</a></li></ul>
+<p><a href="https://galadin.eu/" data-taal="1">Galadin</a></p>
+</div>
+<div data-l="da" hidden>
+<h1>Credits pr. spil</h1><p>Hvert spil har sin egen side.</p><ul><li><a href="jeager.html" data-taal="1">Jeager</a></li><li><a href="owes-nothing.html" data-taal="1">Owes Nothing</a></li><li><a href="saferoom.html" data-taal="1">Saferoom</a></li><li><a href="speelhal.html" data-taal="1">Speelhal</a></li><li><a href="servo-smash.html" data-taal="1">Servo Smash</a></li><li><a href="kogelkast.html" data-taal="1">Kogelkast</a></li></ul>
+<p><a href="https://galadin.eu/" data-taal="1">Galadin</a></p>
+</div>
+<div data-l="sv" hidden>
+<h1>Credits per spel</h1><p>Varje spel har sin egen sida.</p><ul><li><a href="jeager.html" data-taal="1">Jeager</a></li><li><a href="owes-nothing.html" data-taal="1">Owes Nothing</a></li><li><a href="saferoom.html" data-taal="1">Saferoom</a></li><li><a href="speelhal.html" data-taal="1">Speelhal</a></li><li><a href="servo-smash.html" data-taal="1">Servo Smash</a></li><li><a href="kogelkast.html" data-taal="1">Kogelkast</a></li></ul>
+<p><a href="https://galadin.eu/" data-taal="1">Galadin</a></p>
+</div>
+<div data-l="fi" hidden>
+<h1>Tekijätiedot pelikohtaisesti</h1><p>Jokaisella pelillä on oma sivunsa.</p><ul><li><a href="jeager.html" data-taal="1">Jeager</a></li><li><a href="owes-nothing.html" data-taal="1">Owes Nothing</a></li><li><a href="saferoom.html" data-taal="1">Saferoom</a></li><li><a href="speelhal.html" data-taal="1">Speelhal</a></li><li><a href="servo-smash.html" data-taal="1">Servo Smash</a></li><li><a href="kogelkast.html" data-taal="1">Kogelkast</a></li></ul>
+<p><a href="https://galadin.eu/" data-taal="1">Galadin</a></p>
+</div>
+<div data-l="et" hidden>
+<h1>Autorid mängude kaupa</h1><p>Igal mängul on oma leht.</p><ul><li><a href="jeager.html" data-taal="1">Jeager</a></li><li><a href="owes-nothing.html" data-taal="1">Owes Nothing</a></li><li><a href="saferoom.html" data-taal="1">Saferoom</a></li><li><a href="speelhal.html" data-taal="1">Speelhal</a></li><li><a href="servo-smash.html" data-taal="1">Servo Smash</a></li><li><a href="kogelkast.html" data-taal="1">Kogelkast</a></li></ul>
+<p><a href="https://galadin.eu/" data-taal="1">Galadin</a></p>
+</div>
+<div data-l="lv" hidden>
+<h1>Autori pa spēlēm</h1><p>Katrai spēlei ir sava lapa.</p><ul><li><a href="jeager.html" data-taal="1">Jeager</a></li><li><a href="owes-nothing.html" data-taal="1">Owes Nothing</a></li><li><a href="saferoom.html" data-taal="1">Saferoom</a></li><li><a href="speelhal.html" data-taal="1">Speelhal</a></li><li><a href="servo-smash.html" data-taal="1">Servo Smash</a></li><li><a href="kogelkast.html" data-taal="1">Kogelkast</a></li></ul>
+<p><a href="https://galadin.eu/" data-taal="1">Galadin</a></p>
+</div>
+<div data-l="lt" hidden>
+<h1>Kūrėjai pagal žaidimą</h1><p>Kiekvienas žaidimas turi savo puslapį.</p><ul><li><a href="jeager.html" data-taal="1">Jeager</a></li><li><a href="owes-nothing.html" data-taal="1">Owes Nothing</a></li><li><a href="saferoom.html" data-taal="1">Saferoom</a></li><li><a href="speelhal.html" data-taal="1">Speelhal</a></li><li><a href="servo-smash.html" data-taal="1">Servo Smash</a></li><li><a href="kogelkast.html" data-taal="1">Kogelkast</a></li></ul>
+<p><a href="https://galadin.eu/" data-taal="1">Galadin</a></p>
+</div>
+<div data-l="pl" hidden>
+<h1>Twórcy według gier</h1><p>Każda gra ma własną stronę.</p><ul><li><a href="jeager.html" data-taal="1">Jeager</a></li><li><a href="owes-nothing.html" data-taal="1">Owes Nothing</a></li><li><a href="saferoom.html" data-taal="1">Saferoom</a></li><li><a href="speelhal.html" data-taal="1">Speelhal</a></li><li><a href="servo-smash.html" data-taal="1">Servo Smash</a></li><li><a href="kogelkast.html" data-taal="1">Kogelkast</a></li></ul>
+<p><a href="https://galadin.eu/" data-taal="1">Galadin</a></p>
+</div>
+<div data-l="cs" hidden>
+<h1>Autoři podle her</h1><p>Každá hra má vlastní stránku.</p><ul><li><a href="jeager.html" data-taal="1">Jeager</a></li><li><a href="owes-nothing.html" data-taal="1">Owes Nothing</a></li><li><a href="saferoom.html" data-taal="1">Saferoom</a></li><li><a href="speelhal.html" data-taal="1">Speelhal</a></li><li><a href="servo-smash.html" data-taal="1">Servo Smash</a></li><li><a href="kogelkast.html" data-taal="1">Kogelkast</a></li></ul>
+<p><a href="https://galadin.eu/" data-taal="1">Galadin</a></p>
+</div>
+<div data-l="sk" hidden>
+<h1>Autori podľa hier</h1><p>Každá hra má vlastnú stránku.</p><ul><li><a href="jeager.html" data-taal="1">Jeager</a></li><li><a href="owes-nothing.html" data-taal="1">Owes Nothing</a></li><li><a href="saferoom.html" data-taal="1">Saferoom</a></li><li><a href="speelhal.html" data-taal="1">Speelhal</a></li><li><a href="servo-smash.html" data-taal="1">Servo Smash</a></li><li><a href="kogelkast.html" data-taal="1">Kogelkast</a></li></ul>
+<p><a href="https://galadin.eu/" data-taal="1">Galadin</a></p>
+</div>
+<div data-l="sl" hidden>
+<h1>Avtorji po igrah</h1><p>Vsaka igra ima svojo stran.</p><ul><li><a href="jeager.html" data-taal="1">Jeager</a></li><li><a href="owes-nothing.html" data-taal="1">Owes Nothing</a></li><li><a href="saferoom.html" data-taal="1">Saferoom</a></li><li><a href="speelhal.html" data-taal="1">Speelhal</a></li><li><a href="servo-smash.html" data-taal="1">Servo Smash</a></li><li><a href="kogelkast.html" data-taal="1">Kogelkast</a></li></ul>
+<p><a href="https://galadin.eu/" data-taal="1">Galadin</a></p>
+</div>
+<div data-l="hr" hidden>
+<h1>Autori po igrama</h1><p>Svaka igra ima svoju stranicu.</p><ul><li><a href="jeager.html" data-taal="1">Jeager</a></li><li><a href="owes-nothing.html" data-taal="1">Owes Nothing</a></li><li><a href="saferoom.html" data-taal="1">Saferoom</a></li><li><a href="speelhal.html" data-taal="1">Speelhal</a></li><li><a href="servo-smash.html" data-taal="1">Servo Smash</a></li><li><a href="kogelkast.html" data-taal="1">Kogelkast</a></li></ul>
+<p><a href="https://galadin.eu/" data-taal="1">Galadin</a></p>
+</div>
+<div data-l="hu" hidden>
+<h1>Készítők játékonként</h1><p>Minden játéknak saját oldala van.</p><ul><li><a href="jeager.html" data-taal="1">Jeager</a></li><li><a href="owes-nothing.html" data-taal="1">Owes Nothing</a></li><li><a href="saferoom.html" data-taal="1">Saferoom</a></li><li><a href="speelhal.html" data-taal="1">Speelhal</a></li><li><a href="servo-smash.html" data-taal="1">Servo Smash</a></li><li><a href="kogelkast.html" data-taal="1">Kogelkast</a></li></ul>
+<p><a href="https://galadin.eu/" data-taal="1">Galadin</a></p>
+</div>
+<div data-l="ro" hidden>
+<h1>Autori pe jocuri</h1><p>Fiecare joc are propria pagină.</p><ul><li><a href="jeager.html" data-taal="1">Jeager</a></li><li><a href="owes-nothing.html" data-taal="1">Owes Nothing</a></li><li><a href="saferoom.html" data-taal="1">Saferoom</a></li><li><a href="speelhal.html" data-taal="1">Speelhal</a></li><li><a href="servo-smash.html" data-taal="1">Servo Smash</a></li><li><a href="kogelkast.html" data-taal="1">Kogelkast</a></li></ul>
+<p><a href="https://galadin.eu/" data-taal="1">Galadin</a></p>
+</div>
+<div data-l="bg" hidden>
+<h1>Автори по игри</h1><p>Всяка игра има своя страница.</p><ul><li><a href="jeager.html" data-taal="1">Jeager</a></li><li><a href="owes-nothing.html" data-taal="1">Owes Nothing</a></li><li><a href="saferoom.html" data-taal="1">Saferoom</a></li><li><a href="speelhal.html" data-taal="1">Speelhal</a></li><li><a href="servo-smash.html" data-taal="1">Servo Smash</a></li><li><a href="kogelkast.html" data-taal="1">Kogelkast</a></li></ul>
+<p><a href="https://galadin.eu/" data-taal="1">Galadin</a></p>
+</div>
+<div data-l="el" hidden>
+<h1>Δημιουργοί ανά παιχνίδι</h1><p>Κάθε παιχνίδι έχει τη δική του σελίδα.</p><ul><li><a href="jeager.html" data-taal="1">Jeager</a></li><li><a href="owes-nothing.html" data-taal="1">Owes Nothing</a></li><li><a href="saferoom.html" data-taal="1">Saferoom</a></li><li><a href="speelhal.html" data-taal="1">Speelhal</a></li><li><a href="servo-smash.html" data-taal="1">Servo Smash</a></li><li><a href="kogelkast.html" data-taal="1">Kogelkast</a></li></ul>
+<p><a href="https://galadin.eu/" data-taal="1">Galadin</a></p>
+</div>
+<div data-l="mt" hidden>
+<h1>Awturi skont il-logħba</h1><p>Kull logħba għandha l-paġna tagħha.</p><ul><li><a href="jeager.html" data-taal="1">Jeager</a></li><li><a href="owes-nothing.html" data-taal="1">Owes Nothing</a></li><li><a href="saferoom.html" data-taal="1">Saferoom</a></li><li><a href="speelhal.html" data-taal="1">Speelhal</a></li><li><a href="servo-smash.html" data-taal="1">Servo Smash</a></li><li><a href="kogelkast.html" data-taal="1">Kogelkast</a></li></ul>
+<p><a href="https://galadin.eu/" data-taal="1">Galadin</a></p>
+</div>
+<div data-l="ga" hidden>
+<h1>Cruthaitheoirí de réir cluiche</h1><p>Tá a leathanach féin ag gach cluiche.</p><ul><li><a href="jeager.html" data-taal="1">Jeager</a></li><li><a href="owes-nothing.html" data-taal="1">Owes Nothing</a></li><li><a href="saferoom.html" data-taal="1">Saferoom</a></li><li><a href="speelhal.html" data-taal="1">Speelhal</a></li><li><a href="servo-smash.html" data-taal="1">Servo Smash</a></li><li><a href="kogelkast.html" data-taal="1">Kogelkast</a></li></ul>
+<p><a href="https://galadin.eu/" data-taal="1">Galadin</a></p>
+</div>
+<script>
+function galadinTaalKeuze(host, cfg) {
+  var langs = cfg.langs, names = cfg.names, flags = cfg.flags, cur = cfg.current, focus = 0, open = false;
+  host.classList.add('tk'); host.textContent = '';
+  var btn = document.createElement('button'); btn.type = 'button'; btn.className = 'tk-knop';
+  btn.setAttribute('aria-haspopup', 'listbox'); btn.setAttribute('aria-expanded', 'false'); btn.setAttribute('aria-label', cfg.label || 'Language');
+  var fl = document.createElement('img'); fl.className = 'tk-vlag'; fl.alt = '';
+  var nm = document.createElement('span'); var pijl = document.createElement('span'); pijl.setAttribute('aria-hidden', 'true'); pijl.textContent = '▾';
+  btn.appendChild(fl); btn.appendChild(nm); btn.appendChild(pijl);
+  var ul = document.createElement('ul'); ul.className = 'tk-lijst'; ul.setAttribute('role', 'listbox'); ul.hidden = true; ul.tabIndex = -1;
+  ul.setAttribute('aria-label', cfg.label || 'Language');
+  var opties = langs.map(function (c) {
+    var li = document.createElement('li'); li.className = 'tk-optie'; li.setAttribute('role', 'option'); li.setAttribute('lang', c); li.dataset.c = c;
+    var im = document.createElement('img'); im.className = 'tk-vlag'; im.alt = ''; im.src = flags[c];
+    var sp = document.createElement('span'); sp.textContent = names[c];
+    li.appendChild(im); li.appendChild(sp); ul.appendChild(li); return li;
+  });
+  host.appendChild(btn); host.appendChild(ul);
+  function toon() {
+    fl.src = flags[cur]; nm.textContent = names[cur]; nm.setAttribute('lang', cur);
+    opties.forEach(function (li) { li.setAttribute('aria-selected', li.dataset.c === cur ? 'true' : 'false'); });
+  }
+  function zetFocus(i) {
+    focus = (i + langs.length) % langs.length;
+    opties.forEach(function (li, k) { li.classList.toggle('tk-focus', k === focus); });
+    opties[focus].scrollIntoView({ block: 'nearest' });
+  }
+  function toggle(aan) {
+    open = aan; ul.hidden = !aan; btn.setAttribute('aria-expanded', aan ? 'true' : 'false');
+    if (aan) { zetFocus(langs.indexOf(cur)); ul.focus(); }
+  }
+  function kies(c) { toggle(false); btn.focus(); if (c !== cur) { cur = c; toon(); if (cfg.onChange) cfg.onChange(c); } }
+  btn.addEventListener('click', function () { toggle(!open); });
+  ul.addEventListener('click', function (e) { var li = e.target.closest ? e.target.closest('.tk-optie') : null; if (li) kies(li.dataset.c); });
+  ul.addEventListener('keydown', function (e) {
+    if (e.key === 'ArrowDown') { e.preventDefault(); zetFocus(focus + 1); }
+    else if (e.key === 'ArrowUp') { e.preventDefault(); zetFocus(focus - 1); }
+    else if (e.key === 'Home') { e.preventDefault(); zetFocus(0); }
+    else if (e.key === 'End') { e.preventDefault(); zetFocus(langs.length - 1); }
+    else if (e.key === 'Enter' || e.key === ' ') { e.preventDefault(); kies(langs[focus]); }
+    else if (e.key === 'Escape' || e.key === 'Tab') { toggle(false); btn.focus(); }
+  });
+  document.addEventListener('click', function (e) { if (open && !host.contains(e.target)) toggle(false); });
+  toon();
+  return { set: function (c) { cur = c; toon(); } };
+}
+
+(function () {
+  'use strict';
+  var LANGS = ["nl", "en", "de", "fr", "es", "it", "pt", "da", "sv", "fi", "et", "lv", "lt", "pl", "cs", "sk", "sl", "hr", "hu", "ro", "bg", "el", "mt", "ga"], KEY = 'galadin_taal', DEFAULT = 'en', BROWSER = true;
+  var NAMES = {"nl": "Nederlands", "en": "English", "de": "Deutsch", "fr": "Français", "es": "Español", "it": "Italiano", "pt": "Português", "da": "Dansk", "sv": "Svenska", "fi": "Suomi", "et": "Eesti", "lv": "Latviešu", "lt": "Lietuvių", "pl": "Polski", "cs": "Čeština", "sk": "Slovenčina", "sl": "Slovenščina", "hr": "Hrvatski", "hu": "Magyar", "ro": "Română", "bg": "Български", "el": "Ελληνικά", "mt": "Malti", "ga": "Gaeilge"}, FLAGS = {"nl": "data:image/svg+xml;charset=utf-8,%3Csvg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 30 20%22 width=%2230%22 height=%2220%22%3E%3Crect x=%220%22 y=%220.000%22 width=%2230%22 height=%226.687%22 fill=%22%23AE1C28%22/%3E%3Crect x=%220%22 y=%226.667%22 width=%2230%22 height=%226.687%22 fill=%22%23FFFFFF%22/%3E%3Crect x=%220%22 y=%2213.333%22 width=%2230%22 height=%226.687%22 fill=%22%2321468B%22/%3E%3C/svg%3E", "en": "data:image/svg+xml;charset=utf-8,%3Csvg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 30 20%22 width=%2230%22 height=%2220%22%3E%3Crect width=%2230%22 height=%2220%22 fill=%22%23012169%22/%3E%3Cpath d=%22M0,0 L30,20 M30,0 L0,20%22 stroke=%22%23fff%22 stroke-width=%224%22/%3E%3Cpath d=%22M0,0 L30,20 M30,0 L0,20%22 stroke=%22%23C8102E%22 stroke-width=%221.6%22/%3E%3Cpath d=%22M15,0 V20 M0,10 H30%22 stroke=%22%23fff%22 stroke-width=%226%22/%3E%3Cpath d=%22M15,0 V20 M0,10 H30%22 stroke=%22%23C8102E%22 stroke-width=%223.4%22/%3E%3C/svg%3E", "de": "data:image/svg+xml;charset=utf-8,%3Csvg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 30 20%22 width=%2230%22 height=%2220%22%3E%3Crect x=%220%22 y=%220.000%22 width=%2230%22 height=%226.687%22 fill=%22%23000000%22/%3E%3Crect x=%220%22 y=%226.667%22 width=%2230%22 height=%226.687%22 fill=%22%23DD0000%22/%3E%3Crect x=%220%22 y=%2213.333%22 width=%2230%22 height=%226.687%22 fill=%22%23FFCE00%22/%3E%3C/svg%3E", "fr": "data:image/svg+xml;charset=utf-8,%3Csvg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 30 20%22 width=%2230%22 height=%2220%22%3E%3Crect x=%220.000%22 y=%220%22 width=%2210.020%22 height=%2220%22 fill=%22%230055A4%22/%3E%3Crect x=%2210.000%22 y=%220%22 width=%2210.020%22 height=%2220%22 fill=%22%23FFFFFF%22/%3E%3Crect x=%2220.000%22 y=%220%22 width=%2210.020%22 height=%2220%22 fill=%22%23EF4135%22/%3E%3C/svg%3E", "es": "data:image/svg+xml;charset=utf-8,%3Csvg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 30 20%22 width=%2230%22 height=%2220%22%3E%3Crect x=%220%22 y=%220.000%22 width=%2230%22 height=%225.020%22 fill=%22%23AA151B%22/%3E%3Crect x=%220%22 y=%225.000%22 width=%2230%22 height=%2210.020%22 fill=%22%23F1BF00%22/%3E%3Crect x=%220%22 y=%2215.000%22 width=%2230%22 height=%225.020%22 fill=%22%23AA151B%22/%3E%3C/svg%3E", "it": "data:image/svg+xml;charset=utf-8,%3Csvg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 30 20%22 width=%2230%22 height=%2220%22%3E%3Crect x=%220.000%22 y=%220%22 width=%2210.020%22 height=%2220%22 fill=%22%23009246%22/%3E%3Crect x=%2210.000%22 y=%220%22 width=%2210.020%22 height=%2220%22 fill=%22%23FFFFFF%22/%3E%3Crect x=%2220.000%22 y=%220%22 width=%2210.020%22 height=%2220%22 fill=%22%23CE2B37%22/%3E%3C/svg%3E", "pt": "data:image/svg+xml;charset=utf-8,%3Csvg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 30 20%22 width=%2230%22 height=%2220%22%3E%3Crect width=%2212%22 height=%2220%22 fill=%22%23006600%22/%3E%3Crect x=%2212%22 width=%2218%22 height=%2220%22 fill=%22%23FF0000%22/%3E%3Ccircle cx=%2212%22 cy=%2210%22 r=%223.2%22 fill=%22%23FFE000%22/%3E%3Ccircle cx=%2212%22 cy=%2210%22 r=%221.6%22 fill=%22%23FF0000%22/%3E%3C/svg%3E", "da": "data:image/svg+xml;charset=utf-8,%3Csvg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 30 20%22 width=%2230%22 height=%2220%22%3E%3Crect width=%2230%22 height=%2220%22 fill=%22%23C8102E%22/%3E%3Crect x=%229%22 width=%224%22 height=%2220%22 fill=%22%23FFFFFF%22/%3E%3Crect y=%228%22 width=%2230%22 height=%224%22 fill=%22%23FFFFFF%22/%3E%3C/svg%3E", "sv": "data:image/svg+xml;charset=utf-8,%3Csvg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 30 20%22 width=%2230%22 height=%2220%22%3E%3Crect width=%2230%22 height=%2220%22 fill=%22%23006AA7%22/%3E%3Crect x=%229%22 width=%224%22 height=%2220%22 fill=%22%23FECC02%22/%3E%3Crect y=%228%22 width=%2230%22 height=%224%22 fill=%22%23FECC02%22/%3E%3C/svg%3E", "fi": "data:image/svg+xml;charset=utf-8,%3Csvg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 30 20%22 width=%2230%22 height=%2220%22%3E%3Crect width=%2230%22 height=%2220%22 fill=%22%23FFFFFF%22/%3E%3Crect x=%229%22 width=%224%22 height=%2220%22 fill=%22%23003580%22/%3E%3Crect y=%228%22 width=%2230%22 height=%224%22 fill=%22%23003580%22/%3E%3C/svg%3E", "et": "data:image/svg+xml;charset=utf-8,%3Csvg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 30 20%22 width=%2230%22 height=%2220%22%3E%3Crect x=%220%22 y=%220.000%22 width=%2230%22 height=%226.687%22 fill=%22%230072CE%22/%3E%3Crect x=%220%22 y=%226.667%22 width=%2230%22 height=%226.687%22 fill=%22%23000000%22/%3E%3Crect x=%220%22 y=%2213.333%22 width=%2230%22 height=%226.687%22 fill=%22%23FFFFFF%22/%3E%3C/svg%3E", "lv": "data:image/svg+xml;charset=utf-8,%3Csvg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 30 20%22 width=%2230%22 height=%2220%22%3E%3Crect x=%220%22 y=%220.000%22 width=%2230%22 height=%228.020%22 fill=%22%239E3039%22/%3E%3Crect x=%220%22 y=%228.000%22 width=%2230%22 height=%224.020%22 fill=%22%23FFFFFF%22/%3E%3Crect x=%220%22 y=%2212.000%22 width=%2230%22 height=%228.020%22 fill=%22%239E3039%22/%3E%3C/svg%3E", "lt": "data:image/svg+xml;charset=utf-8,%3Csvg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 30 20%22 width=%2230%22 height=%2220%22%3E%3Crect x=%220%22 y=%220.000%22 width=%2230%22 height=%226.687%22 fill=%22%23FDB913%22/%3E%3Crect x=%220%22 y=%226.667%22 width=%2230%22 height=%226.687%22 fill=%22%23006A44%22/%3E%3Crect x=%220%22 y=%2213.333%22 width=%2230%22 height=%226.687%22 fill=%22%23C1272D%22/%3E%3C/svg%3E", "pl": "data:image/svg+xml;charset=utf-8,%3Csvg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 30 20%22 width=%2230%22 height=%2220%22%3E%3Crect x=%220%22 y=%220.000%22 width=%2230%22 height=%2210.020%22 fill=%22%23FFFFFF%22/%3E%3Crect x=%220%22 y=%2210.000%22 width=%2230%22 height=%2210.020%22 fill=%22%23DC143C%22/%3E%3C/svg%3E", "cs": "data:image/svg+xml;charset=utf-8,%3Csvg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 30 20%22 width=%2230%22 height=%2220%22%3E%3Crect width=%2230%22 height=%2210%22 fill=%22%23FFFFFF%22/%3E%3Crect y=%2210%22 width=%2230%22 height=%2210%22 fill=%22%23D7141A%22/%3E%3Cpolygon points=%220,0 15,10 0,20%22 fill=%22%2311457E%22/%3E%3C/svg%3E", "sk": "data:image/svg+xml;charset=utf-8,%3Csvg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 30 20%22 width=%2230%22 height=%2220%22%3E%3Crect x=%220%22 y=%220.000%22 width=%2230%22 height=%226.687%22 fill=%22%23FFFFFF%22/%3E%3Crect x=%220%22 y=%226.667%22 width=%2230%22 height=%226.687%22 fill=%22%230B4EA2%22/%3E%3Crect x=%220%22 y=%2213.333%22 width=%2230%22 height=%226.687%22 fill=%22%23EE1C25%22/%3E%3C/svg%3E", "sl": "data:image/svg+xml;charset=utf-8,%3Csvg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 30 20%22 width=%2230%22 height=%2220%22%3E%3Crect x=%220%22 y=%220.000%22 width=%2230%22 height=%226.687%22 fill=%22%23FFFFFF%22/%3E%3Crect x=%220%22 y=%226.667%22 width=%2230%22 height=%226.687%22 fill=%22%23005DA4%22/%3E%3Crect x=%220%22 y=%2213.333%22 width=%2230%22 height=%226.687%22 fill=%22%23ED1C24%22/%3E%3C/svg%3E", "hr": "data:image/svg+xml;charset=utf-8,%3Csvg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 30 20%22 width=%2230%22 height=%2220%22%3E%3Crect x=%220%22 y=%220.000%22 width=%2230%22 height=%226.687%22 fill=%22%23FF0000%22/%3E%3Crect x=%220%22 y=%226.667%22 width=%2230%22 height=%226.687%22 fill=%22%23FFFFFF%22/%3E%3Crect x=%220%22 y=%2213.333%22 width=%2230%22 height=%226.687%22 fill=%22%23171796%22/%3E%3C/svg%3E", "hu": "data:image/svg+xml;charset=utf-8,%3Csvg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 30 20%22 width=%2230%22 height=%2220%22%3E%3Crect x=%220%22 y=%220.000%22 width=%2230%22 height=%226.687%22 fill=%22%23CD2A3E%22/%3E%3Crect x=%220%22 y=%226.667%22 width=%2230%22 height=%226.687%22 fill=%22%23FFFFFF%22/%3E%3Crect x=%220%22 y=%2213.333%22 width=%2230%22 height=%226.687%22 fill=%22%23436F4D%22/%3E%3C/svg%3E", "ro": "data:image/svg+xml;charset=utf-8,%3Csvg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 30 20%22 width=%2230%22 height=%2220%22%3E%3Crect x=%220.000%22 y=%220%22 width=%2210.020%22 height=%2220%22 fill=%22%23002B7F%22/%3E%3Crect x=%2210.000%22 y=%220%22 width=%2210.020%22 height=%2220%22 fill=%22%23FCD116%22/%3E%3Crect x=%2220.000%22 y=%220%22 width=%2210.020%22 height=%2220%22 fill=%22%23CE1126%22/%3E%3C/svg%3E", "bg": "data:image/svg+xml;charset=utf-8,%3Csvg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 30 20%22 width=%2230%22 height=%2220%22%3E%3Crect x=%220%22 y=%220.000%22 width=%2230%22 height=%226.687%22 fill=%22%23FFFFFF%22/%3E%3Crect x=%220%22 y=%226.667%22 width=%2230%22 height=%226.687%22 fill=%22%2300966E%22/%3E%3Crect x=%220%22 y=%2213.333%22 width=%2230%22 height=%226.687%22 fill=%22%23D62612%22/%3E%3C/svg%3E", "el": "data:image/svg+xml;charset=utf-8,%3Csvg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 30 20%22 width=%2230%22 height=%2220%22%3E%3Crect x=%220%22 y=%220.000%22 width=%2230%22 height=%222.242%22 fill=%22%230D5EAF%22/%3E%3Crect x=%220%22 y=%222.222%22 width=%2230%22 height=%222.242%22 fill=%22%23FFFFFF%22/%3E%3Crect x=%220%22 y=%224.444%22 width=%2230%22 height=%222.242%22 fill=%22%230D5EAF%22/%3E%3Crect x=%220%22 y=%226.667%22 width=%2230%22 height=%222.242%22 fill=%22%23FFFFFF%22/%3E%3Crect x=%220%22 y=%228.889%22 width=%2230%22 height=%222.242%22 fill=%22%230D5EAF%22/%3E%3Crect x=%220%22 y=%2211.111%22 width=%2230%22 height=%222.242%22 fill=%22%23FFFFFF%22/%3E%3Crect x=%220%22 y=%2213.333%22 width=%2230%22 height=%222.242%22 fill=%22%230D5EAF%22/%3E%3Crect x=%220%22 y=%2215.556%22 width=%2230%22 height=%222.242%22 fill=%22%23FFFFFF%22/%3E%3Crect x=%220%22 y=%2217.778%22 width=%2230%22 height=%222.242%22 fill=%22%230D5EAF%22/%3E%3Crect width=%2211.12%22 height=%2211.12%22 fill=%22%230D5EAF%22/%3E%3Crect x=%224.45%22 width=%222.22%22 height=%2211.12%22 fill=%22%23fff%22/%3E%3Crect y=%224.45%22 width=%2211.12%22 height=%222.22%22 fill=%22%23fff%22/%3E%3C/svg%3E", "mt": "data:image/svg+xml;charset=utf-8,%3Csvg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 30 20%22 width=%2230%22 height=%2220%22%3E%3Crect x=%220.000%22 y=%220%22 width=%2215.020%22 height=%2220%22 fill=%22%23FFFFFF%22/%3E%3Crect x=%2215.000%22 y=%220%22 width=%2215.020%22 height=%2220%22 fill=%22%23CF142B%22/%3E%3C/svg%3E", "ga": "data:image/svg+xml;charset=utf-8,%3Csvg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 30 20%22 width=%2230%22 height=%2220%22%3E%3Crect x=%220.000%22 y=%220%22 width=%2210.020%22 height=%2220%22 fill=%22%23169B62%22/%3E%3Crect x=%2210.000%22 y=%220%22 width=%2210.020%22 height=%2220%22 fill=%22%23FFFFFF%22/%3E%3Crect x=%2220.000%22 y=%220%22 width=%2210.020%22 height=%2220%22 fill=%22%23FF883E%22/%3E%3C/svg%3E"};
+  function valid(c) { return LANGS.indexOf(c) > -1; }
+  function fromUrl() { try { var m = /[?&]taal=([a-z]{2})(&|$)/.exec(location.search); return m && valid(m[1]) ? m[1] : null; } catch (e) { return null; } }
+  function fromStore() { try { var v = localStorage.getItem(KEY); return valid(v) ? v : null; } catch (e) { return null; } }
+  function fromBrowser() { if (!BROWSER) return null; var l = navigator.languages || [navigator.language || '']; for (var i = 0; i < l.length; i++) { var c = String(l[i]).slice(0, 2).toLowerCase(); if (valid(c)) return c; } return null; }
+  var cur = fromUrl() || fromStore() || fromBrowser() || DEFAULT;
+  var tk = galadinTaalKeuze(document.getElementById('taalhost'), {
+    langs: LANGS, names: NAMES, flags: FLAGS, current: cur, label: 'Taal / Language',
+    onChange: function (c) { cur = c; try { localStorage.setItem(KEY, c); } catch (e) { } apply(); }
+  });
+  function apply() {
+    document.documentElement.lang = cur; tk.set(cur);
+    var bl = document.querySelectorAll('[data-l]');
+    for (var i = 0; i < bl.length; i++) bl[i].hidden = bl[i].getAttribute('data-l') !== cur;
+    var ls = document.querySelectorAll('a[data-taal]');
+    for (var j = 0; j < ls.length; j++) { var b = ls[j].getAttribute('data-basis') || ls[j].getAttribute('href'); ls[j].setAttribute('data-basis', b); ls[j].setAttribute('href', b + (b.indexOf('?') > -1 ? '&' : '?') + 'taal=' + cur); }
+  }
+  apply();
+})();
+</script>
 </body>
 </html>
