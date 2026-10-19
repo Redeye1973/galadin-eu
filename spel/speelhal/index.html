@@ -101,7 +101,7 @@ button:focus-visible { outline: 2px solid var(--goud); outline-offset: 2px; }
 @keyframes kastGloed { from { box-shadow: inset 0 0 0 3px #5a5e67, 0 0 30px 6px rgba(255,207,77,.35); } to { box-shadow: inset 0 0 0 3px #ffcf4d, 0 0 50px 14px rgba(255,80,40,.5); } }
 
 
-.dome { position: absolute; left: 50%; top: -30px; transform: translateX(-50%); width: 60px; height: 34px; }
+.dome { position: absolute; left: 50%; top: -24px; transform: translateX(-50%); width: 60px; height: 34px; }
 .dome i { display: block; width: 44px; height: 44px; margin: 0 auto; border-radius: 50%; background: radial-gradient(circle at 35% 30%, #ff8a80, #d41b1b 55%, #7a0f0f); box-shadow: 0 0 14px rgba(255,60,60,.5); }
 #kast.jackpot .dome i { animation: lamp .18s linear infinite alternate; }
 @keyframes lamp { from { box-shadow: 0 0 10px rgba(255,60,60,.3); } to { box-shadow: 0 0 36px 10px rgba(255,80,60,.9); } }
@@ -140,10 +140,12 @@ button:focus-visible { outline: 2px solid var(--goud); outline-offset: 2px; }
 
 
 .hendel { --trek: 0; position: absolute; right: -40px; top: 36%; width: 40px; height: 170px; touch-action: none; cursor: grab; }
-.hendel .voet-hendel { position: absolute; left: 0; top: 70px; width: 26px; height: 40px; background: var(--chroom); border: 2px solid #0a0b0e; border-radius: 0 8px 8px 0; }
-.hendel .stang { position: absolute; left: 14px; top: 10px; width: 10px; height: 80px; background: linear-gradient(90deg, #d9dce1, #8a8f97 60%, #d9dce1); border: 1px solid #2b2d33; border-radius: 5px; transform-origin: 50% 100%; transform: rotate(calc(var(--trek) * 150deg)); transition: transform .12s linear; }
-.hendel .knop { position: absolute; left: 3px; top: -6px; width: 32px; height: 32px; border-radius: 50%; background: radial-gradient(circle at 35% 30%, #ff7b7b, #c21818 55%, #6e0b0b); border: 2px solid #3a0606; box-shadow: 0 3px 8px rgba(0,0,0,.6); transform-origin: 16px 96px; transform: rotate(calc(var(--trek) * 150deg)); transition: transform .12s linear; }
+.hendel .voet-hendel { z-index: 1; position: absolute; left: 0; top: 70px; width: 26px; height: 40px; background: var(--chroom); border: 2px solid #0a0b0e; border-radius: 0 8px 8px 0; }
+.hendel .stang { position: absolute; left: 14px; top: 10px; width: 10px; height: 80px; background: linear-gradient(90deg, #d9dce1, #8a8f97 60%, #d9dce1); border: 1px solid #2b2d33; border-radius: 5px; transform-origin: 50% 100%; transform: scaleY(calc(1 - var(--trek) * 0.82)); transition: transform .12s linear; z-index: 2; }
+.hendel .knop { position: absolute; left: 3px; top: -6px; width: 32px; height: 32px; border-radius: 50%; background: radial-gradient(circle at 35% 30%, #ff7b7b, #c21818 55%, #6e0b0b); border: 2px solid #3a0606; box-shadow: 0 3px 8px rgba(0,0,0,.6); transform-origin: 50% 50%; transform: translateY(calc(var(--trek) * 90px)) scale(calc(1 + var(--trek) * 0.3)); transition: transform .12s linear; z-index: 3; }
 .hendel:active { cursor: grabbing; }
+
+.hendel.terug .stang, .hendel.terug .knop { transition: transform .42s cubic-bezier(.22, 1.55, .45, 1); }
 
 .opnieuw { font-size: 12px; color: var(--inkt2); text-decoration: underline; }
 
@@ -192,6 +194,9 @@ button:focus-visible { outline: 2px solid var(--goud); outline-offset: 2px; }
 
 @media (max-width: 420px) { .paneel { grid-template-columns: minmax(0, 1fr); } .paneel .draai { grid-row: auto; grid-column: 1; width: 100%; height: 56px; }
   .teller small { min-width: 0; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; } }
+
+
+#scherm-bandiet { padding-top: 26px; }
 
 
 #studio { --gw: min(96vw, 66vh); position: fixed; inset: 0; z-index: 1000; display: grid; place-items: center; background: rgb(8,11,53) linear-gradient(to bottom, rgb(4,5,31) 0%, rgb(6,7,44) calc(50% + var(--gw) * -0.5195), rgb(7,8,46) calc(50% + var(--gw) * -0.4330), rgb(7,9,49) calc(50% + var(--gw) * -0.3463), rgb(8,10,50) calc(50% + var(--gw) * -0.2598), rgb(8,11,52) calc(50% + var(--gw) * -0.1732), rgb(8,11,53) calc(50% + var(--gw) * -0.0866), rgb(8,11,53) calc(50% + var(--gw) * 0.0000), rgb(8,11,52) calc(50% + var(--gw) * 0.0866), rgb(8,10,50) calc(50% + var(--gw) * 0.1732), rgb(7,9,49) calc(50% + var(--gw) * 0.2598), rgb(7,8,47) calc(50% + var(--gw) * 0.3463), rgb(6,7,44) calc(50% + var(--gw) * 0.4330), rgb(5,6,42) calc(50% + var(--gw) * 0.5195), rgb(4,5,31) 100%); transition: opacity .45s ease; }
@@ -306,7 +311,7 @@ button:focus-visible { outline: 2px solid var(--goud); outline-offset: 2px; }
   </div>
 </div>
 <script>
-var SPEL_VERSIE="0.8";
+var SPEL_VERSIE="0.9";
 
 
 
@@ -7680,7 +7685,8 @@ function hendelStart() {
   const zet = (f) => { h.style.setProperty('--trek', f.toFixed(3)); };
   h.addEventListener('pointerdown', (e) => { e.preventDefault(); audioStart(); if (Kast.spin) return; sleep = { y0: e.clientY, f: 0 }; h.setPointerCapture(e.pointerId); });
   h.addEventListener('pointermove', (e) => { if (!sleep) return; sleep.f = clamp((e.clientY - sleep.y0) / 110, 0, 1); zet(sleep.f); });
-  const los = () => { if (!sleep) return; const f = sleep.f; sleep = null; if (f > 0.5 || f < 0.05) { zet(1); setTimeout(() => zet(0), 260); beurt(); } else zet(0); };
+  const terug = () => { h.classList.add('terug'); zet(0); setTimeout(() => h.classList.remove('terug'), 450); };
+  const los = () => { if (!sleep) return; const f = sleep.f; sleep = null; if (f > 0.5 || f < 0.05) { zet(1); setTimeout(terug, 200); beurt(); } else terug(); };
   h.addEventListener('pointerup', los); h.addEventListener('pointercancel', los);
 }
 
