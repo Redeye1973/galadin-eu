@@ -153,6 +153,15 @@ body.pad .raakknoppen, body.tweemens .raakknoppen { display: none !important; }
 @media (max-width: 400px) { .kop .geld { font-size: 15px; padding: 3px 8px 3px 6px; gap: 4px; } .kop { gap: 6px; } }
 
 
+.moeilijkheid { display: grid; gap: 6px; }
+.moeilijkkop { font: 700 13px var(--kop); letter-spacing: .08em; text-transform: uppercase; color: var(--inkt2); }
+.seg { display: grid; grid-template-columns: repeat(4, minmax(0, 1fr)); gap: 6px; }
+.seg button { min-height: 44px; padding: 6px 4px; border-radius: 10px; background: var(--vlak2); border: 2px solid var(--lijn); color: var(--inkt); font: 700 14px/1.15 var(--kop); overflow-wrap: anywhere; hyphens: auto; }
+.seg button[aria-checked="true"] { background: linear-gradient(180deg, #ff6a4d, var(--rood) 55%, #a8240f); border-color: var(--rood2); color: #fff; }
+.uitleg.klein { font-size: 12px; opacity: .8; }
+@media (max-width: 420px) { .seg { grid-template-columns: repeat(2, minmax(0, 1fr)); } }
+
+
 #studio { --gw: min(96vw, 66vh); position: fixed; inset: 0; z-index: 1000; display: grid; place-items: center; background: rgb(8,11,53) linear-gradient(to bottom, rgb(4,5,31) 0%, rgb(6,7,44) calc(50% + var(--gw) * -0.5195), rgb(7,8,46) calc(50% + var(--gw) * -0.4330), rgb(7,9,49) calc(50% + var(--gw) * -0.3463), rgb(8,10,50) calc(50% + var(--gw) * -0.2598), rgb(8,11,52) calc(50% + var(--gw) * -0.1732), rgb(8,11,53) calc(50% + var(--gw) * -0.0866), rgb(8,11,53) calc(50% + var(--gw) * 0.0000), rgb(8,11,52) calc(50% + var(--gw) * 0.0866), rgb(8,10,50) calc(50% + var(--gw) * 0.1732), rgb(7,9,49) calc(50% + var(--gw) * 0.2598), rgb(7,8,47) calc(50% + var(--gw) * 0.3463), rgb(6,7,44) calc(50% + var(--gw) * 0.4330), rgb(5,6,42) calc(50% + var(--gw) * 0.5195), rgb(4,5,31) 100%); transition: opacity .45s ease; }
 #studio.weg { opacity: 0; pointer-events: none; }
 #studio img { display: block; width: var(--gw); height: auto; animation: studioIn .5s ease both; }
@@ -180,6 +189,12 @@ body.pad .raakknoppen, body.tweemens .raakknoppen { display: none !important; }
       <button class="hoofdknop" id="knopNieuw">NIEUWE LOOPBAAN</button>
       <button class="hoofdknop tweede" data-scherm="vrij">VRIJ SPEL</button>
       <button class="hoofdknop tweede" data-scherm="mods">MODS</button>
+    </div>
+    <div class="moeilijkheid">
+      <span class="moeilijkkop">Moeilijkheid</span>
+      <div class="seg" id="moeilijkKeuze" role="radiogroup" aria-label="Moeilijkheid"></div>
+      <p class="uitleg" id="moeilijkUitleg"></p>
+      <p class="uitleg klein">Geldt voor elk gevecht tegen de computer, ook in je loopbaan. Startgeld en premies blijven gelijk.</p>
     </div>
     <p class="uitleg"><b>Pc</b> A/D of pijlen lopen (achteruit lopen is blokken) · W of pijl omhoog blokken · S of pijl omlaag hurken · F of J stoot · G of K trap · H of L duw · T of I speciaal.<br><b>Zetten</b> vooruit + stoot: zware stoot · omlaag + stoot: opstoot, de ander de lucht in · vooruit + trap: hoge trap · omlaag + trap: veeg · vooruit + duw: knieslag · achteruit + duw: schouderworp (allebei grepen: blokken helpt niet, hurken wel; gepakt? druk op tijd duw om los te breken).<br><b>Hoog, midden, laag</b> hurken duikt onder hoge aanvallen door; staand blokken houdt hoog en midden tegen, hurkend blokken laag. Raakt een zet, dan kun je er de volgende snel achteraan zetten.<br><b>Twee spelers op één toetsenbord</b> speler 1 A D W S en F G H T, speler 2 pijlen en J K L I.<br><b>Controller</b> stick of D-pad lopen, omlaag hurken, LB/RB blokken, A stoot, B trap, X duw, Y speciaal, Start pauze.<br><b>Telefoon</b> liggend spelen; knoppen in beeld.<br>Een ronde eindigt met een knock-out. Alles wat je doet, gaat via je piloot: een vermoeide of zenuwachtige piloot reageert trager.</p>
     <p class="versie" id="versie"></p>
@@ -230,7 +245,7 @@ body.pad .raakknoppen, body.tweemens .raakknoppen { display: none !important; }
   </section>
 </div>
 <script>
-var SPEL_VERSIE="0.8";
+var SPEL_VERSIE="0.9";
 
 
 
@@ -1085,6 +1100,16 @@ Object.assign(TAALBOEK.bg, {
   "Winstpremie": "Премия за победа",
   "Sponsorbonus": "Спонсорски бонус",
   "Loon monteurs": "Заплати механици",
+  "Moeilijkheid": "Трудност",
+  "Geldt voor elk gevecht tegen de computer, ook in je loopbaan. Startgeld en premies blijven gelijk.": "Важи за всеки бой срещу компютъра, и в кариерата ти. Началните пари и наградите остават същите.",
+  "Heel makkelijk": "Най-лесно",
+  "De computer valt zelden aan, blokt bijna nooit en slaat zacht.": "Компютърът рядко атакува, почти никога не блокира и удря леко.",
+  "Makkelijk": "Лесно",
+  "De computer is trager, blokt weinig en slaat minder hard.": "Компютърът е по-бавен, блокира малко и удря по-слабо.",
+  "Normaal": "Нормално",
+  "Een eerlijk gevecht met een beetje hulp: de computer ziet je aanvallen later en blokt minder.": "Честен бой с малко помощ: компютърът вижда атаките ти по-късно и блокира по-малко.",
+  "Moeilijk": "Трудно",
+  "De computer vecht op volle kracht, zonder hulp.": "Компютърът се бие с пълна сила, без помощ.",
 });
 
 
@@ -1478,6 +1503,16 @@ Object.assign(TAALBOEK.cs, {
   "Winstpremie": "Prémie za výhru",
   "Sponsorbonus": "Sponzorský bonus",
   "Loon monteurs": "Mzdy mechaniků",
+  "Moeilijkheid": "Obtížnost",
+  "Geldt voor elk gevecht tegen de computer, ook in je loopbaan. Startgeld en premies blijven gelijk.": "Platí pro každý souboj s počítačem, i ve tvé kariéře. Startovní peníze a odměny zůstávají stejné.",
+  "Heel makkelijk": "Nejlehčí",
+  "De computer valt zelden aan, blokt bijna nooit en slaat zacht.": "Počítač útočí zřídka, skoro nikdy neblokuje a bije slabě.",
+  "Makkelijk": "Lehká",
+  "De computer is trager, blokt weinig en slaat minder hard.": "Počítač je pomalejší, málo blokuje a bije méně silně.",
+  "Normaal": "Normální",
+  "Een eerlijk gevecht met een beetje hulp: de computer ziet je aanvallen later en blokt minder.": "Férový souboj s trochou pomoci: počítač vidí tvé útoky později a méně blokuje.",
+  "Moeilijk": "Těžká",
+  "De computer vecht op volle kracht, zonder hulp.": "Počítač bojuje plnou silou, bez pomoci.",
 });
 
 
@@ -1871,6 +1906,16 @@ Object.assign(TAALBOEK.da, {
   "Winstpremie": "Sejrspræmie",
   "Sponsorbonus": "Sponsorbonus",
   "Loon monteurs": "Mekanikerløn",
+  "Moeilijkheid": "Sværhedsgrad",
+  "Geldt voor elk gevecht tegen de computer, ook in je loopbaan. Startgeld en premies blijven gelijk.": "Gælder for hver kamp mod computeren, også i din karriere. Startpenge og præmier er de samme.",
+  "Heel makkelijk": "Meget let",
+  "De computer valt zelden aan, blokt bijna nooit en slaat zacht.": "Computeren angriber sjældent, blokerer næsten aldrig og slår blødt.",
+  "Makkelijk": "Let",
+  "De computer is trager, blokt weinig en slaat minder hard.": "Computeren er langsommere, blokerer lidt og slår mindre hårdt.",
+  "Normaal": "Normal",
+  "Een eerlijk gevecht met een beetje hulp: de computer ziet je aanvallen later en blokt minder.": "En fair kamp med lidt hjælp: computeren ser dine angreb senere og blokerer mindre.",
+  "Moeilijk": "Svær",
+  "De computer vecht op volle kracht, zonder hulp.": "Computeren kæmper med fuld kraft, uden hjælp.",
 });
 
 
@@ -2264,6 +2309,16 @@ Object.assign(TAALBOEK.de, {
   "Winstpremie": "Siegprämie",
   "Sponsorbonus": "Sponsorbonus",
   "Loon monteurs": "Lohn Mechaniker",
+  "Moeilijkheid": "Schwierigkeit",
+  "Geldt voor elk gevecht tegen de computer, ook in je loopbaan. Startgeld en premies blijven gelijk.": "Gilt für jeden Kampf gegen den Computer, auch in deiner Karriere. Startgeld und Prämien bleiben gleich.",
+  "Heel makkelijk": "Sehr leicht",
+  "De computer valt zelden aan, blokt bijna nooit en slaat zacht.": "Der Computer greift selten an, blockt fast nie und schlägt sanft.",
+  "Makkelijk": "Leicht",
+  "De computer is trager, blokt weinig en slaat minder hard.": "Der Computer ist langsamer, blockt wenig und schlägt weniger hart.",
+  "Normaal": "Normal",
+  "Een eerlijk gevecht met een beetje hulp: de computer ziet je aanvallen later en blokt minder.": "Ein fairer Kampf mit etwas Hilfe: Der Computer sieht deine Angriffe später und blockt weniger.",
+  "Moeilijk": "Schwer",
+  "De computer vecht op volle kracht, zonder hulp.": "Der Computer kämpft mit voller Kraft, ohne Hilfe.",
 });
 
 
@@ -2657,6 +2712,16 @@ Object.assign(TAALBOEK.el, {
   "Winstpremie": "Μπόνους νίκης",
   "Sponsorbonus": "Μπόνους χορηγού",
   "Loon monteurs": "Μισθοί μηχανικών",
+  "Moeilijkheid": "Δυσκολία",
+  "Geldt voor elk gevecht tegen de computer, ook in je loopbaan. Startgeld en premies blijven gelijk.": "Ισχύει για κάθε αγώνα με τον υπολογιστή, και στην καριέρα σου. Τα χρήματα εκκίνησης και τα έπαθλα μένουν ίδια.",
+  "Heel makkelijk": "Πολύ εύκολο",
+  "De computer valt zelden aan, blokt bijna nooit en slaat zacht.": "Ο υπολογιστής επιτίθεται σπάνια, σχεδόν ποτέ δεν μπλοκάρει και χτυπά απαλά.",
+  "Makkelijk": "Εύκολο",
+  "De computer is trager, blokt weinig en slaat minder hard.": "Ο υπολογιστής είναι πιο αργός, μπλοκάρει λίγο και χτυπά λιγότερο δυνατά.",
+  "Normaal": "Κανονικό",
+  "Een eerlijk gevecht met een beetje hulp: de computer ziet je aanvallen later en blokt minder.": "Ένας τίμιος αγώνας με λίγη βοήθεια: ο υπολογιστής βλέπει τις επιθέσεις σου αργότερα και μπλοκάρει λιγότερο.",
+  "Moeilijk": "Δύσκολο",
+  "De computer vecht op volle kracht, zonder hulp.": "Ο υπολογιστής παλεύει με όλη του τη δύναμη, χωρίς βοήθεια.",
 });
 
 
@@ -3050,6 +3115,16 @@ Object.assign(TAALBOEK.en, {
   "Winstpremie": "Win bonus",
   "Sponsorbonus": "Sponsor bonus",
   "Loon monteurs": "Mechanics' wages",
+  "Moeilijkheid": "Difficulty",
+  "Geldt voor elk gevecht tegen de computer, ook in je loopbaan. Startgeld en premies blijven gelijk.": "Applies to every fight against the computer, including your career. Starting money and prizes stay the same.",
+  "Heel makkelijk": "Easiest",
+  "De computer valt zelden aan, blokt bijna nooit en slaat zacht.": "The computer rarely attacks, almost never blocks and hits softly.",
+  "Makkelijk": "Easy",
+  "De computer is trager, blokt weinig en slaat minder hard.": "The computer is slower, blocks little and hits less hard.",
+  "Normaal": "Normal",
+  "Een eerlijk gevecht met een beetje hulp: de computer ziet je aanvallen later en blokt minder.": "A fair fight with a little help: the computer sees your attacks later and blocks less.",
+  "Moeilijk": "Hard",
+  "De computer vecht op volle kracht, zonder hulp.": "The computer fights at full strength, without help.",
 });
 
 
@@ -3443,6 +3518,16 @@ Object.assign(TAALBOEK.es, {
   "Winstpremie": "Prima de victoria",
   "Sponsorbonus": "Bonus de patrocinio",
   "Loon monteurs": "Sueldo de mecánicos",
+  "Moeilijkheid": "Dificultad",
+  "Geldt voor elk gevecht tegen de computer, ook in je loopbaan. Startgeld en premies blijven gelijk.": "Se aplica a cada combate contra el ordenador, también en tu carrera. El dinero inicial y los premios no cambian.",
+  "Heel makkelijk": "Muy fácil",
+  "De computer valt zelden aan, blokt bijna nooit en slaat zacht.": "El ordenador ataca poco, casi nunca bloquea y golpea suave.",
+  "Makkelijk": "Fácil",
+  "De computer is trager, blokt weinig en slaat minder hard.": "El ordenador es más lento, bloquea poco y golpea menos fuerte.",
+  "Normaal": "Normal",
+  "Een eerlijk gevecht met een beetje hulp: de computer ziet je aanvallen later en blokt minder.": "Un combate justo con un poco de ayuda: el ordenador ve tus ataques más tarde y bloquea menos.",
+  "Moeilijk": "Difícil",
+  "De computer vecht op volle kracht, zonder hulp.": "El ordenador lucha con toda su fuerza, sin ayuda.",
 });
 
 
@@ -3836,6 +3921,16 @@ Object.assign(TAALBOEK.et, {
   "Winstpremie": "Võidupreemia",
   "Sponsorbonus": "Sponsoriboonus",
   "Loon monteurs": "Mehaanikute palgad",
+  "Moeilijkheid": "Raskusaste",
+  "Geldt voor elk gevecht tegen de computer, ook in je loopbaan. Startgeld en premies blijven gelijk.": "Kehtib iga võitluse kohta arvuti vastu, ka sinu karjääris. Stardiraha ja auhinnad jäävad samaks.",
+  "Heel makkelijk": "Kõige kergem",
+  "De computer valt zelden aan, blokt bijna nooit en slaat zacht.": "Arvuti ründab harva, peaaegu ei blokeeri ja lööb pehmelt.",
+  "Makkelijk": "Kerge",
+  "De computer is trager, blokt weinig en slaat minder hard.": "Arvuti on aeglasem, blokeerib vähe ja lööb vähem kõvasti.",
+  "Normaal": "Tavaline",
+  "Een eerlijk gevecht met een beetje hulp: de computer ziet je aanvallen later en blokt minder.": "Aus võitlus väikese abiga: arvuti näeb su rünnakuid hiljem ja blokeerib vähem.",
+  "Moeilijk": "Raske",
+  "De computer vecht op volle kracht, zonder hulp.": "Arvuti võitleb täie jõuga, ilma abita.",
 });
 
 
@@ -4229,6 +4324,16 @@ Object.assign(TAALBOEK.fi, {
   "Winstpremie": "Voittopalkkio",
   "Sponsorbonus": "Sponsoribonus",
   "Loon monteurs": "Mekaanikkojen palkat",
+  "Moeilijkheid": "Vaikeustaso",
+  "Geldt voor elk gevecht tegen de computer, ook in je loopbaan. Startgeld en premies blijven gelijk.": "Koskee jokaista ottelua tietokonetta vastaan, myös urallasi. Aloitusraha ja palkkiot pysyvät samoina.",
+  "Heel makkelijk": "Helpoin",
+  "De computer valt zelden aan, blokt bijna nooit en slaat zacht.": "Tietokone hyökkää harvoin, torjuu tuskin koskaan ja lyö pehmeästi.",
+  "Makkelijk": "Helppo",
+  "De computer is trager, blokt weinig en slaat minder hard.": "Tietokone on hitaampi, torjuu vähän ja lyö vähemmän kovaa.",
+  "Normaal": "Normaali",
+  "Een eerlijk gevecht met een beetje hulp: de computer ziet je aanvallen later en blokt minder.": "Reilu ottelu pienellä avulla: tietokone näkee hyökkäyksesi myöhemmin ja torjuu vähemmän.",
+  "Moeilijk": "Vaikea",
+  "De computer vecht op volle kracht, zonder hulp.": "Tietokone taistelee täysillä, ilman apua.",
 });
 
 
@@ -4622,6 +4727,16 @@ Object.assign(TAALBOEK.fr, {
   "Winstpremie": "Prime de victoire",
   "Sponsorbonus": "Bonus sponsor",
   "Loon monteurs": "Salaire des mécaniciens",
+  "Moeilijkheid": "Difficulté",
+  "Geldt voor elk gevecht tegen de computer, ook in je loopbaan. Startgeld en premies blijven gelijk.": "S'applique à chaque combat contre l'ordinateur, y compris ta carrière. L'argent de départ et les primes restent les mêmes.",
+  "Heel makkelijk": "Très facile",
+  "De computer valt zelden aan, blokt bijna nooit en slaat zacht.": "L'ordinateur attaque rarement, ne bloque presque jamais et frappe doucement.",
+  "Makkelijk": "Facile",
+  "De computer is trager, blokt weinig en slaat minder hard.": "L'ordinateur est plus lent, bloque peu et frappe moins fort.",
+  "Normaal": "Normal",
+  "Een eerlijk gevecht met een beetje hulp: de computer ziet je aanvallen later en blokt minder.": "Un combat équitable avec un peu d'aide : l'ordinateur voit tes attaques plus tard et bloque moins.",
+  "Moeilijk": "Difficile",
+  "De computer vecht op volle kracht, zonder hulp.": "L'ordinateur se bat à pleine puissance, sans aide.",
 });
 
 
@@ -5015,6 +5130,16 @@ Object.assign(TAALBOEK.ga, {
   "Winstpremie": "Bónas bua",
   "Sponsorbonus": "Bónas urraitheora",
   "Loon monteurs": "Pá na meicneoirí",
+  "Moeilijkheid": "Deacracht",
+  "Geldt voor elk gevecht tegen de computer, ook in je loopbaan. Startgeld en premies blijven gelijk.": "Baineann sé le gach troid in aghaidh an ríomhaire, i do ghairm bheatha freisin. Fanann an t-airgead tosaigh agus na duaiseanna mar an gcéanna.",
+  "Heel makkelijk": "Is fusa",
+  "De computer valt zelden aan, blokt bijna nooit en slaat zacht.": "Is annamh a ionsaíonn an ríomhaire, is ar éigean a chosnaíonn sé agus buaileann sé go bog.",
+  "Makkelijk": "Éasca",
+  "De computer is trager, blokt weinig en slaat minder hard.": "Tá an ríomhaire níos moille, cosnaíonn sé beagán agus buaileann sé níos laige.",
+  "Normaal": "Gnáth",
+  "Een eerlijk gevecht met een beetje hulp: de computer ziet je aanvallen later en blokt minder.": "Troid chothrom le beagán cabhrach: feiceann an ríomhaire d'ionsaithe níos déanaí agus cosnaíonn sé níos lú.",
+  "Moeilijk": "Deacair",
+  "De computer vecht op volle kracht, zonder hulp.": "Troideann an ríomhaire le neart iomlán, gan cabhair.",
 });
 
 
@@ -5408,6 +5533,16 @@ Object.assign(TAALBOEK.hr, {
   "Winstpremie": "Nagrada za pobjedu",
   "Sponsorbonus": "Sponzorski bonus",
   "Loon monteurs": "Plaće mehaničara",
+  "Moeilijkheid": "Težina",
+  "Geldt voor elk gevecht tegen de computer, ook in je loopbaan. Startgeld en premies blijven gelijk.": "Vrijedi za svaku borbu protiv računala, i u tvojoj karijeri. Početni novac i nagrade ostaju isti.",
+  "Heel makkelijk": "Najlakše",
+  "De computer valt zelden aan, blokt bijna nooit en slaat zacht.": "Računalo rijetko napada, gotovo nikad ne blokira i udara nježno.",
+  "Makkelijk": "Lako",
+  "De computer is trager, blokt weinig en slaat minder hard.": "Računalo je sporije, malo blokira i udara slabije.",
+  "Normaal": "Normalno",
+  "Een eerlijk gevecht met een beetje hulp: de computer ziet je aanvallen later en blokt minder.": "Poštena borba s malo pomoći: računalo kasnije vidi tvoje napade i manje blokira.",
+  "Moeilijk": "Teško",
+  "De computer vecht op volle kracht, zonder hulp.": "Računalo se bori punom snagom, bez pomoći.",
 });
 
 
@@ -5801,6 +5936,16 @@ Object.assign(TAALBOEK.hu, {
   "Winstpremie": "Győzelmi prémium",
   "Sponsorbonus": "Szponzori bónusz",
   "Loon monteurs": "Szerelők bére",
+  "Moeilijkheid": "Nehézség",
+  "Geldt voor elk gevecht tegen de computer, ook in je loopbaan. Startgeld en premies blijven gelijk.": "Minden gép elleni harcra vonatkozik, a karrieredben is. A kezdőpénz és a díjak nem változnak.",
+  "Heel makkelijk": "Legkönnyebb",
+  "De computer valt zelden aan, blokt bijna nooit en slaat zacht.": "A gép ritkán támad, szinte soha nem véd, és gyengén üt.",
+  "Makkelijk": "Könnyű",
+  "De computer is trager, blokt weinig en slaat minder hard.": "A gép lassabb, keveset véd, és kevésbé erősen üt.",
+  "Normaal": "Normál",
+  "Een eerlijk gevecht met een beetje hulp: de computer ziet je aanvallen later en blokt minder.": "Tisztességes harc egy kis segítséggel: a gép később látja a támadásaidat, és kevesebbet véd.",
+  "Moeilijk": "Nehéz",
+  "De computer vecht op volle kracht, zonder hulp.": "A gép teljes erővel harcol, segítség nélkül.",
 });
 
 
@@ -6194,6 +6339,16 @@ Object.assign(TAALBOEK.it, {
   "Winstpremie": "Premio vittoria",
   "Sponsorbonus": "Bonus sponsor",
   "Loon monteurs": "Paga meccanici",
+  "Moeilijkheid": "Difficoltà",
+  "Geldt voor elk gevecht tegen de computer, ook in je loopbaan. Startgeld en premies blijven gelijk.": "Vale per ogni combattimento contro il computer, anche nella tua carriera. Soldi iniziali e premi restano uguali.",
+  "Heel makkelijk": "Facilissimo",
+  "De computer valt zelden aan, blokt bijna nooit en slaat zacht.": "Il computer attacca di rado, non para quasi mai e colpisce piano.",
+  "Makkelijk": "Facile",
+  "De computer is trager, blokt weinig en slaat minder hard.": "Il computer è più lento, para poco e colpisce meno forte.",
+  "Normaal": "Normale",
+  "Een eerlijk gevecht met een beetje hulp: de computer ziet je aanvallen later en blokt minder.": "Un combattimento leale con un po' di aiuto: il computer vede i tuoi attacchi più tardi e para meno.",
+  "Moeilijk": "Difficile",
+  "De computer vecht op volle kracht, zonder hulp.": "Il computer combatte a piena forza, senza aiuto.",
 });
 
 
@@ -6587,6 +6742,16 @@ Object.assign(TAALBOEK.lt, {
   "Winstpremie": "Pergalės premija",
   "Sponsorbonus": "Rėmėjo premija",
   "Loon monteurs": "Mechanikų algos",
+  "Moeilijkheid": "Sunkumas",
+  "Geldt voor elk gevecht tegen de computer, ook in je loopbaan. Startgeld en premies blijven gelijk.": "Galioja kiekvienai kovai su kompiuteriu, taip pat tavo karjeroje. Pradiniai pinigai ir prizai nesikeičia.",
+  "Heel makkelijk": "Lengviausias",
+  "De computer valt zelden aan, blokt bijna nooit en slaat zacht.": "Kompiuteris puola retai, beveik niekada neblokuoja ir smūgiuoja švelniai.",
+  "Makkelijk": "Lengvas",
+  "De computer is trager, blokt weinig en slaat minder hard.": "Kompiuteris lėtesnis, mažai blokuoja ir smūgiuoja silpniau.",
+  "Normaal": "Normalus",
+  "Een eerlijk gevecht met een beetje hulp: de computer ziet je aanvallen later en blokt minder.": "Sąžininga kova su trupučiu pagalbos: kompiuteris tavo atakas pamato vėliau ir mažiau blokuoja.",
+  "Moeilijk": "Sunkus",
+  "De computer vecht op volle kracht, zonder hulp.": "Kompiuteris kovoja visa jėga, be pagalbos.",
 });
 
 
@@ -6980,6 +7145,16 @@ Object.assign(TAALBOEK.lv, {
   "Winstpremie": "Uzvaras prēmija",
   "Sponsorbonus": "Sponsora bonuss",
   "Loon monteurs": "Mehāniķu algas",
+  "Moeilijkheid": "Grūtība",
+  "Geldt voor elk gevecht tegen de computer, ook in je loopbaan. Startgeld en premies blijven gelijk.": "Attiecas uz katru cīņu pret datoru, arī tavā karjerā. Sākuma nauda un balvas paliek tās pašas.",
+  "Heel makkelijk": "Visvieglākā",
+  "De computer valt zelden aan, blokt bijna nooit en slaat zacht.": "Dators uzbrūk reti, gandrīz nekad nebloķē un sit maigi.",
+  "Makkelijk": "Viegla",
+  "De computer is trager, blokt weinig en slaat minder hard.": "Dators ir lēnāks, maz bloķē un sit mazāk spēcīgi.",
+  "Normaal": "Parasta",
+  "Een eerlijk gevecht met een beetje hulp: de computer ziet je aanvallen later en blokt minder.": "Godīga cīņa ar nelielu palīdzību: dators tavus uzbrukumus redz vēlāk un bloķē mazāk.",
+  "Moeilijk": "Grūta",
+  "De computer vecht op volle kracht, zonder hulp.": "Dators cīnās ar pilnu spēku, bez palīdzības.",
 });
 
 
@@ -7373,6 +7548,16 @@ Object.assign(TAALBOEK.mt, {
   "Winstpremie": "Bonus tar-rebħa",
   "Sponsorbonus": "Bonus tal-isponsor",
   "Loon monteurs": "Pagi tal-mekkaniċi",
+  "Moeilijkheid": "Diffikultà",
+  "Geldt voor elk gevecht tegen de computer, ook in je loopbaan. Startgeld en premies blijven gelijk.": "Tgħodd għal kull ġlieda kontra l-kompjuter, anki fil-karriera tiegħek. Il-flus tal-bidu u l-premjijiet jibqgħu l-istess.",
+  "Heel makkelijk": "L-iktar faċli",
+  "De computer valt zelden aan, blokt bijna nooit en slaat zacht.": "Il-kompjuter rari jattakka, kważi qatt ma jibblokka u jolqot bil-mod.",
+  "Makkelijk": "Faċli",
+  "De computer is trager, blokt weinig en slaat minder hard.": "Il-kompjuter huwa iktar bil-mod, jibblokka ftit u jolqot inqas qawwi.",
+  "Normaal": "Normali",
+  "Een eerlijk gevecht met een beetje hulp: de computer ziet je aanvallen later en blokt minder.": "Ġlieda ġusta b'ftit għajnuna: il-kompjuter jara l-attakki tiegħek iktar tard u jibblokka inqas.",
+  "Moeilijk": "Diffiċli",
+  "De computer vecht op volle kracht, zonder hulp.": "Il-kompjuter jiġġieled b'saħħtu kollha, mingħajr għajnuna.",
 });
 
 
@@ -7766,6 +7951,16 @@ Object.assign(TAALBOEK.pl, {
   "Winstpremie": "Premia za wygraną",
   "Sponsorbonus": "Premia sponsora",
   "Loon monteurs": "Pensje mechaników",
+  "Moeilijkheid": "Poziom trudności",
+  "Geldt voor elk gevecht tegen de computer, ook in je loopbaan. Startgeld en premies blijven gelijk.": "Dotyczy każdej walki z komputerem, także w twojej karierze. Pieniądze na start i nagrody pozostają takie same.",
+  "Heel makkelijk": "Najłatwiejszy",
+  "De computer valt zelden aan, blokt bijna nooit en slaat zacht.": "Komputer rzadko atakuje, prawie nigdy nie blokuje i uderza lekko.",
+  "Makkelijk": "Łatwy",
+  "De computer is trager, blokt weinig en slaat minder hard.": "Komputer jest wolniejszy, mało blokuje i uderza słabiej.",
+  "Normaal": "Normalny",
+  "Een eerlijk gevecht met een beetje hulp: de computer ziet je aanvallen later en blokt minder.": "Uczciwa walka z odrobiną pomocy: komputer później widzi twoje ataki i mniej blokuje.",
+  "Moeilijk": "Trudny",
+  "De computer vecht op volle kracht, zonder hulp.": "Komputer walczy z pełną siłą, bez pomocy.",
 });
 
 
@@ -8159,6 +8354,16 @@ Object.assign(TAALBOEK.pt, {
   "Winstpremie": "Prémio de vitória",
   "Sponsorbonus": "Bónus de patrocínio",
   "Loon monteurs": "Salário dos mecânicos",
+  "Moeilijkheid": "Dificuldade",
+  "Geldt voor elk gevecht tegen de computer, ook in je loopbaan. Startgeld en premies blijven gelijk.": "Aplica-se a cada combate contra o computador, também na tua carreira. O dinheiro inicial e os prémios ficam iguais.",
+  "Heel makkelijk": "Muito fácil",
+  "De computer valt zelden aan, blokt bijna nooit en slaat zacht.": "O computador ataca raramente, quase nunca bloqueia e bate devagar.",
+  "Makkelijk": "Fácil",
+  "De computer is trager, blokt weinig en slaat minder hard.": "O computador é mais lento, bloqueia pouco e bate com menos força.",
+  "Normaal": "Normal",
+  "Een eerlijk gevecht met een beetje hulp: de computer ziet je aanvallen later en blokt minder.": "Um combate justo com uma pequena ajuda: o computador vê os teus ataques mais tarde e bloqueia menos.",
+  "Moeilijk": "Difícil",
+  "De computer vecht op volle kracht, zonder hulp.": "O computador luta com toda a força, sem ajuda.",
 });
 
 
@@ -8552,6 +8757,16 @@ Object.assign(TAALBOEK.ro, {
   "Winstpremie": "Primă de victorie",
   "Sponsorbonus": "Bonus de sponsor",
   "Loon monteurs": "Salariu mecanici",
+  "Moeilijkheid": "Dificultate",
+  "Geldt voor elk gevecht tegen de computer, ook in je loopbaan. Startgeld en premies blijven gelijk.": "Se aplică fiecărei lupte cu calculatorul, și în cariera ta. Banii de start și premiile rămân la fel.",
+  "Heel makkelijk": "Foarte ușor",
+  "De computer valt zelden aan, blokt bijna nooit en slaat zacht.": "Calculatorul atacă rar, aproape niciodată nu blochează și lovește încet.",
+  "Makkelijk": "Ușor",
+  "De computer is trager, blokt weinig en slaat minder hard.": "Calculatorul e mai lent, blochează puțin și lovește mai slab.",
+  "Normaal": "Normal",
+  "Een eerlijk gevecht met een beetje hulp: de computer ziet je aanvallen later en blokt minder.": "O luptă cinstită cu puțin ajutor: calculatorul îți vede atacurile mai târziu și blochează mai puțin.",
+  "Moeilijk": "Greu",
+  "De computer vecht op volle kracht, zonder hulp.": "Calculatorul luptă cu toată forța, fără ajutor.",
 });
 
 
@@ -8945,6 +9160,16 @@ Object.assign(TAALBOEK.sk, {
   "Winstpremie": "Prémia za výhru",
   "Sponsorbonus": "Sponzorský bonus",
   "Loon monteurs": "Mzdy mechanikov",
+  "Moeilijkheid": "Obťažnosť",
+  "Geldt voor elk gevecht tegen de computer, ook in je loopbaan. Startgeld en premies blijven gelijk.": "Platí pre každý súboj s počítačom, aj v tvojej kariére. Štartovné peniaze a odmeny zostávajú rovnaké.",
+  "Heel makkelijk": "Najľahšia",
+  "De computer valt zelden aan, blokt bijna nooit en slaat zacht.": "Počítač útočí zriedka, takmer nikdy neblokuje a bije slabo.",
+  "Makkelijk": "Ľahká",
+  "De computer is trager, blokt weinig en slaat minder hard.": "Počítač je pomalší, málo blokuje a bije menej silno.",
+  "Normaal": "Normálna",
+  "Een eerlijk gevecht met een beetje hulp: de computer ziet je aanvallen later en blokt minder.": "Férový súboj s trochou pomoci: počítač vidí tvoje útoky neskôr a menej blokuje.",
+  "Moeilijk": "Ťažká",
+  "De computer vecht op volle kracht, zonder hulp.": "Počítač bojuje plnou silou, bez pomoci.",
 });
 
 
@@ -9338,6 +9563,16 @@ Object.assign(TAALBOEK.sl, {
   "Winstpremie": "Nagrada za zmago",
   "Sponsorbonus": "Sponzorski bonus",
   "Loon monteurs": "Plače mehanikov",
+  "Moeilijkheid": "Težavnost",
+  "Geldt voor elk gevecht tegen de computer, ook in je loopbaan. Startgeld en premies blijven gelijk.": "Velja za vsak boj proti računalniku, tudi v tvoji karieri. Začetni denar in nagrade ostanejo enaki.",
+  "Heel makkelijk": "Najlažja",
+  "De computer valt zelden aan, blokt bijna nooit en slaat zacht.": "Računalnik redko napade, skoraj nikoli ne blokira in udarja nežno.",
+  "Makkelijk": "Lahka",
+  "De computer is trager, blokt weinig en slaat minder hard.": "Računalnik je počasnejši, malo blokira in udarja manj močno.",
+  "Normaal": "Običajna",
+  "Een eerlijk gevecht met een beetje hulp: de computer ziet je aanvallen later en blokt minder.": "Pošten boj z malo pomoči: računalnik tvoje napade opazi pozneje in manj blokira.",
+  "Moeilijk": "Težka",
+  "De computer vecht op volle kracht, zonder hulp.": "Računalnik se bori s polno močjo, brez pomoči.",
 });
 
 
@@ -9731,6 +9966,16 @@ Object.assign(TAALBOEK.sv, {
   "Winstpremie": "Vinstpremie",
   "Sponsorbonus": "Sponsorbonus",
   "Loon monteurs": "Mekanikerlön",
+  "Moeilijkheid": "Svårighetsgrad",
+  "Geldt voor elk gevecht tegen de computer, ook in je loopbaan. Startgeld en premies blijven gelijk.": "Gäller varje match mot datorn, även i din karriär. Startpengar och priser är desamma.",
+  "Heel makkelijk": "Mycket lätt",
+  "De computer valt zelden aan, blokt bijna nooit en slaat zacht.": "Datorn anfaller sällan, blockerar nästan aldrig och slår mjukt.",
+  "Makkelijk": "Lätt",
+  "De computer is trager, blokt weinig en slaat minder hard.": "Datorn är långsammare, blockerar lite och slår mindre hårt.",
+  "Normaal": "Normal",
+  "Een eerlijk gevecht met een beetje hulp: de computer ziet je aanvallen later en blokt minder.": "En rättvis match med lite hjälp: datorn ser dina attacker senare och blockerar mindre.",
+  "Moeilijk": "Svår",
+  "De computer vecht op volle kracht, zonder hulp.": "Datorn slåss med full kraft, utan hjälp.",
 });
 
 
@@ -9947,7 +10192,7 @@ function vertraging(p, g) {
   if (g.brein >= 5) return 4;
   const basis = Math.round(PILOOT.basisVertraging - effectief(p, 'reflex') * PILOOT.perReflex);
   const d = basis + Math.floor(g.moe / PILOOT.moeStap) + (g.paniek > 0 && g.brein < 4 ? PILOOT.paniekExtra : 0) - (g.link ? 2 : 0) - (g.brein >= 3 ? 1 : 0);
-  return clamp(g.mens ? Math.round(d * 0.6) : d, g.mens ? 1 : 2, 20);
+  return clamp(g.mens ? Math.round(d * (g.mensDeel || 0.6)) : d, g.mens ? 1 : 2, 20);
 }
 
 function schoonKans(p, g) {
@@ -10093,7 +10338,19 @@ const GREEP = { los: 14, knie: 24, klaar: 42, tillen: 16, smak: 36, worpKlaar: 5
 
 
 
-const HULP = { schade: 0.85, kunde: 0.75, blok: 0.5, agressie: 0.8 };
+
+
+
+const MOEILIJKHEDEN = {
+  heelmakkelijk: { naam: 'Heel makkelijk', schade: 0.55, kunde: 0.4, blok: 0.15, agressie: 0.55, vertraging: 0.3 , uitleg: 'De computer valt zelden aan, blokt bijna nooit en slaat zacht.' },
+  makkelijk: { naam: 'Makkelijk', schade: 0.7, kunde: 0.55, blok: 0.3, agressie: 0.65, vertraging: 0.45 , uitleg: 'De computer is trager, blokt weinig en slaat minder hard.' },
+  normaal: { naam: 'Normaal', schade: 0.85, kunde: 0.75, blok: 0.5, agressie: 0.8, vertraging: 0.6 , uitleg: 'Een eerlijk gevecht met een beetje hulp: de computer ziet je aanvallen later en blokt minder.' },
+  moeilijk: { naam: 'Moeilijk', schade: 1, kunde: 1, blok: 1, agressie: 1, vertraging: 0.6 , uitleg: 'De computer vecht op volle kracht, zonder hulp.' },
+};
+const MOEILIJKHEID_VOLGORDE = ['heelmakkelijk', 'makkelijk', 'normaal', 'moeilijk'];
+
+const MOEILIJK = { stand: 'normaal' };
+const hulpNu = () => MOEILIJKHEDEN[MOEILIJK.stand] || MOEILIJKHEDEN.normaal;
 const LEEG_INVOER = { x: 0, blok: false, neer: false, n: { stoot: 0, trap: 0, duw: 0, speciaal: 0 } };
 
 function vechterNieuw(kant, deelnemer) {
@@ -10116,9 +10373,13 @@ function vechterNieuw(kant, deelnemer) {
 function gevechtNieuw(deelnemers, zaad) {
   const g = { rng: (zaad | 0) || 1, frame: 0, fase: 'intro', faseT: GEVECHT.intro, ronde: 1, rondeFrames: 0, v: deelnemers.map((d, i) => vechterNieuw(i, d)), gebeurd: [], uitslag: null, rondeTijden: [], rondeWinnaars: [] };
 
+  const H = hulpNu();
+  g.moeilijkheid = MOEILIJKHEDEN[MOEILIJK.stand] ? MOEILIJK.stand : 'normaal';
   for (const v of g.v) {
     v.tegenMens = !v.mens && g.v[1 - v.kant].mens;
-    if (v.tegenMens && v.ai) v.ai = Object.assign({}, v.ai, { kunde: v.ai.kunde * HULP.kunde, blok: v.ai.blok * HULP.blok, agressie: v.ai.agressie * HULP.agressie });
+    v.hulpSchade = v.tegenMens ? H.schade : 1;
+    if (v.mens) v.pg.mensDeel = H.vertraging;
+    if (v.tegenMens && v.ai) v.ai = Object.assign({}, v.ai, { kunde: v.ai.kunde * H.kunde, blok: v.ai.blok * H.blok, agressie: v.ai.agressie * H.agressie });
   }
   return g;
 }
@@ -10130,7 +10391,7 @@ function zetBereik(v, Z) {
   return Z.bereik * v.s.lengte / 160 * (Z.bron === 'arm' ? vorm.arm : Z.bron === 'been' ? vorm.been : 1);
 }
 function zetKracht(v, Z) {
-  const nood = (v.nood ? COMBO.noodKracht : 1) * (v.tegenMens ? HULP.schade : 1);
+  const nood = (v.nood ? COMBO.noodKracht : 1) * (v.hulpSchade || 1);
   if (Z.bron === 'arm') return nood * Math.pow(v.s.arm / 120, 0.6) * (1 - (v.s.armSchade + v.schade.armen) / 200);
   if (Z.bron === 'been') return nood * Math.pow(v.s.been / 340, 0.6) * (1 - (v.s.beenSchade + v.schade.benen) / 250);
   return nood * Math.pow(v.s.massa / 70, 0.7);
@@ -11480,7 +11741,7 @@ function tekenGevecht(c, g, nu, dt, arenaKleur) {
 
 
 const UI = {
-  scherm: 'hoofd', instellingen: { geluid: true, trillen: true }, tab: 'competitie', team: null, g: null, modus: null, tegen: null,
+  scherm: 'hoofd', instellingen: { geluid: true, trillen: true, moeilijkheid: 'normaal' }, tab: 'competitie', team: null, g: null, modus: null, tegen: null,
   pauze: false, invoer: [null, null], cv: null, ctx: null, nieuw: { piloot: 'noor', frame: 'libel' }, vrij: null, mods: [], arenaMod: null, lakMod: null,
   bericht: '', berichtTot: 0, nietBewaren: false,
 };
@@ -11567,7 +11828,15 @@ function renderGeld() { if (UI.team) $('geldTel').textContent = getal(UI.team.ge
 function renderHoofd() {
   $('knopVerder').hidden = !UI.team;
   $('knopNieuw').classList.toggle('tweede', !!UI.team);
+  renderMoeilijk();
   tekenTitel();
+}
+
+function renderMoeilijk() {
+  const nu = MOEILIJKHEDEN[UI.instellingen.moeilijkheid] ? UI.instellingen.moeilijkheid : 'normaal';
+  MOEILIJK.stand = nu;
+  $('moeilijkKeuze').innerHTML = MOEILIJKHEID_VOLGORDE.map((k) => '<button role="radio" data-moeilijk="' + k + '" aria-checked="' + (k === nu) + '">' + esc(vertaal(MOEILIJKHEDEN[k].naam)) + '</button>').join('');
+  $('moeilijkUitleg').textContent = vertaal(MOEILIJKHEDEN[nu].uitleg);
 }
 function tekenTitel() {
   const cv = $('titelDoek'), c = cv.getContext('2d'), nu = performance.now();
@@ -11913,6 +12182,7 @@ function klik(e) {
   audioStart();
   if (t.id === 'terug') { window.terugKnop(); return; }
   if (t.id === 'geluidKnop') { UI.instellingen.geluid = !UI.instellingen.geluid; t.textContent = UI.instellingen.geluid ? '🔊' : '🔇'; bewaarInstellingen(); return; }
+  if (d.moeilijk) { UI.instellingen.moeilijkheid = d.moeilijk; bewaarInstellingen(); geluid('klik'); return renderMoeilijk(); }
   if (d.scherm) { geluid('klik'); return naarScherm(d.scherm); }
   if (t.id === 'knopVerder') return naarScherm('team');
   if (t.id === 'knopNieuw') { if (UI.team && !confirm(vertaal('Een nieuwe loopbaan wist je huidige team. Doorgaan?'))) return; return naarScherm('nieuw'); }
@@ -12121,6 +12391,7 @@ async function start() {
   await laadSprites();
   await beeldenVooraf();
   try { const i = JSON.parse(localStorage.getItem(OPSLAG.inst) || 'null'); if (i) Object.assign(UI.instellingen, i); } catch (e) {  }
+  if (MOEILIJKHEDEN[UI.instellingen.moeilijkheid]) MOEILIJK.stand = UI.instellingen.moeilijkheid;
   UI.team = laadTeam();
   UI.mods = laadMods();
   try { const a = localStorage.getItem(OPSLAG.mods + '_arena'); if (a !== null && a !== '' && UI.mods[+a] && UI.mods[+a].soort === 'arena') UI.arenaMod = UI.mods[+a]; } catch (e) {  }
